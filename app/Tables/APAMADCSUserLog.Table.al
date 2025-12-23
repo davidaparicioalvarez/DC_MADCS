@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS User Log
 /// Table to log all user posts, changes, and actions in the manufacturing data capture process.

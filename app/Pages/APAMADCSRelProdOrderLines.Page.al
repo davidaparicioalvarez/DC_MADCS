@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Released Production Order Lines
 /// List page for ADCS users to select a released production order.
@@ -73,27 +77,107 @@ page 55000 "APA MADCS Rel Prod Order Lines"
     {
         area(Processing)
         {
-            action(OpenOrder)
+            group(Options)
             {
-                Caption = 'Open', Comment = 'ESP="Abrir"';
-                ToolTip = 'Open the selected production order and start working on it.', Comment = 'ESP="Abrir la orden de producción seleccionada y empezar a trabajar en ella."';
-                ApplicationArea = All;
-                Image = EditLines;
+                Caption = 'Process', Comment = 'ESP="Proceso"';
 
-                trigger OnAction()
-                var
-                    ProductionOrderLine: Record "Prod. Order Line";
-                    LabelOrderNotFoundLbl: Label 'The selected production order could not be found.', Comment = 'ESP="No se pudo encontrar la orden de producción seleccionada."';
-                begin
-                    // Get requires both No. and Status as primary key for Production Order
-                    Clear(ProductionOrderLine);
-                    ProductionOrderLine.SetCurrentKey(Status, "Prod. Order No.", "Line No.");
-                    ProductionOrderLine.SetRange(Status, Rec.Status);
-                    ProductionOrderLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                    if not ProductionOrderLine.FindFirst() then
-                        Error(LabelOrderNotFoundLbl); // ESP="No se pudo encontrar la orden de producción seleccionada."
-                    PAGE.RunModal(PAGE::"APA MADCS Main Card", ProductionOrderLine);
-                end;
+                action(VerificationAct)
+                {
+                    Caption = 'Verifications', Comment = 'ESP="Verificaciones"';
+                    ToolTip = 'Manage verifications for the production order.', Comment = 'ESP="Gestiona las verificaciones para la orden de producción."';
+                    Image = CheckList;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    Visible = true; 
+                    RunObject = page "APA MADCS Verification Part";
+                    RunPageLink = "Status" = field("Status"),
+                                  "Prod. Order No." = field("Prod. Order No.");
+                }
+
+                action(TimeAct)
+                {
+                    Caption = 'Time', Comment = 'ESP="Tiempo"';
+                    ToolTip = 'Manage the time tracking for the production order.', Comment = 'ESP="Gestiona el seguimiento del tiempo para la orden de producción."';
+                    Image = Timeline;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    RunObject = page "APA MADCS Time Part";
+                    RunPageLink = Status = field(Status),
+                                  "Prod. Order No." = field("Prod. Order No."),
+                                  "Prod. Order Line No." = field("Line No.");
+                }
+
+                action(StopsAct)
+                {
+                    Caption = 'Stops', Comment = 'ESP="Paradas"';
+                    ToolTip = 'Manage stops for the production order.', Comment = 'ESP="Gestiona las paradas para la orden de producción."';
+                    Image = Stop;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    Visible = false; // TODO: V2.Temporarily hide until implemented
+                    RunObject = page "APA MADCS Stops Part";
+                    RunPageLink = Status = field(Status),
+                                  "Prod. Order No." = field("Prod. Order No."),
+                                  "Routing Reference No." = field("Line No.");
+                }
+
+                action(QualityMeasuresAct)
+                {
+                    Caption = 'Quality Measures', Comment = 'ESP="Medidas de Calidad"';
+                    ToolTip = 'Manage quality measures for the production order.', Comment = 'ESP="Gestiona las medidas de calidad para la orden de producción."';
+                    Image = Questionaire;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    Visible = false; // TODO: V2. Temporarily hide until implemented
+                    RunObject = page "APA MADCS Quality MeasuresPart";
+                    RunPageLink = Status = field(Status), 
+                                  "Prod. Order No." = field("Prod. Order No."),
+                                  "Routing Reference No." = field("Line No.");
+                }
+
+                action(ConsumptionAct)
+                {
+                    Caption = 'Consumption', Comment = 'ESP="Consumo"';
+                    ToolTip = 'Manage the consumption of components for the production order.', Comment = 'ESP="Gestiona el consumo de componentes para la orden de producción."';
+                    Image = ConsumptionJournal;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    RunObject = page "APA MADCS Consumption Part";
+                    RunPageLink = Status = field(Status),
+                                  "Prod. Order No." = field("Prod. Order No."),
+                                  "Prod. Order Line No." = field("Line No.");
+                }
+
+                action(OutputsAct)
+                {
+                    Caption = 'Outputs', Comment = 'ESP="Salidas"';
+                    ToolTip = 'Manage the outputs for the production order.', Comment = 'ESP="Gestiona las salidas para la orden de producción."';
+                    Image = OutputJournal;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    ApplicationArea = All;
+                    RunObject = page "APA MADCS Outputs Part";
+                    RunPageLink = Status = field(Status),
+                                  "Prod. Order No." = field("Prod. Order No."),
+                                  "Routing Reference No." = field("Line No.");
+                }
             }
         }
     }

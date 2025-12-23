@@ -1,3 +1,9 @@
+namespace MADCS.MADCS;
+
+/// <summary>
+/// APA MADCS Operator Actions
+/// Enum for operator actions in the MADCS system.
+/// </summary>
 enum 55003 "APA MADCS Operator Actions"
 {
     Extensible = true;

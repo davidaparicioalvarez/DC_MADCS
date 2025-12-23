@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS Journal Type
 /// Enum for journal types in the MADCS user log.

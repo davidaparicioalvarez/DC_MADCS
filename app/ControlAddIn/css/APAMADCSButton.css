@@ -1,5 +1,4 @@
 /** Button Styles **/
-/*-----------------*/
 
 /** Reset Button styles **/
 
@@ -101,3 +100,5 @@ button.al-button-info:hover {
     background: rgb(230, 242, 250) !important;    
     border-color: #92c0e0;
 }
+
+/*-----------------*/

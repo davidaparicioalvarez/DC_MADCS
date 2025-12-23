@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Pro. Order Line Time
 /// Table to log time entries for production order lines in the MADCS system.
@@ -5,6 +9,8 @@
 table 55001 "APA MADCS Pro. Order Line Time"
 {
     Caption = 'Production Order Line Time', Comment = 'ESP="Tiempo Línea Orden de Producción"';
+    LookupPageId = "APA MADCS Time Part";
+    DrillDownPageId = "APA MADCS Time Part";
     DataClassification = SystemMetadata;
     
     fields
@@ -61,6 +67,16 @@ table 55001 "APA MADCS Pro. Order Line Time"
         key(PK; Status,"Prod. Order No.","Prod. Order Line No.","Line No.")
         {
             Clustered = true;
+        }
+    }
+
+    fieldgroups
+    {
+        fieldgroup(DropDown; "Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","End","Date Time","BreakDown Code")
+        {
+        }
+        fieldgroup(Brick; Status,"Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","End","Date Time","BreakDown Code")
+        {
         }
     }
 }

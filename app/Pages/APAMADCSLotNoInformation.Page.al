@@ -1,3 +1,11 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Inventory.Tracking;
+
+/// <summary>
+/// APA MADCS Lot No. Information
+/// Page for displaying lot number information in the MADCS system.
+/// </summary>
 page 55005 "APA MADCS Lot No. Information"
 {
     ApplicationArea = All;
@@ -34,9 +42,8 @@ page 55005 "APA MADCS Lot No. Information"
                     ToolTip = 'Specifies the expiration date for the item.', Comment = 'ESP="Especifica la fecha de caducidad del producto."';
                 }
                 
-                field("Warehouse Inventory"; Rec."Warehouse Inventory")
+                field("APA MADCS Warehouse Inventory"; Rec."APA MADCS Warehouse Inventory")
                 {
-                    ToolTip = 'Specifies the inventory quantity for the item/lot.', Comment = 'ESP="Especifica la cantidad de inventario del lote del producto."';
                 }
             }
         }

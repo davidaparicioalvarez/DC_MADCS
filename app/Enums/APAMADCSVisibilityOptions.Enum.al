@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS Visibility Options
 /// Enum for different visibility options in the MADCS main card.

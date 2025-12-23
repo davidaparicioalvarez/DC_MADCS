@@ -1,9 +1,15 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Warehouse.ADCS;
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Posting Management
 /// Codeunit to handle posting of consumptions and outputs, and log all user actions.
 /// </summary>
 codeunit 55000 "APA MADCS Posting Management"
 {
+    SingleInstance = true;
     Permissions = 
         tabledata "APA MADCS User Log" = i,
         tabledata "ADCS User" = r;
@@ -106,4 +112,60 @@ codeunit 55000 "APA MADCS Posting Management"
         exit(ADCSUser.Get(UserId()));
     end;
 
+    /// <summary>
+    /// Build a validation ErrorInfo with record and field context information.
+    /// Creates a structured error with title and message for field-level validation failures.
+    /// </summary>
+    /// <param name="myrecordId">RecordId of the record where the validation failed. Can be used by caller for UI context.</param>
+    /// <param name="fieldNo">Field number where the validation failed. Can be used by caller for field highlighting.</param>
+    /// <param name="titleText">Short title for the error (e.g., "Comment required", "Invalid value"). Displayed prominently.</param>
+    /// <param name="messageText">Detailed error message explaining what went wrong and how to fix it. Displayed below the title.</param>
+    /// <returns name="ErrorInfo">Configured ErrorInfo ready to be raised via Error() or collected via ErrorBehavior.Collect.</returns>
+    procedure BuildValidationError(myrecordId: RecordId; fieldNo: Integer; titleText: Text; messageText: Text) err: ErrorInfo
+    begin
+        err := ErrorInfo.Create(messageText);
+        err.RecordId := myrecordId;
+        err.Title := titleText;
+        err.AddNavigationAction();
+        exit(err);
+    end;
+
+    /// <summary>
+    /// Build an application error with title and message.
+    /// </summary>
+    /// <param name="titleText">Short title for the error.</param>
+    /// <param name="messageText">Detailed error message for the user.</param>
+    /// <returns name="ErrorInfo">ErrorInfo</returns>
+    procedure BuildApplicationError(titleText: Text; messageText: Text) err: ErrorInfo
+    begin
+        err := ErrorInfo.Create(messageText);
+        err.Title := titleText;
+        exit(err);
+    end;
+
+    /// <summary>
+    /// Raise a blocking error using ErrorInfo.
+    /// </summary>
+    /// <param name="err">ErrorInfo to raise.</param>
+    procedure Raise(err: ErrorInfo)
+    begin
+        Error(err);
+    end;
+
+    /// <summary>
+    /// Send a non-blocking notification to the user for warnings or info.
+    /// </summary>
+    /// <param name="titleText">Title of the notification.</param>
+    /// <param name="messageText">Message body.</param>
+    /// <param name="recordId">Optional record context.</param>
+    procedure Notify(titleText: Text; messageText: Text; recordId: RecordId)
+    var
+        notif: Notification;
+    begin
+        notif.Message(messageText);
+        notif.Scope(NotificationScope::LocalScope);
+        if recordId.TableNo() <> 0 then
+            notif.SetData('RecordId', Format(recordId));
+        notif.Send();
+    end;
 }

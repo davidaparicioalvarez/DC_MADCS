@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Prod. Order Line Extension
 /// TableExtension to add a field indicating if a user is working with the Prod. Order Line.

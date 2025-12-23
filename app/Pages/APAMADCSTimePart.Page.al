@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS Time Part
 /// Part page for managing time tracking in production orders.
@@ -6,14 +8,15 @@
 page 55003 "APA MADCS Time Part"
 {
     Caption = 'Time', Comment = 'ESP="Tiempo"';
-    PageType = ListPart;
+    PageType = List;
     SourceTable = "APA MADCS Pro. Order Line Time";
     SourceTableView = where("End" = const(false));
     Editable = true;
+    ModifyAllowed = true;
     InsertAllowed = false;
     DeleteAllowed = false;
-    ModifyAllowed = true;
     ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {
@@ -75,84 +78,93 @@ page 55003 "APA MADCS Time Part"
                     }
                 }
             }
-            group(InfButtonGrp)
+            grid(Columns)
             {
                 ShowCaption = false;
+                GridLayout = Columns;
 
-                usercontrol(ALInfButtonGroup; "APA MADCS ButtonGroup")
+                group(leftGrp)
                 {
-                    Visible = true;
+                    ShowCaption = false;
 
-                    trigger OnLoad()
-                    var
-                        PreparationLbl: Label 'Preparation', Comment = 'ESP="Preparación"';
-                        ExecutionLbl: Label 'Execution', Comment = 'ESP="Ejecución"';
-                        CleanLbl: Label 'Cleaning', Comment = 'ESP="Limpieza"';
-                        PreparationTextLbl: Label 'Init preparation phase', Comment = 'ESP="Iniciar fase de preparación"';
-                        ExecutionTextLbl: Label 'Init execution phase', Comment = 'ESP="Iniciar fase de ejecución"';
-                        CleanTextLbl: Label 'Init cleaning phase', Comment = 'ESP="Iniciar fase de limpieza"';
-                    begin
-                        CurrPage.ALInfButtonGroup.AddButton(PreparationLbl, PreparationTextLbl, ALButtonPreparationTok, NormalButtonTok);
-                        CurrPage.ALInfButtonGroup.AddButton(ExecutionLbl, ExecutionTextLbl, ALButtonExecutionTok, NormalButtonTok);
-                        CurrPage.ALInfButtonGroup.AddButton(CleanLbl, CleanTextLbl, ALButtonCleaningTok, NormalButtonTok);
-                    end;
+                    usercontrol(ALInfButtonGroup; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
 
-                    trigger OnClick(id: Text)
-                    begin
-                        // TODO: Implement button actions
-                        Message('%1 button was clicked.', id);
-                    end;
+                        trigger OnLoad()
+                        var
+                            PreparationLbl: Label 'Preparation', Comment = 'ESP="Preparación"';
+                            ExecutionLbl: Label 'Execution', Comment = 'ESP="Ejecución"';
+                            CleanLbl: Label 'Cleaning', Comment = 'ESP="Limpieza"';
+                            PreparationTextLbl: Label 'Init preparation phase', Comment = 'ESP="Iniciar fase de preparación"';
+                            ExecutionTextLbl: Label 'Init execution phase', Comment = 'ESP="Iniciar fase de ejecución"';
+                            CleanTextLbl: Label 'Init cleaning phase', Comment = 'ESP="Iniciar fase de limpieza"';
+                        begin
+                            CurrPage.ALInfButtonGroup.AddButton(PreparationLbl, PreparationTextLbl, ALButtonPreparationTok, NormalButtonTok);
+                            CurrPage.ALInfButtonGroup.AddButton(ExecutionLbl, ExecutionTextLbl, ALButtonExecutionTok, PrimaryButtonTok);
+                            CurrPage.ALInfButtonGroup.AddButton(CleanLbl, CleanTextLbl, ALButtonCleaningTok, NormalButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        begin
+                            // TODO: Implement button actions
+                            Message('%1 button was clicked.', id);
+                        end;
+                    }
+                    usercontrol(ALEndButtonGroup; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
+
+                        trigger OnLoad()
+                        var
+                            EndLbl: Label 'End State', Comment = 'ESP="Fin Estado"';
+                            EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
+                        begin
+                            CurrPage.ALEndButtonGroup.AddButton(EndLbl, EndTextLbl, ALButtonEndTok, PrimaryButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        begin
+                            // TODO: Implement button actions
+                            Message('%1 button was clicked.', id);
+                        end;
+                    }
                 }
-            }
-            group(DataGro)
-            {
-                ShowCaption = false;
-
-                field(StopCode;StopCode)
+                group(rightGrp)
                 {
-                    Caption = 'Stop Code', Comment = 'ESP="Código de Paro"';
-                    ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
-                    Editable = true;
-                    TableRelation = "DC Detalles de paro";
+                    ShowCaption = false;
 
-                    trigger OnValidate()
-                    begin
-                        // TODO: If Stop Code is disabling, finalize the current operation
-                    end;
+                    field(StopCode; StopCode)
+                    {
+                        Caption = 'Stop Code', Comment = 'ESP="Código de Paro"';
+                        ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
+                        Editable = true;
+                        TableRelation = "DC Detalles de paro";
+
+                        trigger OnValidate()
+                        begin
+                            // TODO: If Stop Code is disabling, finalize the current operation
+                        end;
+                    }
+                    usercontrol(ALRightButtonGroup; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
+
+                        trigger OnLoad()
+                        var
+                            BreakDownLbl: Label 'Breakdown', Comment = 'ESP="Avería"';
+                            BreakDownTextLbl: Label 'Register breakdown', Comment = 'ESP="Registrar avería"';
+                        begin
+                            CurrPage.ALRightButtonGroup.AddButton(BreakDownLbl, BreakDownTextLbl, ALButtonBreakdownTok, DangerButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        begin
+                            // TODO: Implement button actions
+                            Message('%1 button was clicked.', id);
+                        end;
+                    }
                 }
-                usercontrol(ALRightButtonGroup; "APA MADCS ButtonGroup")
-                {
-                    Visible = true;
-
-                    trigger OnLoad()
-                    var
-                        BreakDownLbl: Label 'Breakdown', Comment = 'ESP="Avería"';
-                        BreakDownTextLbl: Label 'Register breakdown', Comment = 'ESP="Registrar avería"';
-                    begin
-                        CurrPage.ALRightButtonGroup.AddButton(BreakDownLbl, BreakDownTextLbl, ALButtonBreakdownTok, NormalButtonTok);
-                    end;
-
-                    trigger OnClick(id: Text)
-                    begin
-                        // TODO: Implement button actions
-                        Message('%1 button was clicked.', id);
-                    end;
-                }
-            }
-            usercontrol(ALEndButtonGroup; "APA MADCS ButtonGroup")
-            {
-                Visible = true;
-
-                trigger OnLoad()
-                begin
-                    CurrPage.ALEndButtonGroup.AddButton('Fin Estado', 'Finalizar la fase activa', 'ALButtonEnd', PrimaryButtonTok);
-                end;
-
-                trigger OnClick(id: Text)
-                begin
-                    // TODO: Implement button actions
-                    Message('%1 button was clicked.', id);
-                end;
             }
         }
     }
@@ -161,8 +173,10 @@ page 55003 "APA MADCS Time Part"
         StopCode: Code[20];
         NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
+        DangerButtonTok: Label 'danger', Locked = true;
         ALButtonPreparationTok: Label 'ALButtonPreparation', Locked = true;
         ALButtonExecutionTok: Label 'ALButtonExecution', Locked = true;
         ALButtonCleaningTok: Label 'ALButtonCleaning', Locked = true;
         ALButtonBreakdownTok: Label 'ALButtonBreakdown', Locked = true;
+        ALButtonEndTok: Label 'ALButtonEnd', Locked = true;
 }

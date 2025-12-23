@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS Button ControlAddIn
 /// Provides a customizable button for Manufacturing Automated Data Capture System scenarios.

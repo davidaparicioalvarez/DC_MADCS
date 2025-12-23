@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Stops Part
 /// Part page for managing Stops in production orders.
@@ -7,12 +11,13 @@ page 55007 "APA MADCS Stops Part"
 {
     // TODO:
     Caption = 'Stops', Comment = 'ESP="Paradas"';
-    PageType = ListPart;
+    PageType = List;
     SourceTable = "Prod. Order Routing Line";
     Editable = true;
     InsertAllowed = false;
     DeleteAllowed = false;
     ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {

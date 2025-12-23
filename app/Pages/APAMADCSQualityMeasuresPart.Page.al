@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Quality Measures Part
 /// Part page for managing Quality Measures in production orders.
@@ -7,12 +11,13 @@ page 55008 "APA MADCS Quality MeasuresPart"
 {
     // TODO:
     Caption = 'Quality Measures', Comment = 'ESP="Medidas de Calidad"';
-    PageType = ListPart;
+    PageType = List;
     SourceTable = "Prod. Order Routing Line";
     Editable = true;
     InsertAllowed = false;
     DeleteAllowed = false;
     ApplicationArea = All;
+    UsageCategory = None;
 
     layout
     {

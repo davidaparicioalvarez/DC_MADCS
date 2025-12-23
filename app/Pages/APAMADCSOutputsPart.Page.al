@@ -1,3 +1,7 @@
+namespace MADCS.MADCS;
+
+using Microsoft.Manufacturing.Document;
+
 /// <summary>
 /// APA MADCS Outputs Part
 /// Part page for managing outputs in production orders.
@@ -6,12 +10,13 @@
 page 55004 "APA MADCS Outputs Part"
 {
     Caption = 'Outputs', Comment = 'ESP="Salidas"';
-    PageType = ListPart;
+    PageType = List;
     SourceTable = "Prod. Order Routing Line";
     Editable = true;
     InsertAllowed = false;
     DeleteAllowed = false;
     ApplicationArea = All;
+    UsageCategory = None;
     Permissions =
         tabledata "Prod. Order Line" = rm,
         tabledata "Prod. Order Routing Line" = rm;

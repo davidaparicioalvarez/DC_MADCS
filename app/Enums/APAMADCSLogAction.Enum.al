@@ -1,3 +1,5 @@
+namespace MADCS.MADCS;
+
 /// <summary>
 /// APA MADCS Log Action
 /// Enum for log action types in the MADCS user log.

@@ -201,6 +201,36 @@
           <note from="Developer" annotates="general" priority="2">ESP="No tiene permiso para registrar salida."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Posting Management - NamedType ErrNoPermissionPostOutputLbl</note>
         </trans-unit>
+        <trans-unit id="Page 3998780772 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consume Components</source>
+          <target state="translated">Consumir Componentes</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir Componentes"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3998780772 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the description of the production order component item.</source>
+          <target state="translated">Especifica la descripción del componente de la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la descripción del componente de la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3998780772 - Control 1639563783 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the expected quantity to be consumed for the production order component.</source>
+          <target state="translated">Especifica la cantidad esperada por consumir del componente de la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad esperada por consumir del componente de la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control Expected Quantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3998780772 - Control 568743302 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the item number of the production order component.</source>
+          <target state="translated">Especifica el número de producto del componente de la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de producto del componente de la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control Item No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3998780772 - Control 2367056265 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the remaining quantity to be consumed for the production order component.</source>
+          <target state="translated">Especifica la cantidad restante por consumir del componente de la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad restante por consumir del componente de la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control Remaining Quantity - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 672837462 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Consumption</source>
           <target state="translated">Consumo</target>
@@ -231,35 +261,35 @@
           <note from="Developer" annotates="general" priority="2">ESP="Lote"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Lot No. To Consume - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 672837462 - Control 4109789997 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the quantity of the component to consume.</source>
-          <target state="translated">Indica la cantidad del componente a consumir.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Indica la cantidad del componente a consumir."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control MADCS Quantity - Property ToolTip</note>
+        <trans-unit id="Page 672837462 - Control 2544339464 - Method 2219734473 - NamedType 3157582089" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consume All</source>
+          <target state="translated">Consumir Todo</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir Todo"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control ALButtonGroup - Method OnLoad - NamedType ConsumeAllLbl</note>
         </trans-unit>
-        <trans-unit id="Page 672837462 - Control 4109789997 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Qty. to Consume</source>
-          <target state="translated">Cant. a consumir</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Cant. a consumir"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control MADCS Quantity - Property Caption</note>
+        <trans-unit id="Page 672837462 - Control 2544339464 - Method 2219734473 - NamedType 533539254" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consume all components except for warehouse serving</source>
+          <target state="translated">Consumir todos los componentes excepto quién sirve almacén</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir todos los componentes excepto quién sirve almacén"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control ALButtonGroup - Method OnLoad - NamedType ConsumeAllTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 672837462 - Control 2544339464 - Method 2219734473 - NamedType 14288021" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consume Item</source>
+          <target state="translated">Consumir Comp.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir Comp."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control ALButtonGroup - Method OnLoad - NamedType ConsumeItemLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 672837462 - Control 2544339464 - Method 2219734473 - NamedType 4198271658" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consume the selected component</source>
+          <target state="translated">Consumir el componente seleccionado</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir el componente seleccionado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control ALButtonGroup - Method OnLoad - NamedType ConsumeItemTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 672837462 - Control 2385270358 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the unit of measure for the component.</source>
           <target state="translated">Indica la unidad de medida del componente.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Indica la unidad de medida del componente."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Unit of Measure Code - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 672837462 - Control 4253872189 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the consumed quantity of the component.</source>
-          <target state="translated">Indica la cantidad consumida del componente.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Indica la cantidad consumida del componente."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Consumed Quantity - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 672837462 - Control 4253872189 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Cons. Q.</source>
-          <target state="translated">Q. Cons.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Q. Cons."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Consumed Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 672837462 - Control 362839904 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the consumption by remainder of this component.</source>
@@ -309,12 +339,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="Q. Prev."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Quantity - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 672837462 - Control 463590211 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the routing link code associated with the component.</source>
-          <target state="translated">Indica el código de enlace de ruta asociado con el componente.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Indica el código de enlace de ruta asociado con el componente."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption Part - Control Routing Link Code - Property ToolTip</note>
-        </trans-unit>
         <trans-unit id="Page 1124023000 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Lot No. Information</source>
           <target state="translated">Información del números de lote</target>
@@ -344,132 +368,6 @@
           <target state="translated">Especifica el código de variante del producto.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Especifica el código de variante del producto."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Lot No. Information - Control Variant Code - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 1124023000 - Control 2565466081 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the inventory quantity for the item/lot.</source>
-          <target state="translated">Especifica la cantidad de inventario del lote del producto.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad de inventario del lote del producto."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Lot No. Information - Control Warehouse Inventory - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>MADCS Main Card</source>
-          <target state="translated">Ficha principal MADCS</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Ficha principal MADCS"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 737498079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consumption</source>
-          <target state="translated">Consumo</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Consumo"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control Consumption - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 2549404968 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Outputs</source>
-          <target state="translated">Salidas</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Salidas"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control Outputs - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 64231666 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quality Measures</source>
-          <target state="translated">Medidas de Calidad</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Medidas de Calidad"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control QualityMeasures - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 3844269229 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Stops</source>
-          <target state="translated">Paradas</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Paradas"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control Stops - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 1230148255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Time</source>
-          <target state="translated">Tiempo</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Tiempo"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control Time - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Control 443920403 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Verificación</source>
-          <target state="translated">Verificación</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Verificación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Control Verification - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Process</source>
-          <target state="translated">Proceso</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Proceso"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action Options - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 226226109 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage the consumption of components for the production order.</source>
-          <target state="translated">Gestiona el consumo de componentes para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona el consumo de componentes para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action ConsumptionAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 226226109 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consumption</source>
-          <target state="translated">Consumo</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Consumo"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action ConsumptionAct - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 1887554702 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage the outputs for the production order.</source>
-          <target state="translated">Gestiona las salidas para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las salidas para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action OutputsAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 1887554702 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Outputs</source>
-          <target state="translated">Salidas</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Salidas"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action OutputsAct - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 3230100868 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage quality measures for the production order.</source>
-          <target state="translated">Gestiona las medidas de calidad para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las medidas de calidad para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action QualityMeasuresAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 3230100868 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quality Measures</source>
-          <target state="translated">Medidas de Calidad</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Medidas de Calidad"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action QualityMeasuresAct - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 4199338735 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage stops for the production order.</source>
-          <target state="translated">Gestiona las paradas para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las paradas para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action StopsAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 4199338735 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Stops</source>
-          <target state="translated">Paradas</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Paradas"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action StopsAct - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 2157109501 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage the time tracking for the production order.</source>
-          <target state="translated">Gestiona el seguimiento del tiempo para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona el seguimiento del tiempo para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action TimeAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 2157109501 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Time</source>
-          <target state="translated">Tiempo</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Tiempo"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action TimeAct - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 1403500585 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manage verifications for the production order.</source>
-          <target state="translated">Gestiona las verificaciones para la orden de producción.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las verificaciones para la orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action VerificationAct - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 2108150817 - Action 1403500585 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Verifications</source>
-          <target state="translated">Verificaciones</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Verificaciones"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Main Card - Action VerificationAct - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2476036101 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Outputs</source>
@@ -687,23 +585,83 @@
           <note from="Developer" annotates="general" priority="2">ESP="Especifica la fecha y hora de inicio de la orden de producción."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Control Starting Date-Time - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="Page 3516759027 - Action 2947545438 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Open the selected production order and start working on it.</source>
-          <target state="translated">Abrir la orden de producción seleccionada y empezar a trabajar en ella.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Abrir la orden de producción seleccionada y empezar a trabajar en ella."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OpenOrder - Property ToolTip</note>
+        <trans-unit id="Page 3516759027 - Action 2346885236 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Process</source>
+          <target state="translated">Proceso</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Proceso"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action Options - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 3516759027 - Action 2947545438 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Open</source>
-          <target state="translated">Abrir</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Abrir"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OpenOrder - Property Caption</note>
+        <trans-unit id="Page 3516759027 - Action 226226109 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage the consumption of components for the production order.</source>
+          <target state="translated">Gestiona el consumo de componentes para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona el consumo de componentes para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action ConsumptionAct - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="Page 3516759027 - Action 2947545438 - Method 1377591017 - NamedType 212509315" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The selected production order could not be found.</source>
-          <target state="translated">No se pudo encontrar la orden de producción seleccionada.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="No se pudo encontrar la orden de producción seleccionada."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OpenOrder - Method OnAction - NamedType LabelOrderNotFoundLbl</note>
+        <trans-unit id="Page 3516759027 - Action 226226109 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Consumption</source>
+          <target state="translated">Consumo</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumo"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action ConsumptionAct - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1887554702 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage the outputs for the production order.</source>
+          <target state="translated">Gestiona las salidas para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las salidas para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OutputsAct - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1887554702 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Outputs</source>
+          <target state="translated">Salidas</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Salidas"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OutputsAct - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 3230100868 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage quality measures for the production order.</source>
+          <target state="translated">Gestiona las medidas de calidad para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las medidas de calidad para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action QualityMeasuresAct - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 3230100868 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Quality Measures</source>
+          <target state="translated">Medidas de Calidad</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Medidas de Calidad"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action QualityMeasuresAct - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 4199338735 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage stops for the production order.</source>
+          <target state="translated">Gestiona las paradas para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las paradas para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action StopsAct - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 4199338735 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Stops</source>
+          <target state="translated">Paradas</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Paradas"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action StopsAct - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 2157109501 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage the time tracking for the production order.</source>
+          <target state="translated">Gestiona el seguimiento del tiempo para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona el seguimiento del tiempo para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action TimeAct - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 2157109501 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Time</source>
+          <target state="translated">Tiempo</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Tiempo"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action TimeAct - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1403500585 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Manage verifications for the production order.</source>
+          <target state="translated">Gestiona las verificaciones para la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Gestiona las verificaciones para la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action VerificationAct - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1403500585 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Verifications</source>
+          <target state="translated">Verificaciones</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Verificaciones"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action VerificationAct - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 912602456 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Stops</source>
@@ -717,29 +675,17 @@
           <note from="Developer" annotates="general" priority="2">ESP="Tiempo"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3619673136 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Breakdown</source>
-          <target state="translated">Avería</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Avería"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroup - Method OnLoad - NamedType BreakDownLbl</note>
+        <trans-unit id="Page 1569277430 - Control 1290785397 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>End State</source>
+          <target state="translated">Fin Estado</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Fin Estado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALEndButtonGroup - Method OnLoad - NamedType EndLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3619673136 - Method 2219734473 - NamedType 3707734870" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Register breakdown</source>
-          <target state="translated">Registrar avería</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Registrar avería"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroup - Method OnLoad - NamedType BreakDownTextLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the stop code for the breakdown.</source>
-          <target state="translated">Especifica el código de paro para la avería.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Especifica el código de paro para la avería."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Stop Code</source>
-          <target state="translated">Código de Paro</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Código de Paro"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property Caption</note>
+        <trans-unit id="Page 1569277430 - Control 1290785397 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finalize the active phase</source>
+          <target state="translated">Finalizar la fase activa</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALEndButtonGroup - Method OnLoad - NamedType EndTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 667767015 - Method 2219734473 - NamedType 972073109" size-unit="char" translate="yes" xml:space="preserve">
           <source>Preparation</source>
@@ -777,41 +723,71 @@
           <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de limpieza"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroup - Method OnLoad - NamedType CleanTextLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 3619673136 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown</source>
+          <target state="translated">Avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroup - Method OnLoad - NamedType BreakDownLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 3619673136 - Method 2219734473 - NamedType 3707734870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Register breakdown</source>
+          <target state="translated">Registrar avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Registrar avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroup - Method OnLoad - NamedType BreakDownTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the stop code for the breakdown.</source>
+          <target state="translated">Especifica el código de paro para la avería.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el código de paro para la avería."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Stop Code</source>
+          <target state="translated">Código de Paro</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de Paro"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3454829778 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Verification</source>
           <target state="translated">Verificación</target>
           <note from="Developer" annotates="general" priority="2">ESP="Verificación"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification Part - Property Caption</note>
         </trans-unit>
-        <trans-unit id="TableExtension 1124023000 - Field 2565466081 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
+        <trans-unit id="Page 3454829778 - Method 2686574772 - NamedType 1302664427" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Error initializing verification data.</source>
+          <target state="translated">Error al inicializar los datos de verificación.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Error al inicializar los datos de verificación."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification Part - Method InitializeData - NamedType ProgramErr</note>
+        </trans-unit>
+        <trans-unit id="Page 3454829778 - Method 2686574772 - NamedType 2025886684" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Page table is not temporary.</source>
+          <target state="translated">La tabla de la página no es temporal.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="La tabla de la página no es temporal."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification Part - Method InitializeData - NamedType TemporaryTableErr</note>
+        </trans-unit>
+        <trans-unit id="Page 3454829778 - Method 2686574772 - NamedType 450116916" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item not found: %1</source>
+          <target state="translated">Artículo no encontrado: %1</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Artículo no encontrado: %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification Part - Method InitializeData - NamedType ItemErr</note>
+        </trans-unit>
+        <trans-unit id="Page 3454829778 - Method 2686574772 - NamedType 682822190" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking Code not found: %1</source>
+          <target state="translated">Código de seguimiento del artículo no encontrado: %1</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de seguimiento del artículo no encontrado: %1"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification Part - Method InitializeData - NamedType ItemTrackingCodeErr</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1124023000 - Field 2920600153 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Specifies the inventory quantity for the item/lot.</source>
           <target state="translated">Especifica la cantidad de inventario del lote del producto.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad de inventario del lote del producto."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Lot No. Information - Field Warehouse Inventory - Property ToolTip</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Lot No. Information - Field APA MADCS Warehouse Inventory - Property ToolTip</note>
         </trans-unit>
-        <trans-unit id="TableExtension 1124023000 - Field 2565466081 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
+        <trans-unit id="TableExtension 1124023000 - Field 2920600153 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3361278800">
           <source>Warehouse Inventory</source>
           <target state="translated">Inventario de almacén</target>
           <note from="Developer" annotates="general" priority="2">ESP="Inventario de almacén"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Lot No. Information - Field Warehouse Inventory - Property Caption</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2160695598 - NamedType 2542039969" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 2160695598">
-          <source>Negative quantity is not allowed.</source>
-          <target state="translated">No se permite cantidad negativa.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="No se permite cantidad negativa."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - NamedType NegativeQuantityNotAllowedLbl</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2160695598 - Field 4109789997 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
-          <source>Specifies the quantity captured through the Automated Data Capture System (MADCS).</source>
-          <target state="translated">Especifica la cantidad capturada a través del Sistema Automatizado de Captura de Datos (MADCS).</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad capturada a través del Sistema Automatizado de Captura de Datos (MADCS)."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Quantity - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="TableExtension 2160695598 - Field 4109789997 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
-          <source>MADCS Quantity</source>
-          <target state="translated">Cantidad MADCS</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Cantidad MADCS"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Quantity - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Lot No. Information - Field APA MADCS Warehouse Inventory - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1761940193 - Field 4167500140 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4218928473">
           <source>Specifies the user currently working with this production order line.</source>
@@ -950,6 +926,54 @@
           <target state="translated">Usuario ADCS MADCS</target>
           <note from="Developer" annotates="general" priority="2">ESP="Usuario ADCS MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PermissionSet APA MADCS ADCS User - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 1197634748 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Specifies the lot number captured through the Automated Data Capture System (MADCS).</source>
+          <target state="translated">Especifica el número de lote capturado a través del Sistema Automatizado de Captura de Datos (MADCS).</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de lote capturado a través del Sistema Automatizado de Captura de Datos (MADCS)."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Lot No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 1197634748 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Lot No.</source>
+          <target state="translated">Nº Lote</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Nº Lote"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Lot No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 4109789997 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Specifies the quantity captured through the Automated Data Capture System (MADCS).</source>
+          <target state="translated">Especifica la cantidad capturada a través del Sistema Automatizado de Captura de Datos (MADCS).</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad capturada a través del Sistema Automatizado de Captura de Datos (MADCS)."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Quantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 4109789997 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Quantity</source>
+          <target state="translated">Cantidad</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 2966227410 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Indicates whether the MADCS data has been verified.</source>
+          <target state="translated">Indica si los datos de MADCS han sido verificados.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Indica si los datos de MADCS han sido verificados."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Verified - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 2966227410 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Verified</source>
+          <target state="translated">Verificado</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Verificado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field MADCS Verified - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 537631876 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Stores the original line number before any modifications.</source>
+          <target state="translated">Almacena el número de línea original antes de cualquier modificación.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Almacena el número de línea original antes de cualquier modificación."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field Original Line No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 2160695598 - Field 537631876 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
+          <source>Original Line No.</source>
+          <target state="translated">Nº Línea Original</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Nº Línea Original"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field Original Line No. - Property Caption</note>
         </trans-unit>
       </group>
     </body>
