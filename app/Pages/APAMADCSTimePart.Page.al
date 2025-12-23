@@ -8,6 +8,7 @@ namespace MADCS.MADCS;
 page 55003 "APA MADCS Time Part"
 {
     Caption = 'Time', Comment = 'ESP="Tiempo"';
+    Extensible = true;
     PageType = List;
     SourceTable = "APA MADCS Pro. Order Line Time";
     SourceTableView = where("End" = const(false));

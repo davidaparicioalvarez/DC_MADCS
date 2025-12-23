@@ -126,87 +126,138 @@ page 55006 "APA MADCS Verification Part"
     local procedure InitializeData()
     var
         ProdOrderComponent: Record "Prod. Order Component";
-        TrackingSpecification: Record "Tracking Specification";
+    begin
+        this.ValidateAndDeleteTemporaryTables();
+        this.LoadProdOrderComponents(ProdOrderComponent);
+    end;
+
+    local procedure ValidateAndDeleteTemporaryTables()
+    var
         TempTrackingSpecification: Record "Tracking Specification" temporary;
-        Item: Record Item;
-        ItemTrackingCode: Record "Item Tracking Code";
-        ProdOrderCompReserve: Codeunit "Prod. Order Comp.-Reserve";
-        ItemTrackingLines: Page "Item Tracking Lines";
-        i: Integer;
         err: ErrorInfo;
         ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
         TemporaryTableErr: Label 'Page table is not temporary.', Comment = 'ESP="La tabla de la página no es temporal."';
-        ItemErr: Label 'Item not found: %1', Comment = 'ESP="Artículo no encontrado: %1"';
-        ItemTrackingCodeErr: Label 'Item Tracking Code not found: %1', Comment = 'ESP="Código de seguimiento del artículo no encontrado: %1"';
     begin
         if not Rec.IsTemporary() or not TempTrackingSpecification.IsTemporary() then begin
             err := this.errMgmt.BuildApplicationError(ProgramErr, TemporaryTableErr);
             this.errMgmt.Raise(err);
         end;
         Rec.DeleteAll(false);
+    end;
+
+    local procedure LoadProdOrderComponents(var ProdOrderComponent: Record "Prod. Order Component")
+    begin
         Clear(ProdOrderComponent);
         ProdOrderComponent.SetCurrentKey("Prod. Order No.");
         ProdOrderComponent.SetFilter("Prod. Order No.", Rec.GetFilter("Prod. Order No."));
         if ProdOrderComponent.FindSet(false) then
             repeat
-                i := 0;
-                Clear(Item);
-                Clear(ItemTrackingCode);
-                Clear(ItemTrackingLines);
-                Clear(TrackingSpecification);
-                TempTrackingSpecification.DeleteAll(false);
-                Rec := ProdOrderComponent;
-                Rec."Original Line No." := ProdOrderComponent."Line No.";
-                if not Item.Get(ProdOrderComponent."Item No.") then begin
-                    err := this.errMgmt.BuildApplicationError(ProgramErr, StrSubstNo(ItemErr, Rec."Item No."));
-                    this.errMgmt.Raise(err);
-                end;
-                if Item."Item Tracking Code" <> '' then begin
-                    if not ItemTrackingCode.Get(Item."Item Tracking Code") then begin
-                        err := this.errMgmt.BuildApplicationError(ProgramErr, StrSubstNo(ItemTrackingCodeErr, Item."Item Tracking Code"));
-                        this.errMgmt.Raise(err);
-                    end;
-                    if ItemTrackingCode."Lot Manuf. Inbound Tracking" then begin
-                        ProdOrderCompReserve.InitFromProdOrderComp(TrackingSpecification, ProdOrderComponent);
-                        ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderComponent."Due Date");
-                        ItemTrackingLines.SetInbound(ProdOrderComponent.IsInbound());
-                        ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
-                        if TempTrackingSpecification.FindSet(false) then
-                            repeat
-                                i += 1;
-                                Rec."Original Line No." := ProdOrderComponent."Line No.";
-                                Rec."Line No." := ProdOrderComponent."Line No." + i;
-                                Rec."MADCS Lot No." := TempTrackingSpecification."Lot No.";
-                                Rec."MADCS Quantity" := TempTrackingSpecification."Quantity (Base)";
-                                Rec.Insert(false);
-                            until TempTrackingSpecification.Next() = 0;
-                    end;
-                end else begin
-                    Rec."MADCS Lot No." := '';
-                    Rec."MADCS Quantity" := Rec.Quantity;
-                    Rec.Insert(false);
-                end;
+                this.ProcessProdOrderComponent(ProdOrderComponent);
             until ProdOrderComponent.Next() = 0;
+    end;
+
+    local procedure ProcessProdOrderComponent(ProdOrderComponent: Record "Prod. Order Component")
+    var
+        Item: Record Item;
+        ItemTrackingCode: Record "Item Tracking Code";
+    begin
+        Rec := ProdOrderComponent;
+        this.ValidateAndGetItem(Item, ProdOrderComponent."Item No.");
+        if this.ShouldProcessItemTracking(Item, ItemTrackingCode) then
+            this.ProcessItemWithTracking(ProdOrderComponent)
+        else
+            this.InsertComponentRecord(ProdOrderComponent, '', Rec.Quantity, 0);
+    end;
+
+    local procedure ValidateAndGetItem(var Item: Record Item; ItemNo: Code[20])
+    var
+        err: ErrorInfo;
+        ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
+        ItemErr: Label 'Item not found: %1', Comment = 'ESP="Artículo no encontrado: %1"';
+    begin
+        Clear(Item);
+        if not Item.Get(ItemNo) then begin
+            err := this.errMgmt.BuildApplicationError(ProgramErr, StrSubstNo(ItemErr, ItemNo));
+            this.errMgmt.Raise(err);
+        end;
+    end;
+
+    local procedure ShouldProcessItemTracking(Item: Record Item; var ItemTrackingCode: Record "Item Tracking Code"): Boolean
+    var
+        err: ErrorInfo;
+        ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
+        ItemTrackingCodeErr: Label 'Item Tracking Code not found: %1', Comment = 'ESP="Código de seguimiento del artículo no encontrado: %1"';
+    begin
+        if Item."Item Tracking Code" = '' then
+            exit(false);
+
+        Clear(ItemTrackingCode);
+        if not ItemTrackingCode.Get(Item."Item Tracking Code") then begin
+            err := this.errMgmt.BuildApplicationError(ProgramErr, StrSubstNo(ItemTrackingCodeErr, Item."Item Tracking Code"));
+            this.errMgmt.Raise(err);
+        end;
+
+        exit(ItemTrackingCode."Lot Manuf. Inbound Tracking");
+    end;
+
+    local procedure ProcessItemWithTracking(ProdOrderComponent: Record "Prod. Order Component")
+    var
+        TrackingSpecification: Record "Tracking Specification";
+        TempTrackingSpecification: Record "Tracking Specification" temporary;
+        ProdOrderCompReserve: Codeunit "Prod. Order Comp.-Reserve";
+        ItemTrackingLines: Page "Item Tracking Lines";
+        i: Integer;
+    begin
+        Clear(TrackingSpecification);
+        Clear(ItemTrackingLines);
+        TempTrackingSpecification.DeleteAll(false);
+
+        ProdOrderCompReserve.InitFromProdOrderComp(TrackingSpecification, ProdOrderComponent);
+        ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderComponent."Due Date");
+        ItemTrackingLines.SetInbound(ProdOrderComponent.IsInbound());
+        ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
+
+        i := 0;
+        if TempTrackingSpecification.FindSet(false) then
+            repeat
+                i += 1;
+                this.InsertComponentRecord(ProdOrderComponent, TempTrackingSpecification."Lot No.", TempTrackingSpecification."Quantity (Base)", i);
+            until TempTrackingSpecification.Next() = 0;
+    end;
+
+    /// <summary>
+    /// InsertComponentRecord
+    /// Inserts a component record with or without item tracking information.
+    /// </summary>
+    /// <param name="ProdOrderComponent">Record "Prod. Order Component"</param>
+    /// <param name="LotNo">Text[50]</param>
+    /// <param name="Quantity">Decimal</param>
+    /// <param name="LineIncrement">Integer</param>
+    local procedure InsertComponentRecord(ProdOrderComponent: Record "Prod. Order Component"; LotNo: Text[50]; Quantity: Decimal; LineIncrement: Integer)
+    begin
+        Rec."Original Line No." := ProdOrderComponent."Line No.";
+        Rec."Line No." := ProdOrderComponent."Line No." + LineIncrement;
+        Rec."MADCS Lot No." := LotNo;
+        Rec."MADCS Quantity" := Quantity;
+        Rec.Insert(false);
     end;
 
     local procedure MarkAsVerified(Verified: Boolean)
     var
         ProdOrderComponent: Record "Prod. Order Component";
-        allVerified: Boolean;
     begin
         // If all lots in prod ord comp are verified, set the main line as verified
         CurrPage.Update(true);
 
-        allVerified := true;
         ProdOrderComponent.Copy(Rec);
         Rec.SetRange("Original Line No.", Rec."Original Line No.");
         Rec.SetRange("MADCS Verified", not Verified);
 
-        allVerified := Rec.IsEmpty();
-        if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."Original Line No.") then begin
-            ProdOrderComponent."MADCS Verified" := allVerified;
-            ProdOrderComponent.Modify(false);
-        end;
+        if (Verified and Rec.IsEmpty()) or not Verified then
+            if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."Original Line No.") then begin
+                ProdOrderComponent."MADCS Verified" := Verified;
+                ProdOrderComponent.Modify(false);
+            end;
 
         Rec.SetRange("Original Line No.");
         Rec.SetRange("MADCS Verified");

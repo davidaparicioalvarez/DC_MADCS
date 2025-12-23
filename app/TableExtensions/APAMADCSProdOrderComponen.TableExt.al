@@ -31,6 +31,7 @@ tableextension 55002 "APA MADCS Prod. Order Componen" extends "Prod. Order Compo
         {
             Caption = 'Original Line No.', Comment = 'ESP="Nº Línea Original"';
             DataClassification = SystemMetadata;
+            AllowInCustomizations = Never;
             ToolTip = 'Stores the original line number before any modifications.', Comment = 'ESP="Almacena el número de línea original antes de cualquier modificación."';
         }
     }

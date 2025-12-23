@@ -10,6 +10,7 @@ using Microsoft.Manufacturing.Document;
 page 55004 "APA MADCS Outputs Part"
 {
     Caption = 'Outputs', Comment = 'ESP="Salidas"';
+    Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Routing Line";
     Editable = true;
@@ -121,7 +122,7 @@ page 55004 "APA MADCS Outputs Part"
 
                     field(Separator; '')
                     {
-                        Caption = '', Locked = true;
+                        Caption = '-----', Locked = true;
                         ToolTip = 'Specifies blank separator.', Comment = 'ESP="Indica el separador en blanco."';
                     }
 

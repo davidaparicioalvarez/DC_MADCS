@@ -11,6 +11,7 @@ page 55007 "APA MADCS Stops Part"
 {
     // TODO:
     Caption = 'Stops', Comment = 'ESP="Paradas"';
+    Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Routing Line";
     Editable = true;

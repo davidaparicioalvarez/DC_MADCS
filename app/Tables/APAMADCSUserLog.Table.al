@@ -7,6 +7,7 @@ namespace MADCS.MADCS;
 table 55000 "APA MADCS User Log"
 {
     Caption = 'MADCS User Log', Comment = 'ESP="Registro de usuario MADCS"';
+    Extensible = true;
     DataClassification = ToBeClassified;
 
     fields

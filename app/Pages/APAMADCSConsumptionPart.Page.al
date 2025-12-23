@@ -12,6 +12,7 @@ using Microsoft.Manufacturing.Document;
 page 55002 "APA MADCS Consumption Part"
 {
     Caption = 'Consumption', Comment = 'ESP="Consumo"';
+    Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";
     Editable = true;

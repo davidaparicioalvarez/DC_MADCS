@@ -10,6 +10,7 @@ page 55005 "APA MADCS Lot No. Information"
 {
     ApplicationArea = All;
     Caption = 'Lot No. Information', Comment = 'ESP="Información del números de lote"';
+    Extensible = true;
     PageType = List;
     SourceTable = "Lot No. Information";
     SourceTableTemporary = true;

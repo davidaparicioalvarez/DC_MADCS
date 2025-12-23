@@ -9,6 +9,7 @@ using Microsoft.Manufacturing.Document;
 table 55001 "APA MADCS Pro. Order Line Time"
 {
     Caption = 'Production Order Line Time', Comment = 'ESP="Tiempo Línea Orden de Producción"';
+    Extensible = true;
     LookupPageId = "APA MADCS Time Part";
     DrillDownPageId = "APA MADCS Time Part";
     DataClassification = SystemMetadata;

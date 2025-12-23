@@ -9,8 +9,8 @@ using Microsoft.Inventory.Tracking;
 /// </summary>
 page 55001 "APA MADCS Consume Components"
 {
-    ApplicationArea = All;
     Caption = 'Consume Components', Comment = 'ESP="Consumir Componentes"';
+    Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";
     SourceTableTemporary = true;
@@ -19,6 +19,7 @@ page 55001 "APA MADCS Consume Components"
     ModifyAllowed = true;
     DeleteAllowed = false;
     Editable = true;
+    ApplicationArea = All;
     Permissions =
         tabledata "Tracking Specification" = r,
         tabledata "Reservation Entry" = r;
