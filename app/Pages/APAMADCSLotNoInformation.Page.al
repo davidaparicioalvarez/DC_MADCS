@@ -40,7 +40,6 @@ page 55005 "APA MADCS Lot No. Information"
                 
                 field("Expiration Date"; Rec."Expiration Date")
                 {
-                    ToolTip = 'Specifies the expiration date for the item.', Comment = 'ESP="Especifica la fecha de caducidad del producto."';
                 }
                 
                 field("APA MADCS Warehouse Inventory"; Rec."APA MADCS Warehouse Inventory")

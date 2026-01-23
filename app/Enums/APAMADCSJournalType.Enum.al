@@ -19,29 +19,38 @@ enum 55001 "APA MADCS Journal Type"
     }
 
     /// <summary>
-    /// Consumption
-    /// Represents a consumption journal type.
+    /// Preparation
+    /// Represents a Preparation journal type.
     /// </summary>
-    value(1; Consumption)
+    value(1; Preparation)
     {
-        Caption = 'Consumption', Comment = 'ESP="Consumo"';
+        Caption = 'Preparation', Comment = 'ESP="Preparación"';
     }
 
     /// <summary>
-    /// Output
-    /// Represents an output journal type.
+    /// Execution
+    /// Represents an Execution journal type.
     /// </summary>
-    value(2; Output)
+    value(2; Execution)
     {
-        Caption = 'Output', Comment = 'ESP="Salida"';
+        Caption = 'Execution', Comment = 'ESP="Ejecución"';
     }
 
     /// <summary>
-    /// Time
-    /// Represents a time journal type.
+    /// Clean
+    /// Represents a Clean journal type.
     /// </summary>
-    value(3; Time)
+    value(3; Clean)
     {
-        Caption = 'Time', Comment = 'ESP="Tiempo"';
+        Caption = 'Clean', Comment = 'ESP="Limpieza"';
+    }
+
+    /// <summary>
+    /// Fault
+    /// Represents a fault journal type.
+    /// </summary>
+    value(4; Fault)
+    {
+        Caption = 'Fault', Comment = 'ESP="Avería"';
     }
 }

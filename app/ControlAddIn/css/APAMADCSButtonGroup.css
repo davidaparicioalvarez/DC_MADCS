@@ -1,15 +1,15 @@
 /** Button Group Styles **/
 
 div.al-button-group button.al-button:first-child {
-    margin-left: 0px;
+    margin-left: 15px;
 }
 
 div.al-button-group button.al-button:nth-child(2) {
-    margin-left: 0px;
+    margin-left: 15px;
 }
 
 div.al-button-group button.al-button:last-child {
-    margin-right: 0px;
+    margin-right: 15px;
 }
 
 /*-----------------------*/

@@ -1,9 +1,16 @@
 {
-    "al.enableCodeAnalysis": true,
+   "alTranslationCenter.general.customLanguageMapping": {
+        "ESP": "es-ES|es-ES_tradnl"
+    },
+    "alTranslationCenter.general.checkForWhitespacesInLanguageAbbreviations": false,
+    "alTranslationCenter.general.throwErrorIfCommentLanguageNotMapped": "Skip only % prefix",
     "al.codeAnalyzers": [
         "${CodeCop}",
         "${UICop}",
+        "${PerTenantExtensionCop}",
         "${analyzerFolder}BusinessCentral.LinterCop.dll"
     ],
-    "chat.promptFiles": true
+    "al.enableCodeAnalysis": true,
+    "al.enableCodeActions": true,
+    "al.backgroundCodeAnalysis": "Project"
 }

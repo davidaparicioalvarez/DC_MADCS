@@ -34,114 +34,122 @@ page 55001 "APA MADCS Consume Components"
                 {
                     ToolTip = 'Specifies the item number of the production order component.', Comment = 'ESP="Especifica el número de producto del componente de la orden de producción."';
                     Editable = false;
+                    StyleExpr = this.styleColor;
+                    Width = 13;
                 }
                 field(Description; Rec.Description)
                 {
                     ToolTip = 'Specifies the description of the production order component item.', Comment = 'ESP="Especifica la descripción del componente de la orden de producción."';
                     Editable = false;
+                    StyleExpr = this.styleColor;
+                    Width = 10;
                 }
-                // field("MADCS Lot No."; Rec."MADCS Lot No.")
-                // {
-                //     Editable = false;
-                // }
-                field("Expected Quantity"; Rec."Expected Quantity")
+                field("MADCS Lot No."; Rec."MADCS Lot No.")
                 {
-                    ToolTip = 'Specifies the expected quantity to be consumed for the production order component.', Comment = 'ESP="Especifica la cantidad esperada por consumir del componente de la orden de producción."';
                     Editable = false;
+                    StyleExpr = this.styleColor;
                 }
-                field("Remaining Quantity"; Rec."Remaining Quantity")
+                field("MADCS Quantity"; Rec."MADCS Quantity")
                 {
-                    ToolTip = 'Specifies the remaining quantity to be consumed for the production order component.', Comment = 'ESP="Especifica la cantidad restante por consumir del componente de la orden de producción."';
                     Editable = false;
+                    StyleExpr = this.styleColor;
+                    Width = 5;
                 }
-                // field("MADCS Quantity"; Rec."MADCS Quantity")
-                // {
-                // }
+                field("MADCS Consumed Quantity"; Rec."MADCS Consumed Quantity")
+                {
+                    Editable = false;
+                    StyleExpr = this.styleColor;
+                    Width = 5;
+                }
+                field("MADCS Qty. After Consumption"; Rec."MADCS Qty. After Consumption")
+                {
+                    Editable = true;
+                    StyleExpr = this.styleColor;
+                    Width = 5;
+                }
+            }
+            group(buttonGrp)
+            {
+                ShowCaption = false;
+
+                usercontrol(ALButtonGroupAll; "APA MADCS ButtonGroup")
+                {
+                    Visible = true;
+
+                    trigger OnLoad()
+                    var
+                        ConsumeAllLbl: Label 'Consume Lot', Comment = 'ESP="Consumir Lote"';
+                        ConsumeAllTextLbl: Label 'Consume by rest selected line with lot and rest to consume.', Comment = 'ESP="Consumir por resto la línea seleccionada con lote y resto a consumir."';
+
+                    begin
+                        CurrPage.ALButtonGroupAll.AddButton(ConsumeAllLbl, ConsumeAllTextLbl, this.ALButtonConsumeAllTok, this.DangerButtonTok);
+                    end;
+
+                    trigger OnClick(id: Text)
+                    begin
+                        // Consume all items with "Consumo por resto" = false (quien sirve: Fábrica)
+                        this.Consume();
+                        CurrPage.Update(false);
+                    end;
+                }
             }
         }
     }
 
-    procedure Initialize(Status: Enum "Production Order Status"; ProdOrderNo: Code[20]; ProdOrderLineNo: Integer; ItemNo: Code[20]; QuienSirvePickingOP: Enum "DC Quien Sirve Picking OP")
+    trigger OnAfterGetCurrRecord()
+    begin
+        this.SetStyleColor();
+    end;
+
+    var
+        styleColor: Text;
+        DangerButtonTok: Label 'danger', Locked = true;
+        ALButtonConsumeAllTok: Label 'ALButtonConsumeAll', Locked = true;
+
+    procedure Initialize(ItemNo: Code[20]; QuienSirvePickingOP: Enum "DC Quien Sirve Picking OP")
     var
         ProdOrderComponent: Record "Prod. Order Component";
-        LineNo: Integer;
+        APAMADCSManagement: Codeunit "APA MADCS Management";
     begin
-        // Initialize the temporary record with data from "Prod. Order Component" for the specified production order, 
-        // line, item and showing lots assigned to the component item.
-        LineNo := 10000;
-        Clear(Rec);
-        Rec.DeleteAll(false);
-        Clear(ProdOrderComponent);
-        ProdOrderComponent.SetCurrentKey(Status, "Prod. Order No.", "Prod. Order Line No.", "Item No.", "Quien sirve picking OP");
-        ProdOrderComponent.SetRange(Status, Status);
-        ProdOrderComponent.SetRange("Prod. Order No.", ProdOrderNo);
-        ProdOrderComponent.SetRange("Prod. Order Line No.", ProdOrderLineNo);
-        ProdOrderComponent.SetRange("Item No.", ItemNo);
-        ProdOrderComponent.SetRange("Quien sirve picking OP", QuienSirvePickingOP);
-        if ProdOrderComponent.FindSet() then
-            repeat
-                Rec.Status := ProdOrderComponent.Status;
-                Rec."Prod. Order No." := ProdOrderComponent."Prod. Order No.";
-                Rec."Prod. Order Line No." := ProdOrderComponent."Prod. Order Line No.";
-                Rec."Line No." := LineNo;
-                Rec."Item No." := ProdOrderComponent."Item No.";
-                Rec.Description := ProdOrderComponent.Description;
-                Rec."Expected Quantity" := ProdOrderComponent."Expected Quantity";
-                Rec."Remaining Quantity" := ProdOrderComponent."Remaining Quantity";
-                FillItemTracking(ProdOrderComponent, LineNo);
-            until ProdOrderComponent.Next() = 0;
+        APAMADCSManagement.ValidateAndDeleteTemporaryTables(Rec);
+        APAMADCSManagement.LoadProdOrderComponentsForWarehouseConsumption(Rec, ProdOrderComponent, ItemNo, QuienSirvePickingOP);
     end;
 
-    local procedure FillItemTracking(ProdOrderComponent: Record "Prod. Order Component"; var LineNo: Integer)
+    local procedure SetStyleColor()
     var
-        TrackingSpecification: Record "Tracking Specification";
-        TempTrackingSpecification: Record "Tracking Specification" temporary;
-        ReservEntry: Record "Reservation Entry";
-        ProdOrderCompReserve: Codeunit "Prod. Order Comp.-Reserve";
+        ProdOrderComponent: Record "Prod. Order Component";
+        newPageStyle: PageStyle;
     begin
-        ProdOrderCompReserve.InitFromProdOrderComp(TrackingSpecification, ProdOrderComponent);
-        ReservEntry.SetSourceFilter(
-          TrackingSpecification."Source Type", TrackingSpecification."Source Subtype",
-          TrackingSpecification."Source ID", TrackingSpecification."Source Ref. No.", true);
-        ReservEntry.SetSourceFilter(
-          TrackingSpecification."Source Batch Name", TrackingSpecification."Source Prod. Order Line");
-        ReservEntry.SetRange("Untracked Surplus", false);
+        // Set style color based only on remaining quantity
+        // Consumed lines (remaining quantity = 0): black (None)
+        // Non-consumed lines (remaining quantity > 0): red (Attention)
+        newPageStyle := PageStyle::Attention;
+        if not ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then
+            exit;
 
-        AddReservEntriesToTempRecSet(ReservEntry, TempTrackingSpecification);
+        if ProdOrderComponent."MADCS Verified" then
+            newPageStyle := PageStyle::Favorable;
 
-        TrackingSpecification.SetSourceFilter(
-          TrackingSpecification."Source Type", TrackingSpecification."Source Subtype",
-          TrackingSpecification."Source ID", TrackingSpecification."Source Ref. No.", true);
-        TrackingSpecification.SetSourceFilter(
-          TrackingSpecification."Source Batch Name", TrackingSpecification."Source Prod. Order Line");
-
-        if TrackingSpecification.FindSet() then
-            repeat
-                TempTrackingSpecification := TrackingSpecification;
-                TempTrackingSpecification.Insert(false);
-            until TrackingSpecification.Next() = 0;
-
-
-        if TempTrackingSpecification.FindSet() then
-            repeat
-                Rec."Line No." := LineNo;
-                // Rec."MADCS Lot No." := TempTrackingSpecification."Lot No.";
-                // Rec."MADCS Quantity" := -TempTrackingSpecification."Qty. to Handle (Base)";
-                Rec.Insert(false);
-                LineNo += 10000;
-            until TempTrackingSpecification.Next() = 0;
+        this.styleColor := Format(newPageStyle);
     end;
 
-    local procedure AddReservEntriesToTempRecSet(var ReservEntry: Record "Reservation Entry"; var TempTrackingSpecification: Record "Tracking Specification" temporary)
+    local procedure Consume()
+    var
+        ProdOrderComponent: Record "Prod. Order Component";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        err: ErrorInfo;
+        QuantityToConsume: Decimal;
+        BadQuantityMsg: Label 'Consume by Rest', Comment = 'ESP="Consumo por restos."';
+        BadQuantityErr: Label 'The amount indicated as remainder %1 is not consistent with the amount of component %2 nor with the amount already consumed %3.', Comment = 'ESP="La cantidad indicada como resto %1 no es consistente con la cantidad del componente %2 ni con la cantidad ya consumida %3."';
     begin
-        if ReservEntry.FindSet() then
-            repeat
-                if ReservEntry.TrackingExists() then begin
-                    TempTrackingSpecification.TransferFields(ReservEntry);
-                    // Ensure uniqueness of Entry No. by making it negative:
-                    TempTrackingSpecification."Entry No." *= -1;
-                    TempTrackingSpecification.Insert(false);
-                end;
-            until ReservEntry.Next() = 0;
+        Rec.CalcFields("MADCS Consumed Quantity");
+        QuantityToConsume := Rec."MADCS Quantity" - Rec."MADCS Consumed Quantity" - Rec."MADCS Qty. After Consumption";
+        if QuantityToConsume <= 0 then begin
+            err := APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."MADCS Qty. After Consumption", Rec."MADCS Quantity", Rec."MADCS Consumed Quantity"));
+            APAMADCSManagement.Raise(err);
+        end;
+        Clear(ProdOrderComponent);
+        if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then
+            APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."MADCS Lot No.");
     end;
 }

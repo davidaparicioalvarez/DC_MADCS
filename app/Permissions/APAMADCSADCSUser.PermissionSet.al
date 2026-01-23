@@ -15,15 +15,15 @@ permissionset 55000 "APA MADCS ADCS User"
         tabledata Microsoft.Manufacturing.Document."Prod. Order Component" = RIMD,
         table "APA MADCS User Log" = X,
         table "APA MADCS Pro. Order Line Time" = X,
-        codeunit "APA MADCS Posting Management" = X,
+        codeunit "APA MADCS Management" = X,
         page "APA MADCS Rel Prod Order Lines" = X,
         page "APA MADCS Consumption Part" = X,
         page "APA MADCS Outputs Part" = X,
         page "APA MADCS Time Part" = X,
         page "APA MADCS Lot No. Information" = X,
         page "APA MADCS Verification Part" = X,
-        page "APA MADCS Stops Part" = X,
-        page "APA MADCS Quality MeasuresPart" = X,
+        // page "APA MADCS Stops Part" = X,
+        // page "APA MADCS Quality MeasuresPart" = X,
         page "APA MADCS Consume Components" = X,
         page "APA MADCS QA. Measure Params." = X;
 }

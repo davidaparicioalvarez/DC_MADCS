@@ -57,6 +57,10 @@ table 55000 "APA MADCS User Log"
         {
             Caption = 'Comment', Comment = 'ESP="Comentario"';
         }
+        field(12; "Log Type"; Enum "APA MADCS Log Type")
+        {
+            Caption = 'Log Type', Comment = 'ESP="Tipo de log"';
+        }
     }
 
     keys

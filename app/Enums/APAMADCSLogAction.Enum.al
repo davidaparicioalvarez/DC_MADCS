@@ -63,4 +63,8 @@ enum 55000 "APA MADCS Log Action"
         Caption = 'Post Time', Comment = 'ESP="Registrar Tiempo"';
     }
 
+    value(6; "New Activity")
+    {
+        Caption = 'New Activity', Comment = 'ESP="Nueva Actividad"';
+    }
 }

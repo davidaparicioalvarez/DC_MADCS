@@ -13,6 +13,10 @@ table 55001 "APA MADCS Pro. Order Line Time"
     LookupPageId = "APA MADCS Time Part";
     DrillDownPageId = "APA MADCS Time Part";
     DataClassification = SystemMetadata;
+    Permissions =
+        tabledata "Prod. Order Line" = r,
+        tabledata "APA MADCS Pro. Order Line Time" = rmid,
+        tabledata "Prod. Order Routing Line" = r;
     
     fields
     {
@@ -36,31 +40,42 @@ table 55001 "APA MADCS Pro. Order Line Time"
             Caption = 'Line No.', Comment = 'ESP="Nº Línea"';
             ToolTip = 'Specifies the line number.', Comment = 'ESP="Especifica el número de línea."';
         }
-        field(5; "Operator Code"; Code[20])
+        field(5; "Operation No."; Code[10])
+        {
+            Caption = 'Operation No.', Comment = 'ESP="Nº Operación"';
+            ToolTip = 'Specifies the operation number of the production order line.', Comment = 'ESP="Especifica el número de operación de la línea de orden de producción."';
+        }
+        field(6; "Operator Code"; Code[20])
         {
             Caption = 'Operator Code', Comment = 'ESP="Código de Operario"';
             ToolTip = 'Specifies the operator code.', Comment = 'ESP="Especifica el código de operario."';
         }
-        field(6; "Action"; Enum "APA MADCS Journal Type")
+        field(7; "Action"; Enum "APA MADCS Journal Type")
         {
             Caption = 'Action', Comment = 'ESP="Acción"';
             ToolTip = 'Specifies the action type.', Comment = 'ESP="Especifica el tipo de acción."';
         }
-        field(7; "End"; Boolean)
+        field(8; "Start Date Time"; DateTime)
         {
-            Caption = 'End', Comment = 'ESP="Fin"';
-            ToolTip = 'Indicates if the time entry marks the end of an operation.', Comment = 'ESP="Indica si la entrada de tiempo marca el fin de una operación."';
+            Caption = 'Start Date Time', Comment = 'ESP="Fecha y Hora de Inicio"';
+            ToolTip = 'Specifies the start date and time of the time entry.', Comment = 'ESP="Especifica la fecha y hora de inicio de la entrada de tiempo."';
         }
-        field(8; "Date Time"; DateTime)
+        field(9; "End Date Time"; DateTime)
         {
-            Caption = 'Date Time', Comment = 'ESP="Fecha y Hora"';
-            ToolTip = 'Specifies the date and time of the time entry.', Comment = 'ESP="Especifica la fecha y hora de la entrada de tiempo."';
+            Caption = 'End Date Time', Comment = 'ESP="Fecha y Hora de Fin"';
+            ToolTip = 'Specifies the end date and time of the time entry.', Comment = 'ESP="Especifica la fecha y hora de fin de la entrada de tiempo."';
         }
-        field(9; "BreakDown Code"; Code[20])
+        field(10; "BreakDown Code"; Code[20])
         {
             Caption = 'BreakDown Code', Comment = 'ESP="Código de Paro"';
             ToolTip = 'Specifies the code of the breakdown.', Comment = 'ESP="Especifica el código de paro."';
             TableRelation = "DC Detalles de paro".Code;
+        }
+        field(11; Posted; Boolean)
+        {
+            Caption = 'Posted', Comment = 'ESP="Registrada"';
+            ToolTip = 'Indicates whether the time entry has been posted.', Comment = 'ESP="Indica si la entrada de tiempo ha sido registrada."';
+            AllowInCustomizations = Always;
         }
     }
     keys
@@ -73,11 +88,219 @@ table 55001 "APA MADCS Pro. Order Line Time"
 
     fieldgroups
     {
-        fieldgroup(DropDown; "Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","End","Date Time","BreakDown Code")
+        fieldgroup(DropDown; "Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","Start Date Time","BreakDown Code")
         {
         }
-        fieldgroup(Brick; Status,"Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","End","Date Time","BreakDown Code")
+        fieldgroup(Brick; Status,"Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","Start Date Time","BreakDown Code")
         {
         }
     }
+
+    var
+        PreparationDescriptionLbl: Label 'Preparation Phase', Comment = 'ESP="Fase de Preparación"';
+        ExecutionDescriptionLbl: Label 'Execution Phase', Comment = 'ESP="Fase de Ejecución"';
+        CleanDescriptionLbl: Label 'Cleaning Phase', Comment = 'ESP="Fase de Limpieza"';
+        FaultDescriptionLbl: Label 'Fault Occurred', Comment = 'ESP="Se produjo una avería"';
+
+    /// <summary>
+    /// procedure ItemNo
+    /// Gets the item number associated with the production order line.
+    /// </summary>
+    /// <returns></returns>
+    procedure ItemNo(): Code[20]
+    var
+        ProdOrderLine: Record "Prod. Order Line";
+    begin
+        if ProdOrderLine.Get(Status, "Prod. Order No.", "Prod. Order Line No.") then
+            exit(ProdOrderLine."Item No.")
+        else
+            exit('');
+    end;
+
+    procedure Description(): Text[100]
+    begin
+        case Rec.Action of
+            "APA MADCS Journal Type"::Preparation: 
+                exit(CopyStr(PreparationDescriptionLbl, 1, 100));
+            "APA MADCS Journal Type"::Clean: 
+                exit(CopyStr(CleanDescriptionLbl, 1, 100));
+            "APA MADCS Journal Type"::Execution: 
+                exit(CopyStr(ExecutionDescriptionLbl, 1, 100));
+            "APA MADCS Journal Type"::Fault: 
+                exit(CopyStr(FaultDescriptionLbl, 1, 100));                
+        end;
+    end;
+
+    internal procedure NewPreparationActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    var
+        NewActivity: Record "APA MADCS Pro. Order Line Time";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+    begin
+        Clear(NewActivity);
+        NewActivity.Status := pProdOrderStatus;
+        NewActivity."Prod. Order No." := pProdOrderCode;
+        NewActivity."Prod. Order Line No." := pProdOrderLine;
+        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
+        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Preparation);
+        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
+        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Preparation;
+        NewActivity."Start Date Time" := CurrentDateTime();
+        NewActivity.Insert(true);
+    end;
+
+    internal procedure NewCleaningActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    var
+        NewActivity: Record "APA MADCS Pro. Order Line Time";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+    begin
+        Clear(NewActivity);
+        NewActivity.Status := pProdOrderStatus;
+        NewActivity."Prod. Order No." := pProdOrderCode;
+        NewActivity."Prod. Order Line No." := pProdOrderLine;
+        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
+        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Clean);
+        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
+        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Clean;
+        NewActivity."Start Date Time" := CurrentDateTime();
+        NewActivity.Insert(true);
+    end;
+
+    internal procedure NewExecutionActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    var
+        NewActivity: Record "APA MADCS Pro. Order Line Time";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+    begin
+        Clear(NewActivity);
+        NewActivity.Status := pProdOrderStatus;
+        NewActivity."Prod. Order No." := pProdOrderCode;
+        NewActivity."Prod. Order Line No." := pProdOrderLine;
+        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
+        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Execution);
+        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
+        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Execution;
+        NewActivity."Start Date Time" := CurrentDateTime();
+        NewActivity.Insert(true);
+    end;
+
+    internal procedure NewFaultActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    var
+        NewActivity: Record "APA MADCS Pro. Order Line Time";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+    begin
+        Clear(NewActivity);
+        NewActivity.Status := pProdOrderStatus;
+        NewActivity."Prod. Order No." := pProdOrderCode;
+        NewActivity."Prod. Order Line No." := pProdOrderLine;
+        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
+        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Fault);
+        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
+        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Fault;
+        NewActivity."Start Date Time" := CurrentDateTime();
+        NewActivity.Insert(true);
+    end;
+
+    internal procedure MinutesUsed() Hours: Decimal
+    var
+        Duration: Decimal;
+    begin
+        if Rec."End Date Time" = 0DT then
+            Duration := 0
+        else
+            Duration := Rec."End Date Time" - Rec."Start Date Time";
+        
+        Hours := Duration / 1000 / 60 / 60;
+        exit(Hours);
+    end;
+
+    internal procedure GetLastLineNo(pStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer): Integer
+    var
+        MADCSProOrderLineTime: Record "APA MADCS Pro. Order Line Time";
+    begin
+        Clear(MADCSProOrderLineTime);
+        MADCSProOrderLineTime.SetRange(Status, pStatus);
+        MADCSProOrderLineTime.SetRange("Prod. Order No.", pProdOrderCode);
+        MADCSProOrderLineTime.SetRange("Prod. Order Line No.", pProdOrderLine);
+        if MADCSProOrderLineTime.FindLast() then
+            exit(MADCSProOrderLineTime."Line No.")
+        else
+            exit(0);
+    end;
+
+    /// <summary>
+    /// Gets the operation number for the production order routing line that matches the journal type.
+    /// </summary>
+    /// <param name="APAMADCSJournalType">Enum "APA MADCS Journal Type"</param>
+    /// <returns>Code[10]</returns>
+    internal procedure FindOperationNo(APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type"): Code[10]
+    var
+        ProdOrderLine: Record "Prod. Order Line";
+        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+    begin
+        this.GetProdOrderLine(ProdOrderLine);
+        this.InitProdOrderRoutingLine(ProdOrderRoutingLine, ProdOrderLine);
+
+        if this.IsCleanJournalType(APAMADCSJournalType) then
+            this.EnsureCleanOperation(ProdOrderRoutingLine)
+        else
+            this.EnsurePreparationExecutionFailOperation(ProdOrderRoutingLine, APAMADCSJournalType);
+
+        exit(ProdOrderRoutingLine."Operation No.");
+    end;
+
+    local procedure GetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line")
+    var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
+        MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
+    begin
+        Clear(ProdOrderLine);
+        if not ProdOrderLine.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.") then
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+    end;
+
+    local procedure InitProdOrderRoutingLine(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; ProdOrderLine: Record "Prod. Order Line")
+    begin
+        Clear(ProdOrderRoutingLine);
+        ProdOrderRoutingLine.SetCurrentKey(Status, "Prod. Order No.", "Routing Reference No.", "Routing No.");
+        ProdOrderRoutingLine.SetRange(Status, Rec.Status);
+        ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Prod. Order Line No.");
+        ProdOrderRoutingLine.SetRange("Routing No.", ProdOrderLine."Routing No.");
+    end;
+
+    local procedure IsPreparationJournalType(APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type"): Boolean
+    begin
+        exit(APAMADCSJournalType in [Enum::"APA MADCS Journal Type"::Preparation]);
+    end;
+
+    local procedure IsCleanJournalType(APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type"): Boolean
+    begin
+        exit(APAMADCSJournalType in [Enum::"APA MADCS Journal Type"::Clean]);
+    end;
+
+    local procedure EnsureCleanOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line")
+    var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
+        CleanNotFoundMsgLbl: Label 'No cleaning operation found for the production order line.', Comment = 'ESP="No se encontró ninguna operación de limpieza para la línea de orden de producción."';
+    begin
+        ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
+        
+        if not ProdOrderRoutingLine.FindLast() then
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, CleanNotFoundMsgLbl));
+    end;
+
+    local procedure EnsurePreparationExecutionFailOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type")
+    var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
+        MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
+    begin
+        if this.IsPreparationJournalType(APAMADCSJournalType) then
+            ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0)
+        else
+            ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
+
+        if not ProdOrderRoutingLine.FindFirst() then
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+    end;
 }

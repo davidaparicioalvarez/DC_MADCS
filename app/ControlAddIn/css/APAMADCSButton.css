@@ -85,10 +85,29 @@ button.al-button-danger:hover {
     background: rgb(201, 85, 98) !important;
 }
 
+/** Danger Button **/
+
+button.al-button-warning {
+    border-color: transparent !important;
+    background: #d2e65e !important;
+    color: #000000 !important;
+}
+
+button.al-button-warning:focus, button.al-button-warning:active {
+    outline-color: #fff !important;
+    outline-offset: -3px !important;
+}
+
+button.al-button-warning:hover {
+    background: rgb(201, 199, 85) !important;
+}
+
 /** Info Button **/
 
 button.al-button-info {
     border-color: rgb(68, 68, 68);
+    background: #605ee6 !important;
+    color: #fff !important;
 }
 
 button.al-button-info:focus, button.al-button-info:active {

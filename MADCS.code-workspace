@@ -9,19 +9,5 @@
 			"name": "MADCS",
 			"path": "."
 		}
-	],
-	"settings": {
-		"alTranslationCenter.general.customLanguageMapping": {
-			"ESP": "es-ES|es-ES_tradnl"
-		},
-		"alTranslationCenter.general.checkForWhitespacesInLanguageAbbreviations": false,
-		"alTranslationCenter.general.throwErrorIfCommentLanguageNotMapped": "Skip only % prefix",
-		"al.codeAnalyzers": [
-			"${CodeCop}",
-			"${UICop}",
-			"${analyzerFolder}BusinessCentral.LinterCop.dll"
-		],
-		"al.enableCodeAnalysis": true,
-		"al.enableCodeActions": true
-	}
+	]
 }
