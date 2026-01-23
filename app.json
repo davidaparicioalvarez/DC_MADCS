@@ -39,7 +39,7 @@
   "supportedLocales": [
     "es-ES", "es-ES_tradnl"
   ],
-  "target": "Cloud",
+  "target": "OnPrem",
   "platform": "25.2.0.0",
   "application": "25.10.0.0",
   "runtime": "14.3",

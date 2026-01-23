@@ -39,6 +39,7 @@ tableextension 55002 "APA MADCS Prod. Order Componen" extends "Prod. Order Compo
             Caption = 'Rest To Consume', Comment = 'ESP="Resto por Consumir"';
             ToolTip = 'Specify the amount of component left over after consumption.', Comment = 'ESP="Especifica la cantidad de componente restante después del consumo."';
             DecimalPlaces = 0 : 5;
+            DataClassification = SystemMetadata;
         }
         field(55005; "MADCS Consumed Quantity"; Decimal)
         {
