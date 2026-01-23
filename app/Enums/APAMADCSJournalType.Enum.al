@@ -53,4 +53,13 @@ enum 55001 "APA MADCS Journal Type"
     {
         Caption = 'Fault', Comment = 'ESP="Avería"';
     }
+
+    /// <summary>
+    /// "Execution with Fault"
+    /// Represents a fault journal type.
+    /// </summary>
+    value(5; "Execution with Fault")
+    {
+        Caption = 'Execution with Fault', Comment = 'ESP="Ejecución con Avería"';
+    }
 }

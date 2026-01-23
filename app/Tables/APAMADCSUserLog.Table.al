@@ -61,6 +61,10 @@ table 55000 "APA MADCS User Log"
         {
             Caption = 'Log Type', Comment = 'ESP="Tipo de log"';
         }
+        field(13; "BreakDown Code"; Code[20])
+        {
+            Caption = 'BreakDown Code', Comment = 'ESP="Código de avería"';
+        }
     }
 
     keys

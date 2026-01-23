@@ -129,7 +129,7 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnClick(id: Text)
                         begin
-                            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode());
+                            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
                             CurrPage.Update(false);
                         end;
                     }
@@ -139,13 +139,13 @@ page 55003 "APA MADCS Time Part"
                 {
                     ShowCaption = false;
 
-                    field(StopCode; this.StopCode)
+                    field(StopCode; this.BreakDownCode)
                     {
                         StyleExpr = this.styleColor;
                         Caption = 'Stop Code', Comment = 'ESP="Código de Paro"';
                         ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
                         Editable = true;
-                        TableRelation = "DC Detalles de paro";
+                        TableRelation = "DC Detalles de paro".Code;
                     }
                 }
             }
@@ -176,7 +176,7 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnClick(id: Text)
                         begin
-                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode());
+                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
                             CurrPage.Update(false);
                         end;
                     }
@@ -202,8 +202,13 @@ page 55003 "APA MADCS Time Part"
                         end;
 
                         trigger OnClick(id: Text)
+                        var
+                            BreakdownTitleErrLbl: Label 'Breakdown Code Required', Comment = 'ESP="Código de Avería Requerido"';
+                            BreakdownMsgErrLbl: Label 'Please enter a Breakdown Code before registering a breakdown.', Comment = 'ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."';
                         begin
-                            this.APAMADCSManagement.ProcessBreakdownAndBlockedBreakdownTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode());
+                            if this.BreakDownCode = '' then 
+                                this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("BreakDown Code"), BreakdownTitleErrLbl, BreakdownMsgErrLbl));
+                            this.APAMADCSManagement.ProcessBreakdownAndBlockedBreakdownTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
                             CurrPage.Update(false);
                         end;
                     }
@@ -227,7 +232,7 @@ page 55003 "APA MADCS Time Part"
         MyStatus: Enum "Production Order Status";
         styleColor: Text;
         MyProdOrdeNo: Code[20];
-        StopCode: Code[20];        
+        BreakDownCode: Code[20];        
         MyProdOrdeLineNo: Integer;
         NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
@@ -263,6 +268,8 @@ page 55003 "APA MADCS Time Part"
                 newPageStyle := PageStyle::None;
             Rec.Action::Execution:
                 newPageStyle := PageStyle::StrongAccent;
+            Rec.Action::"Execution with Fault":
+                newPageStyle := PageStyle::Ambiguous;
             Rec.Action::Fault:
                 newPageStyle := PageStyle::Unfavorable;
         else

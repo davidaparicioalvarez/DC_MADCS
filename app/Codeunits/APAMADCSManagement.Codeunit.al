@@ -304,7 +304,8 @@ codeunit 55000 "APA MADCS Management"
     /// </summary>
     /// <param name="ItemJournalLine"></param>
     /// <param name="LogType"></param>
-    procedure LogAction(ItemJournalLine: Record "Item Journal Line"; LogType: Enum "APA MADCS Log Type")
+    /// <param name="BreakDownCode"></param>
+    procedure LogAction(ItemJournalLine: Record "Item Journal Line"; LogType: Enum "APA MADCS Log Type"; BreakDownCode: Code[20])
     var
         UserLog: Record "APA MADCS User Log";
     begin
@@ -314,6 +315,7 @@ codeunit 55000 "APA MADCS Management"
         UserLog."Production Order No." := ItemJournalLine."Order No.";
         UserLog."Log Action" := UserLog."Log Action"::PostTime;
         UserLog."Log Action" := UserLog."Log Action"::"New Activity";
+        UserLog."BreakDown Code" := BreakDownCode;
 
         UserLog.Insert(true); // TODO: Verify log
     end;
@@ -471,7 +473,8 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="pProdOrder"></param>
     /// <param name="pProdOrderLine"></param>
     /// <param name="OperatorCode"></param>
-    procedure ProcessPreparationCleaningTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    /// <param name="BreakDownCode"></param>
+    procedure ProcessPreparationCleaningTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
@@ -479,9 +482,9 @@ codeunit 55000 "APA MADCS Management"
 
         case id of
             Format(Enum::"APA MADCS Time Buttons"::ALButtonPreparationTok):
-                Activities.NewPreparationActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode);
+                Activities.NewPreparationActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
             Format(Enum::"APA MADCS Time Buttons"::ALButtonCleaningTok):
-                Activities.NewCleaningActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode);
+                Activities.NewCleaningActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
         end;
         this.LogAction(Activities, Enum::"APA MADCS Log Type"::Cleaning);
     end;
@@ -495,13 +498,16 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="pProdOrder"></param>
     /// <param name="pProdOrderLine"></param>
     /// <param name="OperatorCode"></param>
-    procedure ProcessExecutionAndStopAllTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    /// <param name="BreakDownCode"></param>
+    procedure ProcessExecutionAndStopAllTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
         this.FinalizeLastActivity(OperatorCode);
 
-        Activities.NewExecutionActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode);
+        if id = Format(Enum::"APA MADCS Time Buttons"::ALButtonExecutionTok) then
+            Activities.NewExecutionActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
+
         this.LogAction(Activities, Enum::"APA MADCS Log Type"::Execution);
     end;
 
@@ -514,13 +520,14 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="pProdOrder"></param>
     /// <param name="pProdOrderLine"></param>
     /// <param name="OperatorCode"></param>
-    procedure ProcessBreakdownAndBlockedBreakdownTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    /// <param name="BreakDownCode"></param>
+    procedure ProcessBreakdownAndBlockedBreakdownTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
         this.FinalizeLastActivity(OperatorCode); // only for blocked tasks
 
-        Activities.NewFaultActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode);
+        Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
         this.LogAction(Activities, Enum::"APA MADCS Log Type"::Fault);
     end;
 
@@ -533,10 +540,12 @@ codeunit 55000 "APA MADCS Management"
         Clear(Activities);
         Activities.SetCurrentKey("Operator Code");
         Activities.SetRange("Operator Code", OperatorCode);
+        Activities.SetRange(Posted, false);
         if Activities.FindSet(true) then
             repeat
                 Activities."End Date Time" := CurrentDateTime();
-                this.PostCapacityJournalLine(Activities);
+                if Activities."Action" <> Enum::"APA MADCS Journal Type"::Fault then
+                    this.PostCapacityJournalLine(Activities);
                 Activities.Validate(Posted, true);
                 Activities.Modify(false);
                 // Log the action
@@ -562,23 +571,29 @@ codeunit 55000 "APA MADCS Management"
         ItemJournalLine.Validate("Document No.", Activities."Prod. Order No.");
         // Only one operation per production order line in MADCS
         ItemJournalLine.Validate("Posting Date", Activities."End Date Time".Date());
-        ItemJournalLine.Validate(Description, Activities.Description());
         case Activities.Action of
             "APA MADCS Journal Type"::Preparation,
             "APA MADCS Journal Type"::Clean:
                 ItemJournalLine.Validate("Setup Time", Activities.MinutesUsed());
             "APA MADCS Journal Type"::Execution:
                 ItemJournalLine.Validate("Run Time", Activities.MinutesUsed());
+            "APA MADCS Journal Type"::"Execution with Fault":
+                begin
+                    ItemJournalLine.Validate("Run Time", Activities.MinutesUsed());
+                    ItemJournalLine.Validate("Stop Code", Activities.GetStopCode(Activities."BreakDown Code"));
+                    ItemJournalLine.Validate("Stop Detail Code", Activities."BreakDown Code");
+                end;
             "APA MADCS Journal Type"::Fault:
                 ItemJournalLine.Validate("Stop Time", Activities.MinutesUsed());
         end;
         ItemJournalLine.Validate(Quantity, 0);
         ItemJournalLine.Validate("Output Quantity", 0);
+        ItemJournalLine.Validate(Description, Activities.Description());
 
         // Post Journal
         Clear(PostItemJnlLine);
         PostItemJnlLine.Run(ItemJournalLine);
-        this.LogAction(ItemJournalLine, Enum::"APA MADCS Log Type"::PostTime);
+        this.LogAction(ItemJournalLine, Enum::"APA MADCS Log Type"::PostTime, Activities."BreakDown Code");
     end;
 
     local procedure ProcessProdOrderComponent(var Rec: Record "Prod. Order Component" temporary; ProdOrderComponent: Record "Prod. Order Component")

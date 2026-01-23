@@ -16,7 +16,8 @@ table 55001 "APA MADCS Pro. Order Line Time"
     Permissions =
         tabledata "Prod. Order Line" = r,
         tabledata "APA MADCS Pro. Order Line Time" = rmid,
-        tabledata "Prod. Order Routing Line" = r;
+        tabledata "Prod. Order Routing Line" = r,
+        tabledata "DC Detalles de paro" = r;
     
     fields
     {
@@ -99,6 +100,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     var
         PreparationDescriptionLbl: Label 'Preparation Phase', Comment = 'ESP="Fase de Preparación"';
         ExecutionDescriptionLbl: Label 'Execution Phase', Comment = 'ESP="Fase de Ejecución"';
+        ExecutionWithFaultDescriptionLbl: Label 'Execution with Fault', Comment = 'ESP="Ejecución con Avería"';
         CleanDescriptionLbl: Label 'Cleaning Phase', Comment = 'ESP="Fase de Limpieza"';
         FaultDescriptionLbl: Label 'Fault Occurred', Comment = 'ESP="Se produjo una avería"';
 
@@ -117,6 +119,11 @@ table 55001 "APA MADCS Pro. Order Line Time"
             exit('');
     end;
 
+    /// <summary>
+    /// procedure Description
+    /// Gets the description based on the action type.
+    /// </summary>
+    /// <returns></returns>
     procedure Description(): Text[100]
     begin
         case Rec.Action of
@@ -126,79 +133,84 @@ table 55001 "APA MADCS Pro. Order Line Time"
                 exit(CopyStr(CleanDescriptionLbl, 1, 100));
             "APA MADCS Journal Type"::Execution: 
                 exit(CopyStr(ExecutionDescriptionLbl, 1, 100));
+            "APA MADCS Journal Type"::"Execution with Fault": 
+                exit(CopyStr(ExecutionWithFaultDescriptionLbl, 1, 100));
             "APA MADCS Journal Type"::Fault: 
                 exit(CopyStr(FaultDescriptionLbl, 1, 100));                
         end;
     end;
 
-    internal procedure NewPreparationActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
-    var
-        NewActivity: Record "APA MADCS Pro. Order Line Time";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
+    /// <summary>
+    /// internal procedure NewPreparationActivity
+    /// Creates a new preparation activity based on the button ID for preparation.
+    /// </summary>
+    /// <param name="pProdOrderStatus"></param>
+    /// <param name="pProdOrderCode"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <param name="OperatorCode"></param>
+    /// <param name="BreakDownCode"></param>
+    internal procedure NewPreparationActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     begin
-        Clear(NewActivity);
-        NewActivity.Status := pProdOrderStatus;
-        NewActivity."Prod. Order No." := pProdOrderCode;
-        NewActivity."Prod. Order Line No." := pProdOrderLine;
-        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
-        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Preparation);
-        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
-        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Preparation;
-        NewActivity."Start Date Time" := CurrentDateTime();
-        NewActivity.Insert(true);
+        this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Preparation, BreakDownCode);
     end;
 
-    internal procedure NewCleaningActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
-    var
-        NewActivity: Record "APA MADCS Pro. Order Line Time";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
+    /// <summary>
+    /// internal procedure NewCleaningActivity
+    /// Creates a new cleaning activity based on the button ID for cleaning.
+    /// </summary>
+    /// <param name="pProdOrderStatus"></param>
+    /// <param name="pProdOrderCode"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <param name="OperatorCode"></param>
+    /// <param name="BreakDownCode"></param>
+    internal procedure NewCleaningActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     begin
-        Clear(NewActivity);
-        NewActivity.Status := pProdOrderStatus;
-        NewActivity."Prod. Order No." := pProdOrderCode;
-        NewActivity."Prod. Order Line No." := pProdOrderLine;
-        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
-        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Clean);
-        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
-        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Clean;
-        NewActivity."Start Date Time" := CurrentDateTime();
-        NewActivity.Insert(true);
+        this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Clean, BreakDownCode);
     end;
 
-    internal procedure NewExecutionActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
-    var
-        NewActivity: Record "APA MADCS Pro. Order Line Time";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
+    /// <summary>
+    /// internal procedure NewExecutionActivity
+    /// Creates a new fault activity based on the button ID for execution.
+    /// </summary>
+    /// <param name="pProdOrderStatus"></param>
+    /// <param name="pProdOrderCode"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <param name="OperatorCode"></param>
+    /// <param name="BreakDownCode"></param>
+    internal procedure NewExecutionActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     begin
-        Clear(NewActivity);
-        NewActivity.Status := pProdOrderStatus;
-        NewActivity."Prod. Order No." := pProdOrderCode;
-        NewActivity."Prod. Order Line No." := pProdOrderLine;
-        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
-        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Execution);
-        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
-        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Execution;
-        NewActivity."Start Date Time" := CurrentDateTime();
-        NewActivity.Insert(true);
+        this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Execution, BreakDownCode);
     end;
 
-    internal procedure NewFaultActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
+    /// <summary>
+    /// internal procedure NewFaultActivity
+    /// Creates a new fault activity based on the button ID for breakdown or execution with fault.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="pProdOrderStatus"></param>
+    /// <param name="pProdOrderCode"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <param name="OperatorCode"></param>
+    /// <param name="BreakDownCode"></param>
+    internal procedure NewFaultActivity(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
-        NewActivity: Record "APA MADCS Pro. Order Line Time";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
+        AlertBlockedFaultMsg: Label 'The breakdown code %1 is blocking. A fault activity will be created instead of a execution with fault activity.', Comment='ESP="El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería."';
     begin
-        Clear(NewActivity);
-        NewActivity.Status := pProdOrderStatus;
-        NewActivity."Prod. Order No." := pProdOrderCode;
-        NewActivity."Prod. Order Line No." := pProdOrderLine;
-        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
-        NewActivity."Operation No." := NewActivity.FindOperationNo(Enum::"APA MADCS Journal Type"::Fault);
-        NewActivity."Operator Code" := APAMADCSManagement.GetOperatorCode();
-        NewActivity."Action" := Enum::"APA MADCS Journal Type"::Fault;
-        NewActivity."Start Date Time" := CurrentDateTime();
-        NewActivity.Insert(true);
+        if (id = Format(Enum::"APA MADCS Time Buttons"::ALButtonBlockedBreakdownTok)) then
+            this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode)
+        else
+            if this.BreakDownCodeIsBlocking(BreakDownCode) then begin
+                Message(AlertBlockedFaultMsg, BreakDownCode);
+                this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode);
+            end else    
+                this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::"Execution with Fault", BreakDownCode);
     end;
 
+    /// <summary>
+    /// internal procedure MinutesUsed
+    /// Calculates the total minutes used between the start and end date times.
+    /// </summary>
+    /// <returns></returns>
     internal procedure MinutesUsed() Hours: Decimal
     var
         Duration: Decimal;
@@ -212,6 +224,14 @@ table 55001 "APA MADCS Pro. Order Line Time"
         exit(Hours);
     end;
 
+    /// <summary>
+    /// internal procedure GetLastLineNo
+    /// Gets the last line number for a given production order status, code, and line.
+    /// </summary>
+    /// <param name="pStatus"></param>
+    /// <param name="pProdOrderCode"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <returns></returns>
     internal procedure GetLastLineNo(pStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer): Integer
     var
         MADCSProOrderLineTime: Record "APA MADCS Pro. Order Line Time";
@@ -227,6 +247,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     end;
 
     /// <summary>
+    /// internal procedure FindOperationNo
     /// Gets the operation number for the production order routing line that matches the journal type.
     /// </summary>
     /// <param name="APAMADCSJournalType">Enum "APA MADCS Journal Type"</param>
@@ -245,6 +266,25 @@ table 55001 "APA MADCS Pro. Order Line Time"
             this.EnsurePreparationExecutionFailOperation(ProdOrderRoutingLine, APAMADCSJournalType);
 
         exit(ProdOrderRoutingLine."Operation No.");
+    end;
+
+    /// <summary>
+    /// internal procedure GetStopCode
+    /// Gets the stop code from the breakdown code.
+    /// </summary>
+    /// <param name="BreakDownCode"></param>
+    /// <returns></returns>
+    internal procedure GetStopCode(BreakDownCode: Code[20]): Code[10]
+    var
+        DCDetallesDeParo: Record "DC Detalles de paro"; 
+    begin
+        Clear(DCDetallesDeParo);
+        DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
+        DCDetallesDeParo.SetRange(Code, BreakDownCode);
+        if DCDetallesDeParo.FindFirst() then
+            exit(CopyStr(DCDetallesDeParo."Stop Code", 1, 10))
+        else
+            exit('');
     end;
 
     local procedure GetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line")
@@ -303,4 +343,35 @@ table 55001 "APA MADCS Pro. Order Line Time"
         if not ProdOrderRoutingLine.FindFirst() then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
     end;
+
+    local procedure CreateNewActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; ActionType: Enum "APA MADCS Journal Type"; BreakDownCode: Code[20])
+    var
+        NewActivity: Record "APA MADCS Pro. Order Line Time";
+    begin
+        Clear(NewActivity);
+        NewActivity.Status := pProdOrderStatus;
+        NewActivity."Prod. Order No." := pProdOrderCode;
+        NewActivity."Prod. Order Line No." := pProdOrderLine;
+        NewActivity."Line No." := Rec.GetLastLineNo(pProdOrderStatus, pProdOrderCode, pProdOrderLine) + 1;
+        NewActivity."Operation No." := NewActivity.FindOperationNo(ActionType);
+        NewActivity."Operator Code" := OperatorCode;
+        NewActivity."Action" := ActionType;
+        NewActivity."Start Date Time" := CurrentDateTime();
+        NewActivity."BreakDown Code" := BreakDownCode;
+        NewActivity.Insert(true);
+    end;
+
+    local procedure BreakDownCodeIsBlocking(BreakDownCode: Code[20]): Boolean
+    var
+        DCDetallesDeParo: Record "DC Detalles de paro"; 
+    begin
+        Clear(DCDetallesDeParo);
+        DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
+        DCDetallesDeParo.SetRange(Code, BreakDownCode);
+        if DCDetallesDeParo.FindFirst() then
+            exit(DCDetallesDeParo.Disabling)
+        else
+            exit(false);
+    end;
+
 }

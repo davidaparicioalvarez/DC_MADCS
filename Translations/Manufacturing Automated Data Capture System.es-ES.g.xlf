@@ -21,6 +21,12 @@
           <note from="Developer" annotates="general" priority="2">ESP="Fase de Ejecución"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - NamedType ExecutionDescriptionLbl</note>
         </trans-unit>
+        <trans-unit id="Table 2825751362 - NamedType 2743916938" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Execution with Fault</source>
+          <target state="translated">Ejecución con Avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Ejecución con Avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - NamedType ExecutionWithFaultDescriptionLbl</note>
+        </trans-unit>
         <trans-unit id="Table 2825751362 - NamedType 3042492618" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fault Occurred</source>
           <target state="translated">Se produjo una avería</target>
@@ -68,6 +74,12 @@
           <target state="translated">No se pudo encontrar el número de operación para la línea de orden de producción.</target>
           <note from="Developer" annotates="general" priority="2">ESP="No se pudo encontrar el número de operación para la línea de orden de producción."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method GetProdOrderLine - NamedType MessageMsgLbl</note>
+        </trans-unit>
+        <trans-unit id="Table 2825751362 - Method 2013650317 - NamedType 1512264695" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The breakdown code %1 is blocking. A fault activity will be created instead of a execution with fault activity.</source>
+          <target state="translated">El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method NewFaultActivity - NamedType AlertBlockedFaultMsg</note>
         </trans-unit>
         <trans-unit id="Table 2825751362 - Field 2279323338 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the action type.</source>
@@ -212,6 +224,12 @@
           <target state="translated">Fecha y hora de acción</target>
           <note from="Developer" annotates="general" priority="2">ESP="Fecha y hora de acción"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS User Log - Field Action DateTime - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 3797038551 - Field 3065230068 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>BreakDown Code</source>
+          <target state="translated">Código de avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS User Log - Field BreakDown Code - Property Caption</note>
         </trans-unit>
         <trans-unit id="Table 3797038551 - Field 2790486453 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Comment</source>
@@ -897,6 +915,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType EndTextLbl</note>
         </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown Code Required</source>
+          <target state="translated">Código de Avería Requerido</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de Avería Requerido"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnClick - NamedType BreakdownTitleErrLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Please enter a Breakdown Code before registering a breakdown.</source>
+          <target state="translated">Por favor, introduzca un Código de Avería antes de registrar una avería.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnClick - NamedType BreakdownMsgErrLbl</note>
+        </trans-unit>
         <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
           <source>Breakdown</source>
           <target state="translated">Avería</target>
@@ -1034,6 +1064,12 @@
           <target state="translated">Ejecución</target>
           <note from="Developer" annotates="general" priority="2">ESP="Ejecución"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Execution - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 145277123 - EnumValue 1072123038 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Execution with Fault</source>
+          <target state="translated">Ejecución con Avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Ejecución con Avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Execution with Fault - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 213071998 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Fault</source>
