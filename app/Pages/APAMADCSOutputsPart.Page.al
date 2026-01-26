@@ -114,8 +114,7 @@ page 55004 "APA MADCS Outputs Part"
 
                             trigger OnClick(id: Text)
                             begin
-                                // TODO: Implement button actions
-                                Message('%1 button was clicked.', id);
+                                APAMADCSManagement.PostOutput(Rec, this.OutputQuantity, this.LotNo, this.ScrapQuantity);
                             end;
                         }
                     }
@@ -152,6 +151,7 @@ page 55004 "APA MADCS Outputs Part"
     }
 
     var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
         OutputQuantity: Decimal;
         ScrapQuantity: Decimal;
         LotNo: Code[50];
@@ -170,8 +170,6 @@ page 55004 "APA MADCS Outputs Part"
     end;
 
     local procedure FindLotNoForOutput(var Text: Text): Boolean
-    var
-        APAMADCSManagement: Codeunit "APA MADCS Management";
     begin
         exit(APAMADCSManagement.FindLotNoForOutput(Rec, Text));
     end;

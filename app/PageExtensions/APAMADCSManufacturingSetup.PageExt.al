@@ -20,6 +20,14 @@ pageextension 55000 "APA MADCS Manufacturing Setup" extends "Manufacturing Setup
                 {
                     ApplicationArea = All;
                 }
+                field("APA MADCS Output. Jnl. Templ."; Rec."APA MADCS Output Jnl. Templ.")
+                {
+                    ApplicationArea = All;
+                }
+                field("APA MADCS Output. Jnl. Batch"; Rec."APA MADCS Output Jnl. Batch")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }

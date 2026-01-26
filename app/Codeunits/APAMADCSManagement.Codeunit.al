@@ -33,7 +33,7 @@ codeunit 55000 "APA MADCS Management"
         tabledata "Item Journal Line" = i,
         tabledata "Prod. Order Line" = r,
         tabledata "Prod. Order Routing Line" = r,
-        tabledata "Reservation Entry" = rm,
+        tabledata "Reservation Entry" = rmd,
         tabledata "APA MADCS Pro. Order Line Time" = rmid,
         tabledata "Item Tracking Code" = r,
         tabledata "Capacity Ledger Entry" = r,
@@ -202,12 +202,13 @@ codeunit 55000 "APA MADCS Management"
     /// <summary>
     /// Posts output for a production order routing line and logs the action.
     /// </summary>
-    /// <param name="ProdOrderRoutingLine">Record "Prod. Order Routing Line"</param>
+    /// <param name="ProdOrderLine">Record "Prod. Order Line"</param>
     /// <param name="OutputQuantity">Decimal quantity to post as output</param>
-    procedure PostOutput(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; OutputQuantity: Decimal)
+    /// <param name="LotNo">Code[50] Lot number for tracked items</param>
+    /// <param name="ScrapQuantity">Decimal quantity of scrap produced</param>
+    procedure PostOutput(var ProdOrderLine: Record "Prod. Order Line"; OutputQuantity: Decimal; LotNo: Code[50]; ScrapQuantity: Decimal)
     var
         Item: Record Item;
-        ProdOrderLine: Record "Prod. Order Line";
         ItemJnlLine: Record "Item Journal Line";
         ManufacturingSetup: Record "Manufacturing Setup";
         ItemJnlTemplate: Record "Item Journal Template";
@@ -221,25 +222,25 @@ codeunit 55000 "APA MADCS Management"
             this.Raise(this.BuildApplicationError(ErrNoPermissionPostOutputLbl, ErrNoPermissionPostOutputErr));
 
         // Validate item and variant
-        if not this.ValidateOutputItemAndVariantNotBlocked(ProdOrderRoutingLine, Item, ProdOrderLine) then
+        if not this.ValidateOutputItemAndVariantNotBlocked(Item, ProdOrderLine) then
             exit;
 
         // Get manufacturing setup and journal configuration
-        this.GetManufacturingSetupForConsumption(ManufacturingSetup, ItemJnlTemplate, ItemJnlBatch);
+        this.GetManufacturingSetupForOutput(ManufacturingSetup, ItemJnlTemplate, ItemJnlBatch);
 
         // Setup journal line for complete consumption
-        this.SetupOutputJournalLine(ItemJnlLine, ProdOrderRoutingLine, ItemJnlTemplate, ItemJnlBatch, OutputQuantity);
+        this.SetupOutputJournalLine(ItemJnlLine, ProdOrderLine, ItemJnlTemplate, ItemJnlBatch, OutputQuantity, LotNo, ScrapQuantity);
 
         // Apply item tracking if needed
         if Item."Item Tracking Code" <> '' then
-            this.ApplyItemTrackingToOutput(ItemJnlLine, ProdOrderLine);
+            this.ApplyItemTrackingToOutput(ItemJnlLine, ProdOrderLine, LotNo, OutputQuantity);
 
         // Post Journal
         Clear(PostItemJnlLine);
         PostItemJnlLine.Run(ItemJnlLine);
 
         // Log the action
-        this.LogAction(ProdOrderRoutingLine, Enum::"APA MADCS Log Type"::Output);
+        this.LogAction(ProdOrderLine, Enum::"APA MADCS Log Type"::Output);
     end;
 
     /// <summary>
@@ -283,9 +284,9 @@ codeunit 55000 "APA MADCS Management"
     /// procedure LogAction
     /// Logs the specified action performed by the current user.
     /// </summary>
-    /// <param name="ProdOrderRoutingLine"></param>
+    /// <param name="ProdOrderLine"></param>
     /// <param name="LogType"></param>
-    procedure LogAction(ProdOrderRoutingLine: Record "Prod. Order Routing Line"; LogType: Enum "APA MADCS Log Type")
+    procedure LogAction(ProdOrderLine: Record "Prod. Order Line"; LogType: Enum "APA MADCS Log Type")
     var
         UserLog: Record "APA MADCS User Log";
     begin
@@ -594,7 +595,7 @@ codeunit 55000 "APA MADCS Management"
         TempTrackingSpecification.DeleteAll(false);
 
         ProdOrderLineReserve.InitFromProdOrderLine(TrackingSpecification, ProdOrderLine);
-        ProdOrderLineReserve.FindReservEntry(ProdOrderLine,  ReservationEntries);
+        ProdOrderLineReserve.FindReservEntry(ProdOrderLine, ReservationEntries);
         ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderLine."Due Date");
         ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
 
@@ -833,19 +834,15 @@ codeunit 55000 "APA MADCS Management"
     /// <summary>
     /// Validates that the output item and variant are available and not blocked for posting.
     /// </summary>
-    /// <param name="ProdOrderRoutingLine">Routing line containing item info.</param>
     /// <param name="Item">Resolved item record.</param>
     /// <param name="ProdOrderLine">Resolved production order line.</param>
     /// <returns name="IsAllowed">True when the output can be posted.</returns>
-    local procedure ValidateOutputItemAndVariantNotBlocked(ProdOrderRoutingLine: Record "Prod. Order Routing Line"; var Item: Record Item; ProdOrderLine: Record "Prod. Order Line"): Boolean
+    local procedure ValidateOutputItemAndVariantNotBlocked(var Item: Record Item; ProdOrderLine: Record "Prod. Order Line"): Boolean
     var
         ItemVariant: Record "Item Variant";
         ItemItemVariantTok: Label '%1 %2', Locked = true, Comment = '%1 - Item No., %2 - Variant Code';
         BlockedMsg: Label 'The item %1 (%2) is blocked and cannot be consumed.', Comment = 'ESP="El artículo %1 (%2) está bloqueado y no se puede consumir."';
     begin
-        if not ProdOrderLine.Get(ProdOrderRoutingLine.Status, ProdOrderRoutingLine."Prod. Order No.", ProdOrderRoutingLine."Routing Reference No.") then
-            exit(false);
-
         if not Item.Get(ProdOrderLine."Item No.") then
             exit(false);
 
@@ -891,6 +888,29 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
+    /// Retrieves MADCS output journal setup and raises an error if configuration is missing.
+    /// </summary>
+    /// <param name="ManufacturingSetup">Manufacturing setup record to load.</param>
+    /// <param name="ItemJnlTemplate">Journal template resolved from setup.</param>
+    /// <param name="ItemJnlBatch">Journal batch resolved from setup.</param>
+    local procedure GetManufacturingSetupForOutput(var ManufacturingSetup: Record "Manufacturing Setup"; var ItemJnlTemplate: Record "Item Journal Template"; var ItemJnlBatch: Record "Item Journal Batch")
+    var
+        ItemJournalMissingMsg: Label 'Item Journal Template Missing', Comment = 'ESP="Falta la plantilla de diario de artículos para la salida MADCS."';
+        ItemJournalMissingErr: Label 'The specified Item Journal Template for MADCS output is missing. Please check the Manufacturing Setup.', Comment = 'ESP="Falta la plantilla de diario de artículos especificada para la salida MADCS. Por favor, verifique la Configuración de Fabricación."';
+        ItemJournalBatchMissingMsg: Label 'Item Journal Batch Missing', Comment = 'ESP="Falta la sección del diario de artículos para la salida MADCS."';
+        ItemJournalBatchMissingErr: Label 'The specified Item Journal Batch for MADCS output is missing. Please check the Manufacturing Setup.', Comment = 'ESP="Falta el lote de diario de artículos especificado para la salida MADCS. Por favor, verifique la Configuración de Fabricación."';
+    begin
+        if not ManufacturingSetup.Get() then
+            this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
+
+        if not ItemJnlTemplate.Get(ManufacturingSetup."APA MADCS Output Jnl. Templ.") then
+            this.Raise(this.BuildApplicationError(ItemJournalMissingMsg, ItemJournalMissingErr));
+
+        if not ItemJnlBatch.Get(ManufacturingSetup."APA MADCS Output Jnl. Templ.", ManufacturingSetup."APA MADCS Output Jnl. Batch") then
+            this.Raise(this.BuildApplicationError(ItemJournalBatchMissingMsg, ItemJournalBatchMissingErr));
+    end;
+
+    /// <summary>
     /// Builds a consumption item journal line for a specific production order component.
     /// </summary>
     /// <param name="ItemJnlLine">Journal line to populate.</param>
@@ -911,7 +931,7 @@ codeunit 55000 "APA MADCS Management"
         Clear(ItemJnlLine);
         ItemJnlLine."Journal Template Name" := ItemJnlTemplate.Name;
         ItemJnlLine."Journal Batch Name" := ItemJnlBatch.Name;
-        ItemJnlLine."Line No." := 10000;
+        ItemJnlLine."Line No." := 0;
         ItemJnlLine.Validate("Posting Date", WorkDate());
         ItemJnlLine.Validate("Entry Type", ItemJnlLine."Entry Type"::Consumption);
         ItemJnlLine.Validate("Order Type", ItemJnlLine."Order Type"::Production);
@@ -1060,20 +1080,15 @@ codeunit 55000 "APA MADCS Management"
     /// Builds an output journal line for a routing line with the specified output quantity.
     /// </summary>
     /// <param name="ItemJnlLine">Journal line to populate.</param>
-    /// <param name="ProdOrderRoutingLine">Routing line providing context.</param>
+    /// <param name="ProdOrderLine">Production order line providing context.</param>
     /// <param name="ItemJnlTemplate">Configured journal template.</param>
     /// <param name="ItemJnlBatch">Configured journal batch.</param>
     /// <param name="OutputQuantity">Quantity to post as output.</param>
-    local procedure SetupOutputJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderRoutingLine: Record "Prod. Order Routing Line"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; OutputQuantity: Decimal)
-    var
-        ProdOrderLine: Record "Prod. Order Line";
+    /// <param name="LotNo">Lot number assigned.</param>
+    /// <param name="ScrapQuantity">Quantity of scrap produced.</param>
+    local procedure SetupOutputJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; OutputQuantity: Decimal; LotNo: Code[50]; ScrapQuantity: Decimal)
     begin
         // TODO: Review
-        // Get production order line
-        Clear(ProdOrderLine);
-        if not ProdOrderLine.Get(ProdOrderRoutingLine.Status, ProdOrderRoutingLine."Prod. Order No.", ProdOrderRoutingLine."Routing Reference No.") then
-            exit;
-
         Clear(ItemJnlLine);
         ItemJnlLine."Journal Template Name" := ItemJnlTemplate.Name;
         ItemJnlLine."Journal Batch Name" := ItemJnlBatch.Name;
@@ -1096,11 +1111,52 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine.Validate("Order Line No.", ProdOrderLine."Line No.");
         ItemJnlLine.Validate("Prod. Order Comp. Line No.", ProdOrderLine."Line No.");
         ItemJnlLine.Level := 0;
-        ItemJnlLine."Flushing Method" := ProdOrderRoutingLine."Flushing Method";
+        ItemJnlLine."Flushing Method" := Enum::"Flushing Method"::Manual;
         ItemJnlLine."Source Code" := ItemJnlTemplate."Source Code";
         ItemJnlLine."Reason Code" := ItemJnlBatch."Reason Code";
         ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
         ItemJnlLine.Validate("Output Quantity", OutputQuantity);
+        ItemJnlLine.Validate("Scrap Quantity", ScrapQuantity);
+    end;
+
+    /// <summary>
+    /// Copies tracking from the production component to the complete consumption journal line.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
+    /// <param name="ProdOrderLine">Component providing source tracking.</param>
+    /// <param name="LotNo">Selected lot number.</param>
+    /// <param name="OutputQuantity">Quantity to post as output.</param>
+    local procedure ApplyItemTrackingToOutput(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line"; LotNo: Code[50]; OutputQuantity: Decimal)
+    var
+        ReservEntry: Record "Reservation Entry";
+        ItemTrackingMgt: Codeunit "Item Tracking Management";
+        RemainingQuantity: Decimal;
+        BadOutputMsg: Label 'Bad Output', Comment='ESP="Salida incorrecta"';
+        BadOutputErr: Label 'The output quantity exceeds the available tracked quantity for lot %1.', Comment='ESP="La cantidad de salida excede la cantidad rastreada disponible para el lote %1."';
+    begin
+        ItemTrackingMgt.CopyItemTracking(ProdOrderLine.RowID1(), ItemJnlLine.RowID1(), false);
+        ReservEntry.SetPointer(ItemJnlLine.RowID1());
+        ReservEntry.SetPointerFilter();
+        ReservEntry.SetFilter("Lot No.", '<>%1', LotNo);
+        ReservEntry.ModifyAll("Qty. to Handle (Base)", 0, false);
+        ReservEntry.ModifyAll("Qty. to Invoice (Base)", 0, false);
+        RemainingQuantity := OutputQuantity;
+        ReservEntry.SetRange("Lot No.", LotNo);
+        if ReservEntry.FindSet(true) then
+            repeat
+                if ReservEntry."Qty. to Handle (Base)" >= OutputQuantity then begin
+                    RemainingQuantity := 0;
+                    ReservEntry.Validate("Qty. to Handle (Base)", OutputQuantity);
+                    ReservEntry.Validate("Qty. to Invoice (Base)", OutputQuantity);
+                end else begin
+                    RemainingQuantity -= ReservEntry."Qty. to Handle (Base)";
+                    ReservEntry.Validate("Qty. to Handle (Base)", OutputQuantity);
+                    ReservEntry.Validate("Qty. to Invoice (Base)", OutputQuantity);
+                end;
+                ReservEntry.Modify(false);
+            until (ReservEntry.Next() = 0) or (RemainingQuantity = 0);
+        if RemainingQuantity <> 0 then
+            this.Raise(this.BuildValidationError(ProdOrderLine.RecordId(), ProdOrderLine.FieldNo("Item No."), BadOutputMsg, StrSubstNo(BadOutputErr, LotNo)));
     end;
 
     /// <summary>
@@ -1113,18 +1169,6 @@ codeunit 55000 "APA MADCS Management"
         ItemTrackingMgt: Codeunit "Item Tracking Management";
     begin
         ItemTrackingMgt.CopyItemTracking(ProdOrderComp.RowID1(), ItemJnlLine.RowID1(), false);
-    end;
-
-    /// <summary>
-    /// Copies tracking from the production order line to the output journal line.
-    /// </summary>
-    /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
-    /// <param name="ProdOrderLine">Production order line providing tracking.</param>
-    local procedure ApplyItemTrackingToOutput(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line")
-    var
-        ItemTrackingMgt: Codeunit "Item Tracking Management";
-    begin
-        ItemTrackingMgt.CopyItemTracking(ProdOrderLine.RowID1(), ItemJnlLine.RowID1(), false);
     end;
 
     /// <summary>

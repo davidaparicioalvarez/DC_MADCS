@@ -321,6 +321,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="%1 No puedo cerrar la orden por %2"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method AnotarCierreOrden - NamedType ltxtMsgErrorErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 2188843926 - NamedType 2645315771" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bad Output</source>
+          <target state="translated">Salida incorrecta</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Salida incorrecta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ApplyItemTrackingToOutput - NamedType BadOutputMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 2188843926 - NamedType 4085361127" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The output quantity exceeds the available tracked quantity for lot %1.</source>
+          <target state="translated">La cantidad de salida excede la cantidad rastreada disponible para el lote %1.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="La cantidad de salida excede la cantidad rastreada disponible para el lote %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ApplyItemTrackingToOutput - NamedType BadOutputErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 3590519829 - NamedType 1670204571" size-unit="char" translate="yes" xml:space="preserve">
           <source>Errors</source>
           <target state="translated">Errores</target>
@@ -350,6 +362,30 @@
           <target state="translated">Falta el lote de diario de artículos especificado para el consumo MADCS. Por favor, verifique la Configuración de Fabricación.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Falta el lote de diario de artículos especificado para el consumo MADCS. Por favor, verifique la Configuración de Fabricación."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForConsumption - NamedType ItemJournalBatchMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1745016471 - NamedType 946495499" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Journal Template Missing</source>
+          <target state="translated">Falta la plantilla de diario de artículos para la salida MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Falta la plantilla de diario de artículos para la salida MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForOutput - NamedType ItemJournalMissingMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1745016471 - NamedType 1317996119" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The specified Item Journal Template for MADCS output is missing. Please check the Manufacturing Setup.</source>
+          <target state="translated">Falta la plantilla de diario de artículos especificada para la salida MADCS. Por favor, verifique la Configuración de Fabricación.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Falta la plantilla de diario de artículos especificada para la salida MADCS. Por favor, verifique la Configuración de Fabricación."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForOutput - NamedType ItemJournalMissingErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1745016471 - NamedType 2862809607" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Journal Batch Missing</source>
+          <target state="translated">Falta la sección del diario de artículos para la salida MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Falta la sección del diario de artículos para la salida MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForOutput - NamedType ItemJournalBatchMissingMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1745016471 - NamedType 3298585243" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The specified Item Journal Batch for MADCS output is missing. Please check the Manufacturing Setup.</source>
+          <target state="translated">Falta el lote de diario de artículos especificado para la salida MADCS. Por favor, verifique la Configuración de Fabricación.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Falta el lote de diario de artículos especificado para la salida MADCS. Por favor, verifique la Configuración de Fabricación."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForOutput - NamedType ItemJournalBatchMissingErr</note>
         </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2051529445 - NamedType 2534762797" size-unit="char" translate="yes" xml:space="preserve">
           <source>Operator %1 not found in ADCS users.</source>
@@ -1089,6 +1125,12 @@
           <note from="Developer" annotates="general" priority="2">ESP="Registrar avería bloqueante"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
         </trans-unit>
+        <trans-unit id="Page 3641626520 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Tracking Specification</source>
+          <target state="translated">Especificación de seguimiento</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especificación de seguimiento"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Track. Specification - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 3454829778 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Verification</source>
           <target state="translated">Verificación</target>
@@ -1172,6 +1214,30 @@
           <target state="translated">Plantilla de diario de consumo MADCS</target>
           <note from="Developer" annotates="general" priority="2">ESP="Plantilla de diario de consumo MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Consump. Jnl. Templ. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 234200863 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the item journal batch to be used for MADCS output journals.</source>
+          <target state="translated">Especifica la sección del diario que se utilizará para los diarios de salida MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la sección del diario que se utilizará para los diarios de salida MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Output Jnl. Batch - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 234200863 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Output Journal Batch</source>
+          <target state="translated">Sección de diario de salida MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Sección de diario de salida MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Output Jnl. Batch - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 4154321305 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the item journal template to be used for MADCS output journals.</source>
+          <target state="translated">Especifica el nombre del diario que se utilizará para los diarios de salida MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el nombre del diario que se utilizará para los diarios de salida MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Output Jnl. Templ. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 4154321305 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Output Journal Template</source>
+          <target state="translated">Plantilla de diario de salida MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Plantilla de diario de salida MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Output Jnl. Templ. - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1761940193 - Field 3599806771 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4218928473">
           <source>Indicates whether the production order line can be finished based on MADCS verification.</source>
