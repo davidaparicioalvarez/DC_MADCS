@@ -22,8 +22,9 @@ permissionset 55000 "APA MADCS ADCS User"
         page "APA MADCS Time Part" = X,
         page "APA MADCS Lot No. Information" = X,
         page "APA MADCS Verification Part" = X,
-        // page "APA MADCS Stops Part" = X,
-        // page "APA MADCS Quality MeasuresPart" = X,
+        page "APA MADCS Quality MeasuresPart" = X,
         page "APA MADCS Consume Components" = X,
-        page "APA MADCS QA. Measure Params." = X;
+        page "APA MADCS QA. Measure Params." = X,
+        page "APA MADCS Track. Specification" = X,
+        report "APA MADCS Close Prod. Orders" = X;
 }

@@ -44,24 +44,24 @@ page 55001 "APA MADCS Consume Components"
                     StyleExpr = this.styleColor;
                     Width = 10;
                 }
-                field("MADCS Lot No."; Rec."MADCS Lot No.")
+                field("MADCS Lot No."; Rec."APA MADCS Lot No.")
                 {
                     Editable = false;
                     StyleExpr = this.styleColor;
                 }
-                field("MADCS Quantity"; Rec."MADCS Quantity")
-                {
-                    Editable = false;
-                    StyleExpr = this.styleColor;
-                    Width = 5;
-                }
-                field("MADCS Consumed Quantity"; Rec."MADCS Consumed Quantity")
+                field("MADCS Quantity"; Rec."APA MADCS Quantity")
                 {
                     Editable = false;
                     StyleExpr = this.styleColor;
                     Width = 5;
                 }
-                field("MADCS Qty. After Consumption"; Rec."MADCS Qty. After Consumption")
+                field("MADCS Consumed Quantity"; Rec."APA MADCS Consumed Quantity")
+                {
+                    Editable = false;
+                    StyleExpr = this.styleColor;
+                    Width = 5;
+                }
+                field("MADCS Qty. After Consumption"; Rec."APA MADCS Qty. After Consump.")
                 {
                     Editable = true;
                     StyleExpr = this.styleColor;
@@ -124,10 +124,10 @@ page 55001 "APA MADCS Consume Components"
         // Consumed lines (remaining quantity = 0): black (None)
         // Non-consumed lines (remaining quantity > 0): red (Attention)
         newPageStyle := PageStyle::Attention;
-        if not ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then
+        if not ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
             exit;
 
-        if ProdOrderComponent."MADCS Verified" then
+        if ProdOrderComponent."APA MADCS Verified" then
             newPageStyle := PageStyle::Favorable;
 
         this.styleColor := Format(newPageStyle);
@@ -142,14 +142,14 @@ page 55001 "APA MADCS Consume Components"
         BadQuantityMsg: Label 'Consume by Rest', Comment = 'ESP="Consumo por restos."';
         BadQuantityErr: Label 'The amount indicated as remainder %1 is not consistent with the amount of component %2 nor with the amount already consumed %3.', Comment = 'ESP="La cantidad indicada como resto %1 no es consistente con la cantidad del componente %2 ni con la cantidad ya consumida %3."';
     begin
-        Rec.CalcFields("MADCS Consumed Quantity");
-        QuantityToConsume := Rec."MADCS Quantity" - Rec."MADCS Consumed Quantity" - Rec."MADCS Qty. After Consumption";
+        Rec.CalcFields("APA MADCS Consumed Quantity");
+        QuantityToConsume := Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity" - Rec."APA MADCS Qty. After Consump.";
         if QuantityToConsume <= 0 then begin
-            err := APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."MADCS Qty. After Consumption", Rec."MADCS Quantity", Rec."MADCS Consumed Quantity"));
+            err := APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."APA MADCS Qty. After Consump.", Rec."APA MADCS Quantity", Rec."APA MADCS Consumed Quantity"));
             APAMADCSManagement.Raise(err);
         end;
         Clear(ProdOrderComponent);
-        if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then
-            APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."MADCS Lot No.");
+        if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
+            APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."APA MADCS Lot No.");
     end;
 }

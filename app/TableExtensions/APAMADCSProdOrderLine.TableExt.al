@@ -17,8 +17,8 @@ tableextension 55000 "APA MADCS Prod. Order Line" extends "Prod. Order Line"
             Editable = false;
             AllowInCustomizations = Never;
             FieldClass = FlowField;
-            CalcFormula = min("Prod. Order Component"."MADCS Verified" where (Status = field(Status),
-                                                                              "Prod. Order No." = field("Prod. Order No."), 
+            CalcFormula = min("Prod. Order Component"."APA MADCS Verified" where(Status = field(Status),
+                                                                              "Prod. Order No." = field("Prod. Order No."),
                                                                               "Prod. Order Line No." = field("Line No.")));
         }
 
@@ -27,6 +27,17 @@ tableextension 55000 "APA MADCS Prod. Order Line" extends "Prod. Order Line"
             Caption = 'User Working', Comment = 'ESP="Usuario trabajando"';
             ToolTip = 'Specifies the user currently working with this production order line.', Comment = 'ESP="Especifica el usuario que está trabajando con esta línea de orden de producción."';
             DataClassification = SystemMetadata;
+        }
+
+        field(55002; "APA MADCS Can be finished"; Boolean)
+        {
+            Caption = 'Can be finished', Comment = 'ESP="Puede ser finalizada"';
+            ToolTip = 'Indicates whether the production order line can be finished based on MADCS verification.', Comment = 'ESP="Indica si la línea de orden de producción puede ser finalizada en función de la verificación de MADCS."';
+            Editable = false;
+            AllowInCustomizations = Never;
+            FieldClass = FlowField;
+            CalcFormula = min("Production Order"."APA MADCS Can be finished" where(Status = field(Status),
+                                                                                   "No." = field("Prod. Order No.")));
         }
     }
 }

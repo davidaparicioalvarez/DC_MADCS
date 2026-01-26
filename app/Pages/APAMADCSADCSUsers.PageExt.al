@@ -8,7 +8,7 @@ pageextension 55001 "APA MADCS ADCS Users" extends "ADCS Users"
     {
         addafter(Password)
         {
-            field(MADCSPassword; Rec."MADCS Password")
+            field(MADCSPassword; Rec."APA MADCS Password")
             {
                 ApplicationArea = All;
                 ExtendedDatatype = Masked;

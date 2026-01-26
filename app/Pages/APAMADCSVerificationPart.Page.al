@@ -53,24 +53,24 @@ page 55006 "APA MADCS Verification Part"
                             Editable = false;
                             StyleExpr = styleColor;
                         }
-                        field("MADCS Lot No."; Rec."MADCS Lot No.")
+                        field("MADCS Lot No."; Rec."APA MADCS Lot No.")
                         {
                             Editable = false;
                             StyleExpr = styleColor;
                         }
-                        field("MADCS Quantity"; Rec."MADCS Quantity")
+                        field("MADCS Quantity"; Rec."APA MADCS Quantity")
                         {
                             Editable = false;
                             StyleExpr = styleColor;
                         }
-                        field("MADCS Verified"; Rec."MADCS Verified")
+                        field("MADCS Verified"; Rec."APA MADCS Verified")
                         {
                             Editable = true;
                             StyleExpr = styleColor;
 
                             trigger OnValidate()
                             begin
-                                this.MarkAsVerified(Rec."MADCS Verified");
+                                this.MarkAsVerified(Rec."APA MADCS Verified");
                                 // Update style color when verification status changes
                                 this.SetStyleColor();
                                 CurrPage.Update(false);
@@ -116,10 +116,10 @@ page 55006 "APA MADCS Verification Part"
         // Consumed lines (remaining quantity = 0): black (None)
         // Non-consumed lines (remaining quantity > 0): red (Attention)
         newPageStyle := PageStyle::Attention;
-        if not ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then
+        if not ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
             exit;
 
-        if ProdOrderComponent."MADCS Verified" then
+        if ProdOrderComponent."APA MADCS Verified" then
             newPageStyle := PageStyle::Favorable;
 
         this.styleColor := Format(newPageStyle);
@@ -142,16 +142,16 @@ page 55006 "APA MADCS Verification Part"
         CurrPage.Update(true);
 
         ProdOrderComponent.Copy(Rec);
-        Rec.SetRange("MADCS Original Line No.", Rec."MADCS Original Line No.");
-        Rec.SetRange("MADCS Verified", not Verified);
+        Rec.SetRange("APA MADCS Original Line No.", Rec."APA MADCS Original Line No.");
+        Rec.SetRange("APA MADCS Verified", not Verified);
 
         if (Verified and Rec.IsEmpty()) or not Verified then
-            if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."MADCS Original Line No.") then begin
-                ProdOrderComponent."MADCS Verified" := Verified;
+            if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then begin
+                ProdOrderComponent."APA MADCS Verified" := Verified;
                 ProdOrderComponent.Modify(false);
             end;
 
-        Rec.SetRange("MADCS Original Line No.");
-        Rec.SetRange("MADCS Verified");
+        Rec.SetRange("APA MADCS Original Line No.");
+        Rec.SetRange("APA MADCS Verified");
     end;
 }

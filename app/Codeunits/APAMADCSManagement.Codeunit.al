@@ -9,6 +9,8 @@ using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Journal;
 using Microsoft.Manufacturing.Setup;
 using Microsoft.Foundation.UOM;
+using Microsoft.Manufacturing.Capacity;
+using Microsoft.Foundation.Navigate;
 
 /// <summary>
 /// APA MADCS Posting Management
@@ -24,6 +26,7 @@ codeunit 55000 "APA MADCS Management"
         tabledata Location = r,
         tabledata "Item Variant" = r,
         tabledata "Prod. Order Component" = r,
+        tabledata "Production Order" = rm,
         tabledata "Manufacturing Setup" = r,
         tabledata "Item Journal Template" = r,
         tabledata "Item Journal Batch" = r,
@@ -32,12 +35,18 @@ codeunit 55000 "APA MADCS Management"
         tabledata "Prod. Order Routing Line" = r,
         tabledata "Reservation Entry" = rm,
         tabledata "APA MADCS Pro. Order Line Time" = rmid,
-        tabledata "Item Tracking Code" = r;
+        tabledata "Item Tracking Code" = r,
+        tabledata "Capacity Ledger Entry" = r,
+        tabledata "DC Errores Cierre Orden" = rmid,
+        tabledata "DC Tolerancias Admitidas" = r;
 
     var
         CurrentOperatorCode: Code[20];
         Logged: Boolean;
+        ManufacturingSetupMissMsg: Label 'Manufacturing Setup Missing', Comment = 'ESP="Falta la configuración de fabricación"';
+        ManufacturingSetupErr: Label 'The Manufacturing Setup record is missing. Please set it up before posting consumption.', Comment = 'ESP="Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo."';
 
+    #region procedures
     /// <summary>
     /// procedure LogInOperator
     /// Logs in the operator for time tracking purposes.
@@ -78,7 +87,7 @@ codeunit 55000 "APA MADCS Management"
         end;
 
         // Validate password
-        if ADCSUser."MADCS Password" <> Password then begin
+        if ADCSUser."APA MADCS Password" <> Password then begin
             Message(UserNotFoundMsg, OperatorCode);
             exit(false);
         end;
@@ -115,15 +124,12 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlTemplate: Record "Item Journal Template";
         ItemJnlBatch: Record "Item Journal Batch";
         PostItemJnlLine: Codeunit "Item Jnl.-Post Line";
-        err: ErrorInfo;
         ErrNoPermissionPostConsumptionMsg: Label 'Permissions Error.', Comment = 'ESP="Error de permisos."';
         ErrNoPermissionPostConsumptionErr: Label 'You do not have permission to post consumptions.', Comment = 'ESP="No tiene permiso para registrar consumos."';
     begin
         // Validate user permissions
-        if not this.HasADCSUserPermission() then begin
-            err := this.BuildApplicationError(ErrNoPermissionPostConsumptionMsg, ErrNoPermissionPostConsumptionErr);
-            this.Raise(err);
-        end;
+        if not this.HasADCSUserPermission() then
+            this.Raise(this.BuildApplicationError(ErrNoPermissionPostConsumptionMsg, ErrNoPermissionPostConsumptionErr));
 
         // Validate item and variant
         if not this.ValidateComponentItemAndVariantNotBlocked(ProdOrderComp, Item) then
@@ -159,17 +165,14 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlTemplate: Record "Item Journal Template";
         ItemJnlBatch: Record "Item Journal Batch";
         PostItemJnlLine: Codeunit "Item Jnl.-Post Line";
-        err: ErrorInfo;
         NeededQty: Decimal;
         OriginalNeededQty: Decimal;
         ErrNoPermissionPostConsumptionMsg: Label 'Permissions Error.', Comment = 'ESP="Error de permisos."';
         ErrNoPermissionPostConsumptionErr: Label 'You do not have permission to post consumptions.', Comment = 'ESP="No tiene permiso para registrar consumos."';
     begin
         // Validate user permissions
-        if not this.HasADCSUserPermission() then begin
-            err := this.BuildApplicationError(ErrNoPermissionPostConsumptionMsg, ErrNoPermissionPostConsumptionErr);
-            this.Raise(err);
-        end;
+        if not this.HasADCSUserPermission() then
+            this.Raise(this.BuildApplicationError(ErrNoPermissionPostConsumptionMsg, ErrNoPermissionPostConsumptionErr));
 
         // Validate item and variant
         if not this.ValidateComponentItemAndVariantNotBlocked(ProdOrderComp, Item) then
@@ -210,15 +213,12 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlTemplate: Record "Item Journal Template";
         ItemJnlBatch: Record "Item Journal Batch";
         PostItemJnlLine: Codeunit "Item Jnl.-Post Line";
-        err: ErrorInfo;
         ErrNoPermissionPostOutputLbl: Label 'You do not have permission to post output.', Comment = 'ESP="No tiene permiso para registrar salida."';
         ErrNoPermissionPostOutputErr: Label 'You do not have permission to post output.', Comment = 'ESP="No tiene permiso para registrar salidas."';
     begin
         // Validate user permissions
-        if not this.HasADCSUserPermission() then begin
-            err := this.BuildApplicationError(ErrNoPermissionPostOutputLbl, ErrNoPermissionPostOutputErr);
-            this.Raise(err);
-        end;
+        if not this.HasADCSUserPermission() then
+            this.Raise(this.BuildApplicationError(ErrNoPermissionPostOutputLbl, ErrNoPermissionPostOutputErr));
 
         // Validate item and variant
         if not this.ValidateOutputItemAndVariantNotBlocked(ProdOrderRoutingLine, Item, ProdOrderLine) then
@@ -330,6 +330,11 @@ codeunit 55000 "APA MADCS Management"
         this.Logged := false;
     end;
 
+    /// <summary>
+    /// procedure SetOperatorCode
+    /// Sets the current operator code for logging purposes.
+    /// </summary>
+    /// <param name="OperatorCode"></param>
     local procedure SetOperatorCode(OperatorCode: Code[20])
     begin
         this.CurrentOperatorCode := OperatorCode;
@@ -414,14 +419,11 @@ codeunit 55000 "APA MADCS Management"
     procedure ValidateAndDeleteTemporaryTables(var Rec: Record "Prod. Order Component" temporary)
     var
         TempTrackingSpecification: Record "Tracking Specification" temporary;
-        err: ErrorInfo;
         ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
         TemporaryTableErr: Label 'Page table is not temporary.', Comment = 'ESP="La tabla de la página no es temporal."';
     begin
-        if not Rec.IsTemporary() or not TempTrackingSpecification.IsTemporary() then begin
-            err := this.BuildApplicationError(ProgramErr, TemporaryTableErr);
-            this.Raise(err);
-        end;
+        if not Rec.IsTemporary() or not TempTrackingSpecification.IsTemporary() then
+            this.Raise(this.BuildApplicationError(ProgramErr, TemporaryTableErr));
         Rec.DeleteAll(false);
     end;
 
@@ -525,12 +527,96 @@ codeunit 55000 "APA MADCS Management"
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
-        this.FinalizeLastActivity(OperatorCode); // only for blocked tasks
+        if Activities.BreakDownCodeIsBlocking(BreakDownCode) then
+            this.FinalizeAllActivities(pProdOrderStatus, pProdOrder) // for all operators
+        else
+            this.FinalizeLastActivity(BreakDownCode); // only for blocked tasks
 
         Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
         this.LogAction(Activities, Enum::"APA MADCS Log Type"::Fault);
     end;
 
+    /// <summary>
+    /// CerrarOrdenProduccion.
+    /// Cierra una órden de producción siempre que se cumplan las condiciones necesarias:
+    /// </summary>
+    /// <param name="ProductionOrder">VAR Record "Production Order".</param>
+    /// <param name="pbMostrarError">Boolean.</param>
+    procedure CerrarOrdenProduccion(var ProductionOrder: Record "Production Order"; pbMostrarError: Boolean)
+    var
+        lcuProdOrderStatusManagement: Codeunit "Prod. Order Status Management";
+        lcuDCRegistrarDiarioCapacidad: Codeunit "DC Registrar Diario Capacidad";
+        lenumCierre: Enum "APA MADCS Cierre Orden";
+        ltxtCierre: array[100] of Text;
+        i: Integer;
+        ErrorsLbl: Label 'Errors', Comment = 'ESP="Errores"';
+    begin
+        if not this.PuedoVerificarCierreOrden(ProductionOrder) then
+            exit;
+
+        Clear(lcuDCRegistrarDiarioCapacidad);
+        lcuDCRegistrarDiarioCapacidad.PostProductionOrderJournalLines(ProductionOrder."No."); // Antes de nada registra los diarios de capacidad que haya pendientes
+        this.EsPosibleCerrarOrden(ltxtCierre, i, ProductionOrder);
+        if i > 100 then
+            i := 100;
+        this.AnotarCierreOrden(ProductionOrder, ltxtCierre, i);
+        if this.ShouldAbortClose(i, ltxtCierre, lenumCierre) then
+            exit;
+        if this.ShouldShowCloseErrors(pbMostrarError, i, ltxtCierre, lenumCierre) then
+            Message(ErrorsLbl);
+
+        if this.ShouldFinishOrder(ltxtCierre, lenumCierre) then
+            this.FinalizeProductionOrder(ProductionOrder, lcuProdOrderStatusManagement);
+
+        Commit(); // Cierra la transacción antes de seguir haciendo más procesos.
+        exit;
+    end;
+    /// <summary>
+    /// Finds lot numbers assigned to the production order line and lets the user pick one.
+    /// </summary>
+    /// <param name="ProdOrderLine">Production order line to filter reservation entries.</param>
+    /// <param name="Text">Selected lot number.</param>
+    /// <returns name="Found">True when a lot was selected.</returns>
+    internal procedure FindLotNoForOutput(ProdOrderLine: Record "Prod. Order Line"; var Text: Text): Boolean
+    var
+        ReservationEntries: Record "Reservation Entry";
+        TrackingSpecification: Record "Tracking Specification";
+        TempTrackingSpecification: Record "Tracking Specification" temporary;
+        ProdOrderLineReserve: Codeunit "Prod. Order Line-Reserve";
+        ItemTrackingLines: Page "Item Tracking Lines";
+        APAMADCSTrackingSpecification: Page "APA MADCS Track. Specification";
+
+    begin
+        // DAA - Mostrar la lista de lotes de la línea de la orden y seleccionar uno
+        Text := '';
+        Clear(TrackingSpecification);
+        Clear(TempTrackingSpecification);
+        TempTrackingSpecification.DeleteAll(false);
+
+        ProdOrderLineReserve.InitFromProdOrderLine(TrackingSpecification, ProdOrderLine);
+        ProdOrderLineReserve.FindReservEntry(ProdOrderLine,  ReservationEntries);
+        ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderLine."Due Date");
+        ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
+
+        Clear(APAMADCSTrackingSpecification);
+        APAMADCSTrackingSpecification.InitializeTrackingData(TempTrackingSpecification);
+        APAMADCSTrackingSpecification.LookupMode(true);
+        if APAMADCSTrackingSpecification.RunModal() = Action::LookupOK then begin
+            APAMADCSTrackingSpecification.GetSelectedTrackingSpec(TempTrackingSpecification);
+            Text := TempTrackingSpecification."Lot No.";
+            exit(Text <> '');
+        end;
+
+        exit(false);
+    end;
+    #endregion procedures
+
+
+    #region local procedures
+    /// <summary>
+    /// Finalizes the last active task for an operator, posting time and marking it posted.
+    /// </summary>
+    /// <param name="OperatorCode">Operator identifier to filter activities.</param>
     local procedure FinalizeLastActivity(OperatorCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -551,9 +637,40 @@ codeunit 55000 "APA MADCS Management"
                 // Log the action
                 this.LogAction(Activities, Enum::"APA MADCS Log Type"::FinalizeTask);
             until Activities.Next() = 0;
-
     end;
 
+    /// <summary>
+    /// Finalizes all active tasks for a production order status and number.
+    /// </summary>
+    /// <param name="pProdOrderStatus">Production order status to filter.</param>
+    /// <param name="pProdOrder">Production order number to filter.</param>
+    local procedure FinalizeAllActivities(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20])
+    var
+        Activities: Record "APA MADCS Pro. Order Line Time";
+    begin
+        // Find my current activity and stop it
+        // Consume time used in recent stopped activity
+        Clear(Activities);
+        Activities.SetCurrentKey(Status, "Prod. Order No.");
+        Activities.SetRange(Status, pProdOrderStatus);
+        Activities.SetRange("Prod. Order No.", pProdOrder);
+        Activities.SetRange(Posted, false);
+        if Activities.FindSet(true) then
+            repeat
+                Activities."End Date Time" := CurrentDateTime();
+                if Activities."Action" <> Enum::"APA MADCS Journal Type"::Fault then
+                    this.PostCapacityJournalLine(Activities);
+                Activities.Validate(Posted, true);
+                Activities.Modify(false);
+                // Log the action
+                this.LogAction(Activities, Enum::"APA MADCS Log Type"::FinalizeTask);
+            until Activities.Next() = 0;
+    end;
+
+    /// <summary>
+    /// Posts a capacity journal line based on the provided activity.
+    /// </summary>
+    /// <param name="Activities">Activity record containing time and order context.</param>
     local procedure PostCapacityJournalLine(Activities: Record "APA MADCS Pro. Order Line Time")
     var
         ItemJournalLine: Record "Item Journal Line";
@@ -596,6 +713,11 @@ codeunit 55000 "APA MADCS Management"
         this.LogAction(ItemJournalLine, Enum::"APA MADCS Log Type"::PostTime, Activities."BreakDown Code");
     end;
 
+    /// <summary>
+    /// Copies a production order component into a temporary buffer and processes tracking when required.
+    /// </summary>
+    /// <param name="Rec">Temporary component buffer to populate.</param>
+    /// <param name="ProdOrderComponent">Source production order component.</param>
     local procedure ProcessProdOrderComponent(var Rec: Record "Prod. Order Component" temporary; ProdOrderComponent: Record "Prod. Order Component")
     var
         Item: Record Item;
@@ -609,22 +731,29 @@ codeunit 55000 "APA MADCS Management"
             this.InsertComponentRecord(Rec, ProdOrderComponent, '', Rec."Remaining Qty. (Base)", 0);
     end;
 
+    /// <summary>
+    /// Retrieves an item record or raises an application error if not found.
+    /// </summary>
+    /// <param name="Item">Item record to populate.</param>
+    /// <param name="ItemNo">Item number to fetch.</param>
     local procedure ValidateAndGetItem(var Item: Record Item; ItemNo: Code[20])
     var
-        err: ErrorInfo;
         ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
         ItemErr: Label 'Item not found: %1', Comment = 'ESP="Artículo no encontrado: %1"';
     begin
         Clear(Item);
-        if not Item.Get(ItemNo) then begin
-            err := this.BuildApplicationError(ProgramErr, StrSubstNo(ItemErr, ItemNo));
-            this.Raise(err);
-        end;
+        if not Item.Get(ItemNo) then
+            this.Raise(this.BuildApplicationError(ProgramErr, StrSubstNo(ItemErr, ItemNo)));
     end;
 
+    /// <summary>
+    /// Determines whether item tracking must be processed and loads the tracking code.
+    /// </summary>
+    /// <param name="Item">Item to evaluate.</param>
+    /// <param name="ItemTrackingCode">Loaded tracking code when applicable.</param>
+    /// <returns name="ShouldProcess">Boolean.</returns>
     local procedure ShouldProcessItemTracking(Item: Record Item; var ItemTrackingCode: Record "Item Tracking Code"): Boolean
     var
-        err: ErrorInfo;
         ProgramErr: Label 'Error initializing verification data.', Comment = 'ESP="Error al inicializar los datos de verificación."';
         ItemTrackingCodeErr: Label 'Item Tracking Code not found: %1', Comment = 'ESP="Código de seguimiento del artículo no encontrado: %1"';
     begin
@@ -632,14 +761,17 @@ codeunit 55000 "APA MADCS Management"
             exit(false);
 
         Clear(ItemTrackingCode);
-        if not ItemTrackingCode.Get(Item."Item Tracking Code") then begin
-            err := this.BuildApplicationError(ProgramErr, StrSubstNo(ItemTrackingCodeErr, Item."Item Tracking Code"));
-            this.Raise(err);
-        end;
+        if not ItemTrackingCode.Get(Item."Item Tracking Code") then
+            this.Raise(this.BuildApplicationError(ProgramErr, StrSubstNo(ItemTrackingCodeErr, Item."Item Tracking Code")));
 
         exit(ItemTrackingCode."Lot Manuf. Inbound Tracking");
     end;
 
+    /// <summary>
+    /// Handles item tracking selection for a component and inserts resulting lines into the buffer.
+    /// </summary>
+    /// <param name="Rec">Temporary component buffer to insert tracking splits.</param>
+    /// <param name="ProdOrderComponent">Source production order component.</param>
     local procedure ProcessItemWithTracking(var Rec: Record "Prod. Order Component" temporary; ProdOrderComponent: Record "Prod. Order Component")
     var
         TrackingSpecification: Record "Tracking Specification";
@@ -665,6 +797,12 @@ codeunit 55000 "APA MADCS Management"
             until TempTrackingSpecification.Next() = 0;
     end;
 
+    /// <summary>
+    /// Validates that the component item and its variant are not blocked before consumption.
+    /// </summary>
+    /// <param name="ProdOrderComp">Component line to check.</param>
+    /// <param name="Item">Resolved item record.</param>
+    /// <returns name="IsAllowed">True when the component can be consumed.</returns>
     local procedure ValidateComponentItemAndVariantNotBlocked(ProdOrderComp: Record "Prod. Order Component"; var Item: Record Item): Boolean
     var
         ItemVariant: Record "Item Variant";
@@ -692,6 +830,13 @@ codeunit 55000 "APA MADCS Management"
         exit(true);
     end;
 
+    /// <summary>
+    /// Validates that the output item and variant are available and not blocked for posting.
+    /// </summary>
+    /// <param name="ProdOrderRoutingLine">Routing line containing item info.</param>
+    /// <param name="Item">Resolved item record.</param>
+    /// <param name="ProdOrderLine">Resolved production order line.</param>
+    /// <returns name="IsAllowed">True when the output can be posted.</returns>
     local procedure ValidateOutputItemAndVariantNotBlocked(ProdOrderRoutingLine: Record "Prod. Order Routing Line"; var Item: Record Item; ProdOrderLine: Record "Prod. Order Line"): Boolean
     var
         ItemVariant: Record "Item Variant";
@@ -722,32 +867,38 @@ codeunit 55000 "APA MADCS Management"
         exit(true);
     end;
 
+    /// <summary>
+    /// Retrieves MADCS consumption journal setup and raises an error if configuration is missing.
+    /// </summary>
+    /// <param name="ManufacturingSetup">Manufacturing setup record to load.</param>
+    /// <param name="ItemJnlTemplate">Journal template resolved from setup.</param>
+    /// <param name="ItemJnlBatch">Journal batch resolved from setup.</param>
     local procedure GetManufacturingSetupForConsumption(var ManufacturingSetup: Record "Manufacturing Setup"; var ItemJnlTemplate: Record "Item Journal Template"; var ItemJnlBatch: Record "Item Journal Batch")
     var
-        err: ErrorInfo;
-        ManufacturingSetupMissMsg: Label 'Manufacturing Setup Missing', Comment = 'ESP="Falta la configuración de fabricación"';
-        ManufacturingSetupErr: Label 'The Manufacturing Setup record is missing. Please set it up before posting consumption.', Comment = 'ESP="Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo."';
         ItemJournalMissingMsg: Label 'Item Journal Template Missing', Comment = 'ESP="Falta la plantilla de diario de artículos para el consumo MADCS."';
         ItemJournalMissingErr: Label 'The specified Item Journal Template for MADCS consumption is missing. Please check the Manufacturing Setup.', Comment = 'ESP="Falta la plantilla de diario de artículos especificada para el consumo MADCS. Por favor, verifique la Configuración de Fabricación."';
         ItemJournalBatchMissingMsg: Label 'Item Journal Batch Missing', Comment = 'ESP="Falta la sección del diario de artículos para el consumo MADCS."';
         ItemJournalBatchMissingErr: Label 'The specified Item Journal Batch for MADCS consumption is missing. Please check the Manufacturing Setup.', Comment = 'ESP="Falta el lote de diario de artículos especificado para el consumo MADCS. Por favor, verifique la Configuración de Fabricación."';
     begin
-        if not ManufacturingSetup.Get() then begin
-            err := this.BuildApplicationError(ManufacturingSetupMissMsg, ManufacturingSetupErr);
-            this.Raise(err);
-        end;
+        if not ManufacturingSetup.Get() then
+            this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
 
-        if not ItemJnlTemplate.Get(ManufacturingSetup."APA MADCS Consump. Jnl. Templ.") then begin
-            err := this.BuildApplicationError(ItemJournalMissingMsg, ItemJournalMissingErr);
-            this.Raise(err);
-        end;
+        if not ItemJnlTemplate.Get(ManufacturingSetup."APA MADCS Consump. Jnl. Templ.") then
+            this.Raise(this.BuildApplicationError(ItemJournalMissingMsg, ItemJournalMissingErr));
 
-        if not ItemJnlBatch.Get(ManufacturingSetup."APA MADCS Consump. Jnl. Templ.", ManufacturingSetup."APA MADCS Consump. Jnl. Batch") then begin
-            err := this.BuildApplicationError(ItemJournalBatchMissingMsg, ItemJournalBatchMissingErr);
-            this.Raise(err);
-        end;
+        if not ItemJnlBatch.Get(ManufacturingSetup."APA MADCS Consump. Jnl. Templ.", ManufacturingSetup."APA MADCS Consump. Jnl. Batch") then
+            this.Raise(this.BuildApplicationError(ItemJournalBatchMissingMsg, ItemJournalBatchMissingErr));
     end;
 
+    /// <summary>
+    /// Builds a consumption item journal line for a specific production order component.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line to populate.</param>
+    /// <param name="ProdOrderComp">Component providing consumption context.</param>
+    /// <param name="ItemJnlTemplate">Journal template from setup.</param>
+    /// <param name="ItemJnlBatch">Journal batch from setup.</param>
+    /// <param name="Item">Item record for validations.</param>
+    /// <param name="Quantity">Quantity to consume in base units.</param>
     local procedure SetupConsumptionJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; Item: Record Item; Quantity: Decimal)
     var
         ProdOrderLine: Record "Prod. Order Line";
@@ -778,7 +929,7 @@ codeunit 55000 "APA MADCS Management"
 
         ItemJnlLine."Variant Code" := ProdOrderComp."Variant Code";
         ItemJnlLine.Validate("Order Line No.", ProdOrderComp."Prod. Order Line No.");
-        ItemJnlLine.Validate("Prod. Order Comp. Line No.", ProdOrderComp."MADCS Original Line No.");
+        ItemJnlLine.Validate("Prod. Order Comp. Line No.", ProdOrderComp."APA MADCS Original Line No.");
 
         ItemJnlLine.Level := 0;
         ItemJnlLine."Flushing Method" := ProdOrderComp."Flushing Method";
@@ -787,6 +938,13 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
     end;
 
+    /// <summary>
+    /// Applies lot tracking from a production component to the consumption journal line and sets handling quantities.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
+    /// <param name="ProdOrderComp">Component line providing original tracking.</param>
+    /// <param name="LotNo">Selected lot number.</param>
+    /// <param name="Quantity">Quantity to assign to the lot.</param>
     local procedure ApplyItemTrackingToJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; LotNo: Code[50]; Quantity: Decimal)
     var
         ReservationEntry: Record "Reservation Entry";
@@ -808,6 +966,12 @@ codeunit 55000 "APA MADCS Management"
             until ReservationEntry.Next() = 0;
     end;
 
+    /// <summary>
+    /// Calculates the required consumption quantity for a component considering flushing method and warehouse adjustments.
+    /// </summary>
+    /// <param name="ProdOrderComp">Component line to evaluate.</param>
+    /// <param name="NeededQty">Calculated quantity required.</param>
+    /// <param name="OriginalNeededQty">Unadjusted calculated quantity.</param>
     local procedure CalculateConsumptionQuantity(var ProdOrderComp: Record "Prod. Order Component"; var NeededQty: Decimal; var OriginalNeededQty: Decimal)
     var
         CalcBasedOn: Enum "APA MADCS Calc Based On";
@@ -824,6 +988,11 @@ codeunit 55000 "APA MADCS Management"
             this.AdjustQuantityForWarehouse(ProdOrderComp, NeededQty);
     end;
 
+    /// <summary>
+    /// Adjusts consumption quantity based on warehouse pick handling setup.
+    /// </summary>
+    /// <param name="ProdOrderComp">Component line to inspect.</param>
+    /// <param name="NeededQty">Quantity to adjust when warehouse picks are mandatory.</param>
     local procedure AdjustQuantityForWarehouse(var ProdOrderComp: Record "Prod. Order Component"; var NeededQty: Decimal)
     var
         Location: Record Location;
@@ -838,6 +1007,16 @@ codeunit 55000 "APA MADCS Management"
             ProdOrderComp.AdjustQtyToQtyPicked(NeededQty);
     end;
 
+    /// <summary>
+    /// Builds a consumption journal line for complete component consumption including adjustment quantities.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line to populate.</param>
+    /// <param name="ProdOrderComp">Component providing context.</param>
+    /// <param name="ItemJnlTemplate">Configured journal template.</param>
+    /// <param name="ItemJnlBatch">Configured journal batch.</param>
+    /// <param name="Item">Item record for validations.</param>
+    /// <param name="NeededQty">Adjusted quantity to consume.</param>
+    /// <param name="OriginalNeededQty">Original quantity prior to adjustments.</param>
     local procedure SetupCompleteConsumptionJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; Item: Record Item; NeededQty: Decimal; OriginalNeededQty: Decimal)
     var
         ProdOrderLine: Record "Prod. Order Line";
@@ -877,6 +1056,14 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
     end;
 
+    /// <summary>
+    /// Builds an output journal line for a routing line with the specified output quantity.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line to populate.</param>
+    /// <param name="ProdOrderRoutingLine">Routing line providing context.</param>
+    /// <param name="ItemJnlTemplate">Configured journal template.</param>
+    /// <param name="ItemJnlBatch">Configured journal batch.</param>
+    /// <param name="OutputQuantity">Quantity to post as output.</param>
     local procedure SetupOutputJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderRoutingLine: Record "Prod. Order Routing Line"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; OutputQuantity: Decimal)
     var
         ProdOrderLine: Record "Prod. Order Line";
@@ -916,6 +1103,11 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine.Validate("Output Quantity", OutputQuantity);
     end;
 
+    /// <summary>
+    /// Copies tracking from the production component to the complete consumption journal line.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
+    /// <param name="ProdOrderComp">Component providing source tracking.</param>
     local procedure ApplyItemTrackingToCompleteConsumption(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component")
     var
         ItemTrackingMgt: Codeunit "Item Tracking Management";
@@ -923,6 +1115,11 @@ codeunit 55000 "APA MADCS Management"
         ItemTrackingMgt.CopyItemTracking(ProdOrderComp.RowID1(), ItemJnlLine.RowID1(), false);
     end;
 
+    /// <summary>
+    /// Copies tracking from the production order line to the output journal line.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
+    /// <param name="ProdOrderLine">Production order line providing tracking.</param>
     local procedure ApplyItemTrackingToOutput(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line")
     var
         ItemTrackingMgt: Codeunit "Item Tracking Management";
@@ -930,6 +1127,13 @@ codeunit 55000 "APA MADCS Management"
         ItemTrackingMgt.CopyItemTracking(ProdOrderLine.RowID1(), ItemJnlLine.RowID1(), false);
     end;
 
+    /// <summary>
+    /// Validates consumption quantity respecting item rounding precision.
+    /// </summary>
+    /// <param name="ItemJnlLine">Journal line to validate.</param>
+    /// <param name="NeededQty">Quantity to apply.</param>
+    /// <param name="Item">Item record supplying rounding settings.</param>
+    /// <param name="IgnoreRoundingPrecision">Whether to bypass rounding validation.</param>
     local procedure ConsumptionItemJnlLineValidateQuantity(var ItemJnlLine: Record "Item Journal Line"; NeededQty: Decimal; Item: Record Item; IgnoreRoundingPrecision: Boolean)
     var
         UOMMgt: Codeunit "Unit of Measure Management";
@@ -941,16 +1145,423 @@ codeunit 55000 "APA MADCS Management"
                 ItemJnlLine.Validate(Quantity, Round(NeededQty, UOMMgt.QtyRndPrecision()));
     end;
 
+    /// <summary>
+    /// Inserts a temporary production component record with lot split and consumption tracking fields.
+    /// </summary>
+    /// <param name="Rec">Temporary buffer to insert into.</param>
+    /// <param name="ProdOrderComponent">Source component line.</param>
+    /// <param name="LotNo">Lot number assigned.</param>
+    /// <param name="RemQuantityLot">Remaining quantity for this lot split.</param>
+    /// <param name="LineIncrement">Increment to derive the new line number.</param>
     local procedure InsertComponentRecord(var Rec: Record "Prod. Order Component" temporary; ProdOrderComponent: Record "Prod. Order Component"; LotNo: Text[50]; RemQuantityLot: Decimal; LineIncrement: Integer)
     begin
         if RemQuantityLot = 0 then
             exit;
-        Rec."MADCS Original Line No." := ProdOrderComponent."Line No.";
+        Rec."APA MADCS Original Line No." := ProdOrderComponent."Line No.";
         Rec."Line No." := ProdOrderComponent."Line No." + LineIncrement;
-        Rec."MADCS Lot No." := LotNo;
-        Rec.CalcFields("MADCS Consumed Quantity");
-        Rec."MADCS Quantity" := RemQuantityLot + Rec."MADCS Consumed Quantity";
-        Rec."MADCS Qty. After Consumption" := Rec."MADCS Quantity" - Rec."MADCS Consumed Quantity";
+        Rec."APA MADCS Lot No." := LotNo;
+        Rec.CalcFields("APA MADCS Consumed Quantity");
+        Rec."APA MADCS Quantity" := RemQuantityLot + Rec."APA MADCS Consumed Quantity";
+        Rec."APA MADCS Qty. After Consump." := Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity";
         Rec.Insert(false);
     end;
+
+    /// <summary>
+    /// Checks whether basic conditions are met to verify closing a production order.
+    /// </summary>
+    /// <param name="ProductionOrder">Production order to evaluate.</param>
+    /// <returns name="CanVerify">True when the order can be evaluated for closing.</returns>
+    local procedure PuedoVerificarCierreOrden(var ProductionOrder: Record "Production Order"): Boolean
+    var
+        lrProdOrderComponents: Record "Prod. Order Component";
+        lrProdOrderLines: Record "Prod. Order Line";
+        decConsums: Decimal;
+        decQuantity: Decimal;
+    begin
+        // DAA - Desactivo por ahora el control de fechas
+        //if ProductionOrder."Ending Date-Time" >= CurrentDateTime then // DAA - No cierro las órdenes antes de tiempo, siempre con un día de retraso
+        //    exit(false);
+
+        if ProductionOrder.Status <> ProductionOrder.Status::Released then
+            exit(false);
+
+        if not ProductionOrder."APA MADCS Can be finished" then
+            exit(false);
+
+        decConsums := 0;
+        decQuantity := 0;
+        Clear(lrProdOrderLines);
+        lrProdOrderLines.SetCurrentKey(Status, "Prod. Order No.");
+        lrProdOrderLines.SetRange(Status, ProductionOrder.Status);
+        lrProdOrderLines.SetRange("Prod. Order No.", ProductionOrder."No.");
+        lrProdOrderLines.CalcSums("Finished Quantity", Quantity);
+
+        Clear(lrProdOrderComponents);
+        lrProdOrderComponents.SetCurrentKey(Status, "Prod. Order No.");
+        lrProdOrderComponents.SetRange(Status, ProductionOrder.Status);
+        lrProdOrderComponents.SetRange("Prod. Order No.", ProductionOrder."No.");
+        lrProdOrderComponents.SetAutoCalcFields("Act. Consumption (Qty)");
+        if lrProdOrderComponents.FindSet(false) then
+            repeat
+                decConsums += lrProdOrderComponents."Act. Consumption (Qty)";
+                decQuantity += lrProdOrderComponents."Expected Quantity";
+            until lrProdOrderComponents.Next() = 0;
+
+        exit((lrProdOrderLines."Finished Quantity" = lrProdOrderLines.Quantity) or (decConsums = decQuantity));
+    end;
+
+    /// <summary>
+    /// Comprobar si es posible cerrar la orden evaluando tolerancias, consumos y actividades.
+    /// </summary>
+    /// <param name="pTextoErrores">Array where error messages are returned.</param>
+    /// <param name="i">Index of the last message stored.</param>
+    /// <param name="ProductionOrder">Production order under evaluation.</param>
+    [TryFunction]
+    local procedure EsPosibleCerrarOrden(var pTextoErrores: array[100] of Text; var i: Integer; ProductionOrder: Record "Production Order")
+    var
+        lrManufacturingSetup: Record "Manufacturing Setup";
+        lrProdOrderLine: Record "Prod. Order Line";
+        lrProdOrderComponent: Record "Prod. Order Component";
+        lenumCierre: Enum "APA MADCS Cierre Orden";
+        lbHayLineas: Boolean;
+    begin
+        // DAA - Verificar que se cumplen las condiciones necesarias para cerrar la orden
+        if not lrManufacturingSetup.Get() then
+            this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
+
+        Clear(pTextoErrores);
+        i := 1;
+
+        if this.CheckPendingPicks(ProductionOrder, lrProdOrderComponent) then begin
+            pTextoErrores[i] := Format(lenumCierre::"No cerrar");
+            exit;
+        end;
+
+        lbHayLineas := false;
+        Clear(lrProdOrderLine);
+        lrProdOrderLine.SetCurrentKey(Status, "Prod. Order No.");
+        lrProdOrderLine.SetRange(Status, ProductionOrder.Status);
+        lrProdOrderLine.SetRange("Prod. Order No.", ProductionOrder."No.");
+        if lrProdOrderLine.FindSet(false) then begin
+            lbHayLineas := true;
+            repeat
+                this.ValidateProductionOrderLine(lrProdOrderLine, lrProdOrderComponent, ProductionOrder, pTextoErrores, i);
+            until lrProdOrderLine.Next() = 0;
+        end;
+
+        if not lbHayLineas then begin
+            pTextoErrores[i] := Format(lenumCierre::"Faltan lineas");
+            i += 1;
+        end;
+
+        if i = 1 then
+            pTextoErrores[i] := Format(lenumCierre::Correcto);
+        exit;
+    end;
+
+    /// <summary>
+    /// Checks if there are pending picks that block closing.
+    /// </summary>
+    /// <param name="ProductionOrder">Production order to check.</param>
+    /// <param name="ProdOrderComponent">Component recordset for filtering.</param>
+    /// <returns name="HasPending">True if pending picks exist.</returns>
+    local procedure CheckPendingPicks(ProductionOrder: Record "Production Order"; var ProdOrderComponent: Record "Prod. Order Component") isNotEmpty: Boolean
+    begin
+        Clear(ProdOrderComponent);
+        ProdOrderComponent.SetCurrentKey(Status, "Prod. Order No.");
+        ProdOrderComponent.SetRange(Status, ProductionOrder.Status);
+        ProdOrderComponent.SetRange("Prod. Order No.", ProductionOrder."No.");
+        ProdOrderComponent.SetFilter("Pick Qty.", '<>%1', 0);
+        isNotEmpty := not ProdOrderComponent.IsEmpty();
+        ProdOrderComponent.SetRange("Pick Qty.");
+        exit(isNotEmpty);
+    end;
+
+    /// <summary>
+    /// Validates all aspects of a production order line.
+    /// </summary>
+    /// <param name="ProdOrderLine">Line to validate.</param>
+    /// <param name="ProdOrderComponent">Component recordset.</param>
+    /// <param name="ProductionOrder">Parent production order.</param>
+    /// <param name="ErrorMessages">Error array.</param>
+    /// <param name="MessageIndex">Current message index.</param>
+    local procedure ValidateProductionOrderLine(ProdOrderLine: Record "Prod. Order Line"; var ProdOrderComponent: Record "Prod. Order Component"; ProductionOrder: Record "Production Order"; var ErrorMessages: array[100] of Text; var MessageIndex: Integer)
+    var
+        ToleranciaPrep: Decimal;
+        ToleranciaEjec: Decimal;
+    begin
+        this.GetTimeTolerances(ProdOrderLine."Item No.", ToleranciaPrep, ToleranciaEjec);
+        this.ValidateComponentsForLine(ProdOrderLine, ProdOrderComponent, ErrorMessages, MessageIndex);
+        this.ValidateOutputQuantitiesForLine(ProdOrderLine, ErrorMessages, MessageIndex);
+        this.ValidateCapacityTimesForLine(ProdOrderLine, ProductionOrder, ToleranciaPrep, ToleranciaEjec, ErrorMessages, MessageIndex);
+    end;
+
+    /// <summary>
+    /// Validates component consumption for a production order line.
+    /// </summary>
+    /// <param name="ProdOrderLine">Line context.</param>
+    /// <param name="ProdOrderComponent">Component recordset.</param>
+    /// <param name="ErrorMessages">Error array.</param>
+    /// <param name="MessageIndex">Current message index.</param>
+    local procedure ValidateComponentsForLine(ProdOrderLine: Record "Prod. Order Line"; var ProdOrderComponent: Record "Prod. Order Component"; var ErrorMessages: array[100] of Text; var MessageIndex: Integer)
+    var
+        CierreEnum: Enum "APA MADCS Cierre Orden";
+        ToleranciaConsumos: Decimal;
+        CantidadFabricada: Decimal;
+        CantidadMinima: Decimal;
+        CantidadMaxima: Decimal;
+        LineaComponentesLbl: Label ' component item %1', Comment = 'ESP=" producto componente %1"';
+    begin
+        ProdOrderComponent.SetRange("Prod. Order Line No.", ProdOrderLine."Line No.");
+        ProdOrderComponent.SetAutoCalcFields("Act. Consumption (Qty)");
+        if ProdOrderComponent.FindSet(false) then
+            repeat
+                this.GetQuantityTolerances(ProdOrderComponent."Item No.", ToleranciaConsumos);
+                CantidadFabricada := ProdOrderComponent."Act. Consumption (Qty)";
+                CantidadMinima := ProdOrderComponent."Expected Quantity" - ToleranciaConsumos;
+                CantidadMaxima := ProdOrderComponent."Expected Quantity" + ToleranciaConsumos;
+                if CantidadFabricada < CantidadMinima then begin
+                    ErrorMessages[MessageIndex] := Format(CierreEnum::"Faltan consumos") + StrSubstNo(LineaComponentesLbl, ProdOrderComponent."Item No.");
+                    MessageIndex += 1;
+                end else
+                    if CantidadFabricada > CantidadMaxima then begin
+                        ErrorMessages[MessageIndex] := Format(CierreEnum::"Sobran consumos") + StrSubstNo(LineaComponentesLbl, ProdOrderComponent."Item No.");
+                        MessageIndex += 1;
+                    end;
+            until ProdOrderComponent.Next() = 0
+        else begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Faltan componentes");
+            MessageIndex += 1;
+        end;
+    end;
+
+    /// <summary>
+    /// Validates output quantities for a line.
+    /// </summary>
+    /// <param name="ProdOrderLine">Line to validate.</param>
+    /// <param name="ErrorMessages">Error array.</param>
+    /// <param name="MessageIndex">Current message index.</param>
+    local procedure ValidateOutputQuantitiesForLine(ProdOrderLine: Record "Prod. Order Line"; var ErrorMessages: array[100] of Text; var MessageIndex: Integer)
+    var
+        CierreEnum: Enum "APA MADCS Cierre Orden";
+    begin
+        if ProdOrderLine."Remaining Quantity" <> 0 then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Faltan salidas");
+            MessageIndex += 1;
+        end;
+        if ProdOrderLine."Finished Quantity" > ProdOrderLine.Quantity then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Sobran salidas");
+            MessageIndex += 1;
+        end;
+    end;
+
+    /// <summary>
+    /// Validates capacity times against tolerances.
+    /// </summary>
+    /// <param name="ProdOrderLine">Line context.</param>
+    /// <param name="ProductionOrder">Parent order.</param>
+    /// <param name="ToleranciaPrep">Setup tolerance.</param>
+    /// <param name="ToleranciaEjec">Run tolerance.</param>
+    /// <param name="ErrorMessages">Error array.</param>
+    /// <param name="MessageIndex">Current message index.</param>
+    local procedure ValidateCapacityTimesForLine(ProdOrderLine: Record "Prod. Order Line"; ProductionOrder: Record "Production Order"; ToleranciaPrep: Decimal; ToleranciaEjec: Decimal; var ErrorMessages: array[100] of Text; var MessageIndex: Integer)
+    var
+        CapacityLedgerEntry: Record "Capacity Ledger Entry";
+        CierreEnum: Enum "APA MADCS Cierre Orden";
+        TiempoLimpieza: Decimal;
+        TiempoProduccion: Decimal;
+    begin
+        TiempoLimpieza := 0;
+        TiempoProduccion := 0;
+        Clear(CapacityLedgerEntry);
+        CapacityLedgerEntry.SetCurrentKey("Order Type", "Order No.", "Item No.", "Starting Time");
+        CapacityLedgerEntry.SetRange("Order Type", CapacityLedgerEntry."Order Type"::Production);
+        CapacityLedgerEntry.SetRange("Order No.", ProductionOrder."No.");
+        CapacityLedgerEntry.SetRange("Item No.", ProdOrderLine."Item No.");
+        if CapacityLedgerEntry.FindSet(false) then
+            repeat
+                TiempoLimpieza += CapacityLedgerEntry."Setup Time";
+                TiempoProduccion += CapacityLedgerEntry."Run Time";
+            until CapacityLedgerEntry.Next() = 0
+        else begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta limpieza");
+            MessageIndex += 1;
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta fabricacion");
+            MessageIndex += 1;
+        end;
+
+        if TiempoLimpieza = 0 then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta limpieza");
+            MessageIndex += 1;
+        end;
+        if TiempoProduccion = 0 then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta fabricacion");
+            MessageIndex += 1;
+        end;
+
+        if (TiempoLimpieza <> 0) and (TiempoProduccion <> 0) then
+            this.CompareTimesWithTolerances(ProdOrderLine, ProductionOrder, TiempoLimpieza, TiempoProduccion, ToleranciaPrep, ToleranciaEjec, ErrorMessages, MessageIndex);
+    end;
+
+    /// <summary>
+    /// Compares actual times with expected times and tolerances.
+    /// </summary>
+    /// <param name="ProdOrderLine">Line context.</param>
+    /// <param name="ProductionOrder">Parent order.</param>
+    /// <param name="ActualSetup">Actual setup time.</param>
+    /// <param name="ActualRun">Actual run time.</param>
+    /// <param name="ToleranciaPrep">Setup tolerance.</param>
+    /// <param name="ToleranciaEjec">Run tolerance.</param>
+    /// <param name="ErrorMessages">Error array.</param>
+    /// <param name="MessageIndex">Current message index.</param>
+    local procedure CompareTimesWithTolerances(ProdOrderLine: Record "Prod. Order Line"; ProductionOrder: Record "Production Order"; ActualSetup: Decimal; ActualRun: Decimal; ToleranciaPrep: Decimal; ToleranciaEjec: Decimal; var ErrorMessages: array[100] of Text; var MessageIndex: Integer)
+    var
+        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+        CierreEnum: Enum "APA MADCS Cierre Orden";
+    begin
+        Clear(ProdOrderRoutingLine);
+        ProdOrderRoutingLine.SetCurrentKey(Status, "Prod. Order No.", "Routing Reference No.");
+        ProdOrderRoutingLine.SetRange(Status, ProductionOrder.Status);
+        ProdOrderRoutingLine.SetRange("Prod. Order No.", ProductionOrder."No.");
+        ProdOrderRoutingLine.SetRange("Routing Reference No.", ProdOrderLine."Line No.");
+        ProdOrderRoutingLine.CalcSums("Setup Time");
+        if ProdOrderRoutingLine."Setup Time" < (ActualSetup - ToleranciaPrep) then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Sobra limpieza");
+            MessageIndex += 1;
+        end else
+            if ProdOrderRoutingLine."Setup Time" > (ActualSetup + ToleranciaPrep) then begin
+                ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta limpieza");
+                MessageIndex += 1;
+            end;
+        ProdOrderRoutingLine.CalcSums("Run Time");
+        if (ProdOrderRoutingLine."Run Time" * ProdOrderLine.Quantity) < (ActualRun - ToleranciaEjec) then begin
+            ErrorMessages[MessageIndex] := Format(CierreEnum::"Sobra fabricacion");
+            MessageIndex += 1;
+        end else
+            if (ProdOrderRoutingLine."Run Time" * ProdOrderLine.Quantity) > (ActualRun + ToleranciaEjec) then begin
+                ErrorMessages[MessageIndex] := Format(CierreEnum::"Falta fabricacion");
+                MessageIndex += 1;
+            end;
+    end;
+
+    /// <summary>
+    /// Retrieves time tolerances for setup and execution based on item format and brand settings.
+    /// </summary>
+    /// <param name="ItemNo">Item number to lookup.</param>
+    /// <param name="ToleranciaPreparacionIncial">Setup time tolerance returned.</param>
+    /// <param name="ToleranciaEjecucion">Execution time tolerance returned.</param>
+    local procedure GetTimeTolerances(ItemNo: Code[20]; var ToleranciaPreparacionIncial: Decimal; var ToleranciaEjecucion: Decimal)
+    var
+        lrItem: Record Item;
+        lrDCToleranciasAdmitidas: Record "DC Tolerancias Admitidas";
+    begin
+        ToleranciaPreparacionIncial := 0;
+        ToleranciaEjecucion := 0;
+        if lrItem.Get(ItemNo) then
+            if lrDCToleranciasAdmitidas.Get(lrItem.Formato, lrItem.Marca) then begin
+                ToleranciaPreparacionIncial := lrDCToleranciasAdmitidas."Toler. Tiempo Limpieza Inicial";
+                ToleranciaEjecucion := lrDCToleranciasAdmitidas."Tolerancia Tiempo Fabricacion";
+            end;
+    end;
+
+    /// <summary>
+    /// Retrieves consumption quantity tolerance based on item format and brand settings.
+    /// </summary>
+    /// <param name="ItemNo">Item number to lookup.</param>
+    /// <param name="ToleranciaConsumos">Consumption quantity tolerance returned.</param>
+    local procedure GetQuantityTolerances(ItemNo: Code[20]; var ToleranciaConsumos: Decimal)
+    var
+        lrItem: Record Item;
+        lrDCToleranciasAdmitidas: Record "DC Tolerancias Admitidas";
+    begin
+        ToleranciaConsumos := 0;
+        if lrItem.Get(ItemNo) then
+            if lrDCToleranciasAdmitidas.Get(lrItem.Formato, lrItem.Marca) then
+                ToleranciaConsumos := lrDCToleranciasAdmitidas."Tolerancia Consumo";
+    end;
+
+    /// <summary>
+    /// Logs close attempt results for a production order, recording all validation messages.
+    /// </summary>
+    /// <param name="ProductionOrder">Production order being evaluated.</param>
+    /// <param name="pTextoErrores">Array of validation messages.</param>
+    /// <param name="i">Number of messages recorded.</param>
+    local procedure AnotarCierreOrden(ProductionOrder: Record "Production Order"; pTextoErrores: array[10] of Text; i: Integer)
+    var
+        lrDCErroresCierreOrden: Record "DC Errores Cierre Orden";
+        lenumCierre: Enum "APA MADCS Cierre Orden";
+        j: Integer;
+        ltxtMsgOkLbl: Label 'Attempt to close production order %1', Comment = 'ESP="%1 Intento de cierre de orden de producción"';
+        ltxtMsgErrorErr: Label '%1 I cannot close the order due to %2', Comment = 'ESP="%1 No puedo cerrar la orden por %2"';
+    begin
+        Clear(lrDCErroresCierreOrden);
+        lrDCErroresCierreOrden.SetCurrentKey(Status, "Production Order No.", "Line No.");
+        lrDCErroresCierreOrden.SetRange(Status, ProductionOrder.Status);
+        lrDCErroresCierreOrden.SetRange("Production Order No.", ProductionOrder."No.");
+        lrDCErroresCierreOrden.DeleteAll(true);
+        Commit();  // Cierra la transacción, ya no necesito los menajes anteriores
+        for j := 1 to i - 1 do begin
+            Clear(lrDCErroresCierreOrden);
+            lrDCErroresCierreOrden.Status := ProductionOrder.Status;
+            lrDCErroresCierreOrden."Production Order No." := ProductionOrder."No.";
+            lrDCErroresCierreOrden.Validate("Error Date", CurrentDateTime());
+            lrDCErroresCierreOrden.Validate("User Id", UserId());
+            if (pTextoErrores[j] in [Format(lenumCierre::Correcto)]) then
+                lrDCErroresCierreOrden.Validate(Message, StrSubstNo(ltxtMsgOkLbl, Format(CurrentDateTime())))
+            else
+                lrDCErroresCierreOrden.Validate(Message, StrSubstNo(ltxtMsgErrorErr, Format(CurrentDateTime()), Format(pTextoErrores[j])));
+            lrDCErroresCierreOrden.Insert(true);
+        end;
+    end;
+
+    /// <summary>
+    /// Determine if the close operation must be aborted based on the first result entry.
+    /// </summary>
+    /// <param name="i">Number of messages returned by EsPosibleCerrarOrden.</param>
+    /// <param name="ltxtCierre">Result messages.</param>
+    /// <param name="lenumCierre">Enum defining close outcomes.</param>
+    /// <returns name="ShouldAbort">Boolean.</returns>
+    local procedure ShouldAbortClose(i: Integer; ltxtCierre: array[100] of Text; lenumCierre: Enum "APA MADCS Cierre Orden"): Boolean
+    begin
+        exit((i = 1) and (ltxtCierre[1] = Format(lenumCierre::"No cerrar")));
+    end;
+
+    /// <summary>
+    /// Determine if error messages should be displayed to the user.
+    /// </summary>
+    /// <param name="pbMostrarError">Flag indicating whether to display errors.</param>
+    /// <param name="i">Number of messages returned by EsPosibleCerrarOrden.</param>
+    /// <param name="ltxtCierre">Result messages.</param>
+    /// <param name="lenumCierre">Enum defining close outcomes.</param>
+    /// <returns name="ShouldShow">Boolean.</returns>
+    local procedure ShouldShowCloseErrors(pbMostrarError: Boolean; i: Integer; ltxtCierre: array[100] of Text; lenumCierre: Enum "APA MADCS Cierre Orden"): Boolean
+    begin
+        exit(pbMostrarError and ((i <> 1) or (ltxtCierre[i] <> Format(lenumCierre::Correcto))));
+    end;
+
+    /// <summary>
+    /// Determine if the production order can be finished.
+    /// </summary>
+    /// <param name="ltxtCierre">Result messages.</param>
+    /// <param name="lenumCierre">Enum defining close outcomes.</param>
+    /// <returns name="ShouldFinish">Boolean.</returns>
+    local procedure ShouldFinishOrder(ltxtCierre: array[100] of Text; lenumCierre: Enum "APA MADCS Cierre Orden"): Boolean
+    begin
+        exit(ltxtCierre[1] = Format(lenumCierre::Correcto));
+    end;
+
+    /// <summary>
+    /// Finalize the production order by changing its status to Finished.
+    /// </summary>
+    /// <param name="ProductionOrder">Record Production Order to finalize.</param>
+    /// <param name="ProdOrderStatusManagement">Codeunit Prod. Order Status Management reference.</param>
+    local procedure FinalizeProductionOrder(var ProductionOrder: Record "Production Order"; var ProdOrderStatusManagement: Codeunit "Prod. Order Status Management")
+    begin
+        Clear(ProdOrderStatusManagement);
+        ProductionOrder.AutoRegistrando := true;
+        ProductionOrder.Modify(false);
+        ProdOrderStatusManagement.ChangeProdOrderStatus(ProductionOrder, Enum::"Production Order Status"::Finished, WorkDate(), true);
+    end;
+
+    #endregion local procedures
 }

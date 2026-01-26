@@ -8,7 +8,7 @@ tableextension 55004 "APA MADCS ADCS User" extends "ADCS User"
 {
     fields
     {
-        field(55000; "MADCS Password"; Text[250])
+        field(55000; "APA MADCS Password"; Text[250])
         {
             Caption = 'MADCS Password', Comment = 'ESP="Contraseña MADCS"';
             ToolTip = 'Specifies the MADCS password.', Comment = 'ESP="Especifica la contraseña MADCS."';
@@ -16,8 +16,8 @@ tableextension 55004 "APA MADCS ADCS User" extends "ADCS User"
 
             trigger OnValidate()
             begin
-                Rec.TestField("MADCS Password");
-                Rec."MADCS Password" := CopyStr(CalculateMADCSPassword(CopyStr("MADCS Password", 1, 30)), 1, MaxStrLen("MADCS Password"));
+                Rec.TestField("APA MADCS Password");
+                Rec."APA MADCS Password" := CopyStr(CalculateMADCSPassword(CopyStr("APA MADCS Password", 1, 30)), 1, MaxStrLen("APA MADCS Password"));
             end;
         }
     }

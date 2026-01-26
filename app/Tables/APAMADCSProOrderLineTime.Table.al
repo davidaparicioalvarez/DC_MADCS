@@ -287,6 +287,25 @@ table 55001 "APA MADCS Pro. Order Line Time"
             exit('');
     end;
 
+    /// <summary>
+    /// internal procedure BreakDownCodeIsBlocking
+    /// Checks if the breakdown code is blocking.
+    /// </summary>
+    /// <param name="BreakDownCode"></param>
+    /// <returns></returns>
+    internal procedure BreakDownCodeIsBlocking(BreakDownCode: Code[20]): Boolean
+    var
+        DCDetallesDeParo: Record "DC Detalles de paro"; 
+    begin
+        Clear(DCDetallesDeParo);
+        DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
+        DCDetallesDeParo.SetRange(Code, BreakDownCode);
+        if DCDetallesDeParo.FindFirst() then
+            exit(DCDetallesDeParo.Disabling)
+        else
+            exit(false);
+    end;
+
     local procedure GetProdOrderLine(var ProdOrderLine: Record "Prod. Order Line")
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
@@ -360,18 +379,4 @@ table 55001 "APA MADCS Pro. Order Line Time"
         NewActivity."BreakDown Code" := BreakDownCode;
         NewActivity.Insert(true);
     end;
-
-    local procedure BreakDownCodeIsBlocking(BreakDownCode: Code[20]): Boolean
-    var
-        DCDetallesDeParo: Record "DC Detalles de paro"; 
-    begin
-        Clear(DCDetallesDeParo);
-        DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
-        DCDetallesDeParo.SetRange(Code, BreakDownCode);
-        if DCDetallesDeParo.FindFirst() then
-            exit(DCDetallesDeParo.Disabling)
-        else
-            exit(false);
-    end;
-
 }

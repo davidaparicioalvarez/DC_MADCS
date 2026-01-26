@@ -117,37 +117,38 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     end;
                 }
 
-                // action(QualityMeasuresAct)
-                // { 
-                //     Caption = 'Quality', Comment = 'ESP="Calidad"';
-                //     ToolTip = 'Manage quality measures for the production order.', Comment = 'ESP="Gestiona las medidas de calidad para la orden de producción."';
-                //     Image = Questionaire;
-                //     Promoted = true;
-                //     PromotedOnly = true;
-                //     PromotedCategory = Process;
-                //     PromotedIsBig = true;
-                //     Visible = this.IsVerified; // TODO: Aclarar de dónde sacar los datos de calidad.
-                //     ApplicationArea = All;
+                action(QualityMeasuresAct)
+                { 
+                    Caption = 'Quality', Comment = 'ESP="Calidad"';
+                    ToolTip = 'Manage quality measures for the production order.', Comment = 'ESP="Gestiona las medidas de calidad para la orden de producción."';
+                    Image = Questionaire;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    Visible = this.IsVerified; // TODO: Aclarar de dónde sacar los datos de calidad.
+                    ApplicationArea = All;
 
-                //     trigger OnAction()
-                //     var
-                //         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
-                //         APAMADCSQualityMeasuresPart: Page "APA MADCS Quality MeasuresPart";
-                //     begin
-                //         Clear(ProdOrderRoutingLine);
-                //         ProdOrderRoutingLine.SetRange(Status, Rec.Status);
-                //         ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                //         ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
-                //         Clear(APAMADCSQualityMeasuresPart);
-                //         APAMADCSQualityMeasuresPart.SetTableView(ProdOrderRoutingLine);
-                //         APAMADCSQualityMeasuresPart.RunModal();
-                //         CurrPage.Update(false);
-                //     end;
-                // }
+                    trigger OnAction()
+                    var
+                        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+                        APAMADCSQualityMeasuresPart: Page "APA MADCS Quality MeasuresPart";
+                    begin
+                        Error('Proceso no finalizado: falta definir la condición de visibilidad y los datos de calidad.');
+                        Clear(ProdOrderRoutingLine);
+                        ProdOrderRoutingLine.SetRange(Status, Rec.Status);
+                        ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
+                        ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
+                        Clear(APAMADCSQualityMeasuresPart);
+                        APAMADCSQualityMeasuresPart.SetTableView(ProdOrderRoutingLine);
+                        APAMADCSQualityMeasuresPart.RunModal();
+                        CurrPage.Update(false);
+                    end;
+                }
 
                 action(ConsumptionAct)
                 {
-                    Caption = 'Consumption', Comment = 'ESP="Consumo"';
+                    Caption = 'Consumption', Comment = 'ESP="Consumos"';
                     ToolTip = 'Manage the consumption of components for the production order.', Comment = 'ESP="Gestiona el consumo de componentes para la orden de producción."';
                     Image = ConsumptionJournal;
                     Promoted = true;
@@ -172,7 +173,7 @@ page 55000 "APA MADCS Rel Prod Order Lines"
 
                 action(TimeAct)
                 {
-                    Caption = 'Time', Comment = 'ESP="Tiempo"';
+                    Caption = 'Time', Comment = 'ESP="Tiempos"';
                     ToolTip = 'Manage the time tracking for the production order.', Comment = 'ESP="Gestiona el seguimiento del tiempo para la orden de producción."';
                     Image = Timeline;
                     Promoted = true;
@@ -193,31 +194,6 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     end;
                 }
 
-                // action(StopsAct)
-                // { // TODO: V2. 
-                //     Caption = 'Stops', Comment = 'ESP="Paradas"';
-                //     ToolTip = 'Manage stops for the production order.', Comment = 'ESP="Gestiona las paradas para la orden de producción."';
-                //     Image = Stop;
-                //     Promoted = true;
-                //     PromotedOnly = true;
-                //     PromotedCategory = Process;
-                //     PromotedIsBig = true;
-                //     Visible = this.IsVerified;
-                //     ApplicationArea = All;
-
-                //     trigger OnAction()
-                //     var
-                //         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
-                //     begin
-                //         Clear(ProdOrderRoutingLine);
-                //         ProdOrderRoutingLine.SetRange(Status, Rec.Status);
-                //         ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                //         ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
-                //         RunModal(Page::"APA MADCS Stops Part", ProdOrderRoutingLine);
-                //         CurrPage.Update(false);
-                //     end;
-                // }
-
                 action(OutputsAct)
                 {
                     Caption = 'Outputs', Comment = 'ESP="Salidas"';
@@ -232,13 +208,13 @@ page 55000 "APA MADCS Rel Prod Order Lines"
 
                     trigger OnAction()
                     var
-                        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+                        ProdOrderLine: Record "Prod. Order Line";
                     begin
-                        Clear(ProdOrderRoutingLine);
-                        ProdOrderRoutingLine.SetRange(Status, Rec.Status);
-                        ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                        ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
-                        RunModal(Page::"APA MADCS Outputs Part", ProdOrderRoutingLine);
+                        Clear(ProdOrderLine);
+                        ProdOrderLine.SetRange(Status, Rec.Status);
+                        ProdOrderLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
+                        ProdOrderLine.SetRange("Line No.", Rec."Line No.");
+                        RunModal(Page::"APA MADCS Outputs Part", ProdOrderLine);
                         CurrPage.Update(false);
                     end;
                 }
