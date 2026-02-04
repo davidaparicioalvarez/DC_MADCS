@@ -37,5 +37,12 @@ tableextension 55003 "APA MADCS Manufacturing Setup" extends "Manufacturing Setu
             DataClassification = SystemMetadata;
             TableRelation = "Item Journal Batch".Name where("Journal Template Name" = field("APA MADCS Output Jnl. Templ."));
         }
+
+        field(55004; "APA MADCS Pro. Ord. Close Impl"; Enum "IAPA MADCS Pro. Ord. Close Err")
+        {
+            Caption = 'MADCS Prod. Order Close Error Implementation', Comment = 'ESP="Implementación de error de cierre de orden de producción MADCS"';
+            ToolTip = 'Specifies the implementation method for handling production order close errors in MADCS.', Comment = 'ESP="Especifica el método de implementación para manejar los errores de cierre de órdenes de producción en MADCS."';
+            DataClassification = SystemMetadata;
+        }
     }
 }

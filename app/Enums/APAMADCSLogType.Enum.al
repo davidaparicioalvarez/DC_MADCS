@@ -36,4 +36,8 @@ enum 55005 "APA MADCS Log Type"
     {
         Caption = 'Post Time', Comment = 'ESP="Registrar Tiempo"';
     }
+    value(8; StopTime)
+    {
+        Caption = 'Stop Time', Comment = 'ESP="Detener Tiempo"';
+    }
 }

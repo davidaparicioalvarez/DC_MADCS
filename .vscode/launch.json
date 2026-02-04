@@ -12,6 +12,7 @@
             "startupObjectId": 55000,
             "startupObjectType": "Page",
             "breakOnError": "All",
+            "breakOnRecordWrite": "None",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
             "enableSqlInformationDebugger": true,

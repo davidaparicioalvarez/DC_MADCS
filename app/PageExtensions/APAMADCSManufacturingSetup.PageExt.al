@@ -28,6 +28,10 @@ pageextension 55000 "APA MADCS Manufacturing Setup" extends "Manufacturing Setup
                 {
                     ApplicationArea = All;
                 }
+                field("APA MADCS Pro. Ord. Close Impl"; Rec."APA MADCS Pro. Ord. Close Impl")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }

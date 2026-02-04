@@ -66,6 +66,19 @@ page 55001 "APA MADCS Consume Components"
                     Editable = true;
                     StyleExpr = this.styleColor;
                     Width = 5;
+
+                    trigger OnValidate()
+                    var
+                        OutputQuantytTitleErr: Label 'Invalid Output Quantity', Comment = 'ESP="Cantidad de salida no válida"';
+                        OutputQuantityErr: Label 'ERROR: The output quantity cannot exceed the remaining quantity of %1.', Comment = 'ESP="ERROR: La cantidad de salida no puede exceder la cantidad restante de %1."';
+                        OutputNegativeQuantityErr: Label 'ERROR: The output quantity cannot be negative.', Comment = 'ESP="ERROR: La cantidad de salida no puede ser negativa."';
+
+                    begin
+                        if (Rec."APA MADCS Qty. After Consump." > (Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity")) then
+                            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(OutputQuantytTitleErr, StrSubstNo(OutputQuantityErr, Rec."Remaining Quantity")));
+                        if (Rec."APA MADCS Qty. After Consump." < 0) then
+                            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(OutputQuantytTitleErr, OutputNegativeQuantityErr));
+                    end;
                 }
             }
             group(buttonGrp)
@@ -80,15 +93,19 @@ page 55001 "APA MADCS Consume Components"
                     var
                         ConsumeAllLbl: Label 'Consume Lot', Comment = 'ESP="Consumir Lote"';
                         ConsumeAllTextLbl: Label 'Consume by rest selected line with lot and rest to consume.', Comment = 'ESP="Consumir por resto la línea seleccionada con lote y resto a consumir."';
-
                     begin
                         CurrPage.ALButtonGroupAll.AddButton(ConsumeAllLbl, ConsumeAllTextLbl, this.ALButtonConsumeAllTok, this.DangerButtonTok);
                     end;
 
                     trigger OnClick(id: Text)
+                    var
+                        NoComponentToConsumeMsg: Label 'No components to consume based on the remaining quantity.', Comment = 'ESP="No hay componentes para consumir en función de la cantidad restante."';
                     begin
                         // Consume all items with "Consumo por resto" = false (quien sirve: Fábrica)
-                        this.Consume();
+                        if Rec."APA MADCS Qty. After Consump." <> (Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity") then
+                            this.Consume()
+                        else
+                            Message(NoComponentToConsumeMsg);
                         CurrPage.Update(false);
                     end;
                 }
@@ -102,6 +119,7 @@ page 55001 "APA MADCS Consume Components"
     end;
 
     var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
         styleColor: Text;
         DangerButtonTok: Label 'danger', Locked = true;
         ALButtonConsumeAllTok: Label 'ALButtonConsumeAll', Locked = true;
@@ -109,10 +127,9 @@ page 55001 "APA MADCS Consume Components"
     procedure Initialize(ItemNo: Code[20]; QuienSirvePickingOP: Enum "DC Quien Sirve Picking OP")
     var
         ProdOrderComponent: Record "Prod. Order Component";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
     begin
-        APAMADCSManagement.ValidateAndDeleteTemporaryTables(Rec);
-        APAMADCSManagement.LoadProdOrderComponentsForWarehouseConsumption(Rec, ProdOrderComponent, ItemNo, QuienSirvePickingOP);
+        this.APAMADCSManagement.ValidateAndDeleteTemporaryTables(Rec);
+        this.APAMADCSManagement.LoadProdOrderComponentsForWarehouseConsumption(Rec, ProdOrderComponent, ItemNo, QuienSirvePickingOP);
     end;
 
     local procedure SetStyleColor()
@@ -136,20 +153,18 @@ page 55001 "APA MADCS Consume Components"
     local procedure Consume()
     var
         ProdOrderComponent: Record "Prod. Order Component";
-        APAMADCSManagement: Codeunit "APA MADCS Management";
-        err: ErrorInfo;
         QuantityToConsume: Decimal;
         BadQuantityMsg: Label 'Consume by Rest', Comment = 'ESP="Consumo por restos."';
         BadQuantityErr: Label 'The amount indicated as remainder %1 is not consistent with the amount of component %2 nor with the amount already consumed %3.', Comment = 'ESP="La cantidad indicada como resto %1 no es consistente con la cantidad del componente %2 ni con la cantidad ya consumida %3."';
+        ComponentConsuedSuccessMsg: Label 'Component consumed successfully.', Comment = 'ESP="Componente consumido con éxito."';
     begin
         Rec.CalcFields("APA MADCS Consumed Quantity");
         QuantityToConsume := Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity" - Rec."APA MADCS Qty. After Consump.";
-        if QuantityToConsume <= 0 then begin
-            err := APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."APA MADCS Qty. After Consump.", Rec."APA MADCS Quantity", Rec."APA MADCS Consumed Quantity"));
-            APAMADCSManagement.Raise(err);
-        end;
+        if QuantityToConsume <= 0 then 
+            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."APA MADCS Qty. After Consump.", Rec."APA MADCS Quantity", Rec."APA MADCS Consumed Quantity")));
         Clear(ProdOrderComponent);
         if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
-            APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."APA MADCS Lot No.");
+            this.APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."APA MADCS Lot No.");
+        Message(ComponentConsuedSuccessMsg);
     end;
 }

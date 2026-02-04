@@ -26,6 +26,7 @@ page 55005 "APA MADCS Lot No. Information"
                 field("Item No."; Rec."Item No.")
                 {
                     ToolTip = 'Specifies the item number for the lot information.', Comment = 'ESP="Especifica el número de producto para la información del lote."';
+                    Width = 14;
                 }
                 
                 field("Variant Code"; Rec."Variant Code")

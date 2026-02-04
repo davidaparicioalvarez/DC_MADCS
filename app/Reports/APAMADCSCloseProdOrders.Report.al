@@ -19,7 +19,7 @@ report 55000 "APA MADCS Close Prod. Orders"
             var
                 lrProductionOrder: Record "Production Order";
                 lrProductionOrderToClose: Record "Production Order";
-                APAMADCSManagement: Codeunit "APA MADCS Management";
+                IAPAMADCSProOrdCloseErr: Interface "IAPA MADCS Pro. Ord. Close Err";
                 ldlgDialogo: Dialog;
                 ltxtTextoErrores: array[1] of Text;
                 SpecialErrorErr: Label 'ATTENTION: %1 There is some unusual error in the order, check the directories, components and paths',
@@ -37,7 +37,7 @@ report 55000 "APA MADCS Close Prod. Orders"
                             ldlgDialogo.Update(1, lrProductionOrder."No.");
                         ltxtTextoErrores[1] := SpecialErrorErr;
                         lrProductionOrderToClose := lrProductionOrder;
-                        APAMADCSManagement.CerrarOrdenProduccion(lrProductionOrderToClose, false)
+                        IAPAMADCSProOrdCloseErr.APAMADCSCloseProductionOrder(lrProductionOrderToClose, false);
                     until lrProductionOrder.Next() = 0;
                 if GuiAllowed() then
                     ldlgDialogo.Close();

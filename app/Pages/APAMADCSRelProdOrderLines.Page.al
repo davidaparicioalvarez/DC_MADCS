@@ -12,13 +12,16 @@ page 55000 "APA MADCS Rel Prod Order Lines"
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Line";
+    SourceTableView = where(Status = const(Released),
+                            "Orden Preparacion" = filter(<> 0),
+                            "APA MADCS Picking Status" = const("Totaly Picked"),
+                            "APA MADCS Time finished" = const(false));
     ApplicationArea = All;
     UsageCategory = Lists;
     Editable = false;
-    SourceTableView = where(Status = const(Released),
-                            "Orden Preparacion" = filter(<> 0));
-
-    // TODO: Add filtering to show only orders assigned to a user or to a work center and picking completed
+    Permissions =
+        tabledata "Prod. Order Line" = r,
+        tabledata "Prod. Order Component" = r;
 
     layout
     {
@@ -43,6 +46,7 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                 {
                     ToolTip = 'Specifies the item number of the item to manufacture.', Comment = 'ESP="Especifica el número de artículo del producto a fabricar."';
                     StyleExpr = this.styleColor;
+                    Width = 14;
                 }
                 field("Description"; Rec.Description)
                 {
@@ -100,12 +104,12 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     PromotedCategory = Process;
                     PromotedIsBig = true;
                     ApplicationArea = All;
-                    Visible = true;
+                    Visible = not this.IsVerified;
 
                     trigger OnAction()
                     var
                         TempProdOrderComponent: Record "Prod. Order Component" temporary;
-                        APAMADCSVerificationPart: Page "APA MADCS Verification Part";
+                        APAMADCSVerificationPart: Page "APA MADCS Verification";
                     begin
                         Clear(TempProdOrderComponent);
                         TempProdOrderComponent.SetRange("Status", Rec.Status);
@@ -117,59 +121,34 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     end;
                 }
 
-                action(QualityMeasuresAct)
-                { 
-                    Caption = 'Quality', Comment = 'ESP="Calidad"';
-                    ToolTip = 'Manage quality measures for the production order.', Comment = 'ESP="Gestiona las medidas de calidad para la orden de producción."';
-                    Image = Questionaire;
-                    Promoted = true;
-                    PromotedOnly = true;
-                    PromotedCategory = Process;
-                    PromotedIsBig = true;
-                    Visible = this.IsVerified; // TODO: Aclarar de dónde sacar los datos de calidad.
-                    ApplicationArea = All;
+                // action(QualityMeasuresAct)
+                // { // TODO: Toda la funcionalidad de calidad.
+                //     Caption = 'Quality', Comment = 'ESP="Calidad"';
+                //     ToolTip = 'Manage quality measures for the production order.', Comment = 'ESP="Gestiona las medidas de calidad para la orden de producción."';
+                //     Image = Questionaire;
+                //     Promoted = true;
+                //     PromotedOnly = true;
+                //     PromotedCategory = Process;
+                //     PromotedIsBig = true;
+                //     Visible = this.IsVerified; 
+                //     ApplicationArea = All;
 
-                    trigger OnAction()
-                    var
-                        ProdOrderRoutingLine: Record "Prod. Order Routing Line";
-                        APAMADCSQualityMeasuresPart: Page "APA MADCS Quality MeasuresPart";
-                    begin
-                        Error('Proceso no finalizado: falta definir la condición de visibilidad y los datos de calidad.');
-                        Clear(ProdOrderRoutingLine);
-                        ProdOrderRoutingLine.SetRange(Status, Rec.Status);
-                        ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                        ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
-                        Clear(APAMADCSQualityMeasuresPart);
-                        APAMADCSQualityMeasuresPart.SetTableView(ProdOrderRoutingLine);
-                        APAMADCSQualityMeasuresPart.RunModal();
-                        CurrPage.Update(false);
-                    end;
-                }
-
-                action(ConsumptionAct)
-                {
-                    Caption = 'Consumption', Comment = 'ESP="Consumos"';
-                    ToolTip = 'Manage the consumption of components for the production order.', Comment = 'ESP="Gestiona el consumo de componentes para la orden de producción."';
-                    Image = ConsumptionJournal;
-                    Promoted = true;
-                    PromotedOnly = true;
-                    PromotedCategory = Process;
-                    PromotedIsBig = true;
-                    Visible = this.IsVerified;
-                    ApplicationArea = All;
-
-                    trigger OnAction()
-                    var
-                        ProdOrderComponent: Record "Prod. Order Component";
-                    begin
-                        Clear(ProdOrderComponent);
-                        ProdOrderComponent.SetRange(Status, Rec.Status);
-                        ProdOrderComponent.SetRange("Prod. Order No.", Rec."Prod. Order No.");
-                        ProdOrderComponent.SetRange("Prod. Order Line No.", Rec."Line No.");
-                        RunModal(Page::"APA MADCS Consumption Part", ProdOrderComponent);
-                        CurrPage.Update(false);
-                    end;
-                }
+                //     trigger OnAction()
+                //     var
+                //         ProdOrderRoutingLine: Record "Prod. Order Routing Line";
+                //         APAMADCSQualityMeasuresPart: Page "APA MADCS Quality Measures";
+                //     begin
+                //         Error('Proceso no finalizado: falta definir la condición de visibilidad y los datos de calidad.');
+                //         Clear(ProdOrderRoutingLine);
+                //         ProdOrderRoutingLine.SetRange(Status, Rec.Status);
+                //         ProdOrderRoutingLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
+                //         ProdOrderRoutingLine.SetRange("Routing Reference No.", Rec."Line No.");
+                //         Clear(APAMADCSQualityMeasuresPart);
+                //         APAMADCSQualityMeasuresPart.SetTableView(ProdOrderRoutingLine);
+                //         APAMADCSQualityMeasuresPart.RunModal();
+                //         CurrPage.Update(false);
+                //     end;
+                // }
 
                 action(TimeAct)
                 {
@@ -203,7 +182,7 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     PromotedOnly = true;
                     PromotedCategory = Process;
                     PromotedIsBig = true;
-                    Visible = this.IsVerified;
+                    Visible = this.IsVerified and not this.IsOutputsFinished;
                     ApplicationArea = All;
 
                     trigger OnAction()
@@ -214,13 +193,51 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                         ProdOrderLine.SetRange(Status, Rec.Status);
                         ProdOrderLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
                         ProdOrderLine.SetRange("Line No.", Rec."Line No.");
-                        RunModal(Page::"APA MADCS Outputs Part", ProdOrderLine);
+                        RunModal(Page::"APA MADCS Outputs", ProdOrderLine);
                         CurrPage.Update(false);
                     end;
                 }
+
+                action(ConsumptionAct)
+                {
+                    Caption = 'Consumption', Comment = 'ESP="Consumos"';
+                    ToolTip = 'Manage the consumption of components for the production order.', Comment = 'ESP="Gestiona el consumo de componentes para la orden de producción."';
+                    Image = ConsumptionJournal;
+                    Promoted = true;
+                    PromotedOnly = true;
+                    PromotedCategory = Process;
+                    PromotedIsBig = true;
+                    Visible = this.IsVerified and not this.IsConsumptionFinished;
+                    ApplicationArea = All;
+
+                    trigger OnAction()
+                    var
+                        ProdOrderComponent: Record "Prod. Order Component";
+                        ConsumeTitleErr: Label 'Consumption.', Comment = 'ESP="Consumos."';
+                        CannotConsumeErr: Label 'Cannot consume components because the outputs are not finished.', Comment = 'ESP="No se pueden consumir los componentes porque no se han finalizado las salidas."';
+                    begin
+                        Clear(ProdOrderComponent);
+                        ProdOrderComponent.SetRange(Status, Rec.Status);
+                        ProdOrderComponent.SetRange("Prod. Order No.", Rec."Prod. Order No.");
+                        ProdOrderComponent.SetRange("Prod. Order Line No.", Rec."Line No.");
+                        if ProdOrderComponent.FindFirst() then
+                            if not this.APAMADCSManagement.IsMarkedForConsume(ProdOrderComponent) then
+                                this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(ConsumeTitleErr, CannotConsumeErr));
+                        RunModal(Page::"APA MADCS Consumption", ProdOrderComponent);
+                        CurrPage.Update(false);
+                    end;
+                }
+
             }
         }
     }
+
+    trigger OnInit()
+    begin
+        // Ensure all data for filtering is up to date
+        this.APAMADCSManagement.UpdatePickingStatusForReleasedProdOrders();
+        Commit(); // Commit to ensure data consistency before user interaction
+    end;
 
     trigger OnOpenPage()
     var
@@ -239,18 +256,20 @@ page 55000 "APA MADCS Rel Prod Order Lines"
     trigger OnAfterGetCurrRecord()
     begin
         this.SetStyleColor();
-        this.SetIsVerified();
+        this.SetAllVars();
     end;
 
     trigger OnAfterGetRecord()
     begin
         this.SetStyleColor();
-        this.SetIsVerified();
+        this.SetAllVars();
     end;
 
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         IsVerified: Boolean;
+        IsOutputsFinished: Boolean;
+        IsConsumptionFinished: Boolean;
         styleColor: Text;
 
     local procedure SetStyleColor()
@@ -272,9 +291,11 @@ page 55000 "APA MADCS Rel Prod Order Lines"
         this.styleColor := Format(newPageStyle);
     end;
 
-    local procedure SetIsVerified()
+    local procedure SetAllVars()
     begin
-        Rec.CalcFields("APA MADCS Verified");
+        Rec.CalcFields("APA MADCS Verified", "APA MADCS Time finished", "APA MADCS Output finished", "APA MADCS Consumption finished");
         this.IsVerified := Rec."APA MADCS Verified";
+        this.IsOutputsFinished := Rec."APA MADCS Output finished";
+        this.IsConsumptionFinished := Rec."APA MADCS Consumption finished";
     end;
 }

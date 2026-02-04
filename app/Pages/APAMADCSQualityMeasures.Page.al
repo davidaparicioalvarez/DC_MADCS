@@ -3,11 +3,11 @@ namespace MADCS.MADCS;
 using Microsoft.Manufacturing.Document;
 
 /// <summary>
-/// APA MADCS Quality Measures Part
+/// APA MADCS Quality Measures
 /// Part page for managing Quality Measures in production orders.
 /// This page will be used within the main MADCS card to display and manage output data.
 /// </summary>
-page 55008 "APA MADCS Quality MeasuresPart"
+page 55008 "APA MADCS Quality Measures"
 {
     // TODO:
     Caption = 'Quality Measures', Comment = 'ESP="Medidas de Calidad"';

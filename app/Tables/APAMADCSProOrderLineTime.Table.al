@@ -17,7 +17,8 @@ table 55001 "APA MADCS Pro. Order Line Time"
         tabledata "Prod. Order Line" = r,
         tabledata "APA MADCS Pro. Order Line Time" = rmid,
         tabledata "Prod. Order Routing Line" = r,
-        tabledata "DC Detalles de paro" = r;
+        tabledata "DC Detalles de paro" = r,
+        tabledata "Production Order" = r;
     
     fields
     {
@@ -164,8 +165,15 @@ table 55001 "APA MADCS Pro. Order Line Time"
     /// <param name="OperatorCode"></param>
     /// <param name="BreakDownCode"></param>
     internal procedure NewCleaningActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
+    var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        CleanCannotStartTitleLbl: Label 'Cleaning Phase Cannot Start', Comment = 'ESP="La fase de limpieza no puede iniciarse"';
+        CleanCannotStartErr: Label 'The cleaning phase cannot be started because the execution phase has not been completed yet.', Comment = 'ESP="La fase de limpieza no puede iniciarse porque la fase de ejecución no se ha completado aún."';
     begin
-        this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Clean, BreakDownCode);
+        if APAMADCSManagement.CleanCanStart(pProdOrderStatus, pProdOrderCode) then
+            this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Clean, BreakDownCode)
+        else
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Action"), CleanCannotStartTitleLbl, CleanCannotStartErr));
     end;
 
     /// <summary>
@@ -178,8 +186,19 @@ table 55001 "APA MADCS Pro. Order Line Time"
     /// <param name="OperatorCode"></param>
     /// <param name="BreakDownCode"></param>
     internal procedure NewExecutionActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
+    var
+        ProductionOrder: Record "Production Order";
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        ExecutionCannotStartTitleLbl: Label 'Execution Phase Cannot Start', Comment = 'ESP="La fase de ejecución no puede iniciarse"';
+        ExecutionCannotStartErr: Label 'The execution phase cannot be started because consumptions or outputs have been finished.', Comment = 'ESP="La fase de ejecución no puede iniciarse porque los consumos o las salidas se han finalizado."';
     begin
-        this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Execution, BreakDownCode);
+        if APAMADCSManagement.ExecutionCanStart(pProdOrderStatus, pProdOrderCode) then
+            this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Execution, BreakDownCode)
+        else begin
+            if not ProductionOrder.Get(pProdOrderStatus, pProdOrderCode) then
+                APAMADCSManagement.Raise(APAMADCSManagement.BuildApplicationError(ExecutionCannotStartTitleLbl, ExecutionCannotStartErr));
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildApplicationError(ExecutionCannotStartTitleLbl, ExecutionCannotStartErr));
+        end;           
     end;
 
     /// <summary>
@@ -195,10 +214,13 @@ table 55001 "APA MADCS Pro. Order Line Time"
     internal procedure NewFaultActivity(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         AlertBlockedFaultMsg: Label 'The breakdown code %1 is blocking. A fault activity will be created instead of a execution with fault activity.', Comment='ESP="El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería."';
+        AlertNotBlockedFaultMsg: Label 'The breakdown code %1 is not blocking. A fault activity will be created instead of a execution with fault activity.', Comment='ESP="El código de paro %1 es bloqueante. Se creará una actividad de ejecución con avería en lugar de una actividad de avería."';
     begin
-        if (id = Format(Enum::"APA MADCS Time Buttons"::ALButtonBlockedBreakdownTok)) then
+        if (id = Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok)) then begin
+            if not this.BreakDownCodeIsBlocking(BreakDownCode) then
+                Message(AlertNotBlockedFaultMsg, BreakDownCode);
             this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode)
-        else
+        end else
             if this.BreakDownCodeIsBlocking(BreakDownCode) then begin
                 Message(AlertBlockedFaultMsg, BreakDownCode);
                 this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode);

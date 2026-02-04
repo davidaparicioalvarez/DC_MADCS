@@ -6,17 +6,19 @@ pageextension 55003 "APA MADCS Rel. Prod. Orders" extends "Released Production O
 {
     layout
     {
-        addlast(content)
+        addlast(Control1)
         {
-            group("MADCS Production Orders Info")
+            field("APA MADCS Consumption finished"; Rec."APA MADCS Consumption finished")
             {
-                Caption = 'MADCS Production Orders Info', Comment = 'ESP="Información de las órdenes de producción MADCS"';
-
-                field("APA MADCS Can be finished"; Rec."APA MADCS Can be finished")
-                {
-                    ApplicationArea = All;
-                    Editable = false;
-                }
+                ApplicationArea = All;
+            }
+            field("APA MADCS Output finished"; Rec."APA MADCS Output finished")
+            {
+                ApplicationArea = All;
+            }
+            field("APA MADCS Time finished"; Rec."APA MADCS Time finished")
+            {
+                ApplicationArea = All;
             }
         }
     }
