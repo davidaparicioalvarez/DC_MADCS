@@ -241,7 +241,6 @@ page 55002 "APA MADCS Consumption"
     local procedure ShowConsumptionPageFromWarehouse()
     var
         APAMADCSConsumeComponents: Page "APA MADCS Consume Components";
-        ConsumptionDoneMsg: Label 'All applicable components have been consumed successfully.', Comment = 'ESP="Todos los componentes aplicables han sido consumidos con éxito."';
     begin
         Clear(APAMADCSConsumeComponents);
         APAMADCSConsumeComponents.SetTableView(Rec);
