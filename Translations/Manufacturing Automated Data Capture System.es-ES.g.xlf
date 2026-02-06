@@ -51,17 +51,29 @@
           <note from="Developer" annotates="general" priority="2">ESP="No se encontró ninguna operación de limpieza para la línea de orden de producción."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsureCleanOperation - NamedType CleanNotFoundMsgLbl</note>
         </trans-unit>
-        <trans-unit id="Table 2825751362 - Method 4202036546 - NamedType 657623665" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Table 2825751362 - Method 4038367633 - NamedType 657623665" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error Looking for Operation No.</source>
           <target state="translated">Error al buscar el Nº de Operación.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Error al buscar el Nº de Operación."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsurePreparationExecutionFailOperation - NamedType TittleMsgLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsureExecutionFailOperation - NamedType TittleMsgLbl</note>
         </trans-unit>
-        <trans-unit id="Table 2825751362 - Method 4202036546 - NamedType 4226885860" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Table 2825751362 - Method 4038367633 - NamedType 4226885860" size-unit="char" translate="yes" xml:space="preserve">
           <source>The operation number could not be found for the production order line.</source>
           <target state="translated">No se pudo encontrar el número de operación para la línea de orden de producción.</target>
           <note from="Developer" annotates="general" priority="2">ESP="No se pudo encontrar el número de operación para la línea de orden de producción."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsurePreparationExecutionFailOperation - NamedType MessageMsgLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsureExecutionFailOperation - NamedType MessageMsgLbl</note>
+        </trans-unit>
+        <trans-unit id="Table 2825751362 - Method 3479786346 - NamedType 657623665" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Error Looking for Operation No.</source>
+          <target state="translated">Error al buscar el Nº de Operación.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Error al buscar el Nº de Operación."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsurePreparationOperation - NamedType TittleMsgLbl</note>
+        </trans-unit>
+        <trans-unit id="Table 2825751362 - Method 3479786346 - NamedType 4226885860" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The operation number could not be found for the production order line.</source>
+          <target state="translated">No se pudo encontrar el número de operación para la línea de orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="No se pudo encontrar el número de operación para la línea de orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Method EnsurePreparationOperation - NamedType MessageMsgLbl</note>
         </trans-unit>
         <trans-unit id="Table 2825751362 - Method 1363025201 - NamedType 657623665" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error Looking for Operation No.</source>

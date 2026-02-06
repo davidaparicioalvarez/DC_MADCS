@@ -8,15 +8,15 @@ enum 55010 "APA MADCS Operation Type"
     {
         Caption = '', Locked = true;
     }
-    value(1; Preparation)
+    value(10; Preparation)
     {
         Caption = 'Preparation', Comment = 'ESP="Preparación"';
     }
-    value(2; Execution)
+    value(20; Execution)
     {
         Caption = 'Execution', Comment = 'ESP="Ejecución"';
     }
-    value(3; Cleaning)
+    value(30; Cleaning)
     {
         Caption = 'Cleaning', Comment = 'ESP="Limpieza"';
     }

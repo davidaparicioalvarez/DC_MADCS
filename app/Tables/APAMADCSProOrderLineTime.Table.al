@@ -283,9 +283,12 @@ table 55001 "APA MADCS Pro. Order Line Time"
         this.InitProdOrderRoutingLine(ProdOrderRoutingLine, ProdOrderLine);
 
         if this.IsCleanJournalType(APAMADCSJournalType) then
-            this.EnsureCleanOperation(ProdOrderRoutingLine)
+            this.EnsureCleanOperation(ProdOrderRoutingLine, APAMADCSJournalType)
         else
-            this.EnsurePreparationExecutionFailOperation(ProdOrderRoutingLine, APAMADCSJournalType);
+            if  this.IsPreparationJournalType(APAMADCSJournalType) then
+                this.EnsurePreparationOperation(ProdOrderRoutingLine, APAMADCSJournalType)
+            else       
+                this.EnsureExecutionFailOperation(ProdOrderRoutingLine, APAMADCSJournalType);
 
         exit(ProdOrderRoutingLine."Operation No.");
     end;
@@ -358,29 +361,41 @@ table 55001 "APA MADCS Pro. Order Line Time"
         exit(APAMADCSJournalType in [Enum::"APA MADCS Journal Type"::Clean]);
     end;
 
-    local procedure EnsureCleanOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line")
+    local procedure EnsureCleanOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum "APA MADCS Journal Type")
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
         CleanNotFoundMsgLbl: Label 'No cleaning operation found for the production order line.', Comment = 'ESP="No se encontró ninguna operación de limpieza para la línea de orden de producción."';
     begin
         ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
+        ProdOrderRoutingLine.SetFilter("Operation No.", '<>%1', Format(APAMADCSJournalType.AsInteger()));
         
         if not ProdOrderRoutingLine.FindLast() then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, CleanNotFoundMsgLbl));
     end;
 
-    local procedure EnsurePreparationExecutionFailOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type")
+    local procedure EnsurePreparationOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum "APA MADCS Journal Type")
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
         MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
     begin
-        if this.IsPreparationJournalType(APAMADCSJournalType) then
-            ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0)
-        else
-            ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
+        ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
+        ProdOrderRoutingLine.SetFilter("Operation No.", '<>%1', Format(APAMADCSJournalType.AsInteger()));
 
+        if not ProdOrderRoutingLine.FindFirst() then
+            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+    end;
+
+    local procedure EnsureExecutionFailOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum "APA MADCS Journal Type")
+    var
+        APAMADCSManagement: Codeunit "APA MADCS Management";
+        TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
+        MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
+    begin
+        ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
+        ProdOrderRoutingLine.SetFilter("Operation No.", '<>%1', Format(APAMADCSJournalType.AsInteger()));
+        
         if not ProdOrderRoutingLine.FindFirst() then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
     end;
