@@ -20,9 +20,11 @@ page 55007 "APA MADCS Track. Specification"
             {
                 field("Lot No."; Rec."Lot No.")
                 {
+                    ToolTip = 'Specifies the tracking lot number.', Comment = 'ESP="Especifica el número de lote de trazabilidad."';
                 }
                 field("Expiration Date"; Rec."Expiration Date")
                 {
+                    ToolTip = 'Specifies the expiration date for the tracking lot.', Comment = 'ESP="Especifica la fecha de vencimiento del lote de trazabilidad."';
                 }
             }
         }

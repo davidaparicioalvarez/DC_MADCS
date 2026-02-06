@@ -148,7 +148,7 @@ page 55002 "APA MADCS Consumption"
                     field("Quien sirve picking OP"; Rec."Quien sirve picking OP")
                     {
                         Caption = 'Picking Servicer', Comment = 'ESP="Quien sirve picking"';
-                        ToolTip = 'The Warehouse option always implies performing the remaining quantities. Factories/Order Document: If the OPL is not interrupted, do not perform the remaining quantities; select the "consume all" button. If the OPL is interrupted, perform the remaining quantities.', Comment = 'ESP="La opción Almacen siempre impilca Realizar Restos. Fabricas/Doc Orden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."';
+                        ToolTip = 'Specifies Warehouse implies remaining quantities.Factories/OrderDocument if the OPL isn`t interrupted don`t perform remaining quantities select "consume all" button; else perform remaining quantities.', Comment = 'ESP="Opción Almacen siempre impilca Realizar Restos.Fabrica/DocOrden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."';
                         Width = 10;
                         StyleExpr = this.styleColor;
                     }
@@ -196,9 +196,12 @@ page 55002 "APA MADCS Consumption"
     begin
         // Set style color based only on remaining quantity and consumption from rest
         Rec.CalcFields("Consumo por resto");
-        if Rec."Consumo por resto" then
-            newPageStyle := PageStyle::Favorable // Warehouse serving lines: green (Favorable)
-        else
+        if Rec."Consumo por resto" then begin
+            if Rec."Remaining Quantity" = 0 then
+                newPageStyle := PageStyle::None // Consumed lines: black (None)
+            else
+                newPageStyle := PageStyle::Favorable // Warehouse serving lines: green (Favorable)
+        end else
             if Rec."Remaining Quantity" = 0 then
                 newPageStyle := PageStyle::None // Consumed lines: black (None)
             else

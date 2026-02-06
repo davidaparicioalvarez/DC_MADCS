@@ -113,7 +113,7 @@ page 55001 "APA MADCS Consume Components"
         }
     }
 
-    trigger OnAfterGetCurrRecord()
+    trigger OnAfterGetRecord()
     begin
         this.SetStyleColor();
     end;

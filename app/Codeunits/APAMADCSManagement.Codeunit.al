@@ -719,6 +719,43 @@ codeunit 55000 "APA MADCS Management"
                 ProductionOrder.UpdatePickingStatusField(true);
             until ProductionOrder.Next() = 0;
     end;
+
+    /// <summary>
+    /// procedure UpdatePickingStatusField
+    /// Updates the "APA MADCS Picking Status" field based on the picking status of the production order components.
+    /// </summary>
+    /// <param name="ProductionOrder"></param>
+    /// <param name="save"></param>
+    procedure UpdatePickingStatusField(var ProductionOrder: Record "Production Order"; save: Boolean)
+    var
+        lrProdOrderComponent: Record "Prod. Order Component";
+        lineasTotales: Integer;
+    begin
+        Clear(ProductionOrder."APA MADCS Picking Status");
+        Clear(lrProdOrderComponent);
+        lrProdOrderComponent.SetCurrentKey(Status, "Prod. Order No.");
+        lrProdOrderComponent.SetRange(Status, ProductionOrder.Status);
+        lrProdOrderComponent.SetRange("Prod. Order No.", ProductionOrder."No.");
+        lineasTotales := lrProdOrderComponent.Count();
+        lrProdOrderComponent.SetRange("Completely Picked", false);
+        if lrProdOrderComponent.IsEmpty() then begin
+            ProductionOrder."APA MADCS Picking Status" := ProductionOrder."APA MADCS Picking Status"::"Totaly Picked";
+            if save then
+                ProductionOrder.Modify(true);
+        end else
+            if (lrProdOrderComponent.Count() <> lineasTotales) then begin
+                ProductionOrder."APA MADCS Picking Status" := ProductionOrder."APA MADCS Picking Status"::"Partialy Picked";
+                if save then
+                    ProductionOrder.Modify(true);
+            end else begin
+                ProductionOrder.CalcFields("RPO No. Picking");
+                if (ProductionOrder."RPO No. Picking" <> '') then begin
+                    ProductionOrder."APA MADCS Picking Status" := ProductionOrder."APA MADCS Picking Status"::Pending;
+                    if save then
+                        ProductionOrder.Modify(true);
+                end 
+            end;
+    end;
     #endregion procedures
 
 
@@ -1079,6 +1116,10 @@ codeunit 55000 "APA MADCS Management"
         ReservationEntry: Record "Reservation Entry";
         ItemTrackingMgt: Codeunit "Item Tracking Management";
     begin
+        Clear(ReservationEntry);
+        ReservationEntry.SetPointer(ItemJnlLine.RowID1());
+        ReservationEntry.SetPointerFilter();
+        ReservationEntry.DeleteAll(false);
         ItemTrackingMgt.CopyItemTracking(ProdOrderComp.RowID1(), ItemJnlLine.RowID1(), false);
 
         Clear(ReservationEntry);

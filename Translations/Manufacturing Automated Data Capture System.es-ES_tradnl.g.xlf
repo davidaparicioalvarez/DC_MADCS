@@ -513,42 +513,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="El artículo %1 (%2) está bloqueado y no se puede consumir."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ValidateOutputItemAndVariantNotBlocked - NamedType BlockedMsg</note>
         </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 2988159517 - NamedType 1670204571" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Errors</source>
-          <target state="translated">Errores</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Errores"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method APAMADCSCloseProductionOrder - NamedType ErrorsLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 1107688992 - NamedType 1938414526" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Manufacturing Setup Missing</source>
-          <target state="translated">Falta la configuración de fabricación</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Falta la configuración de fabricación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method CanCloseOrder - NamedType ManufacturingSetupMissMsg</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 1107688992 - NamedType 3393518014" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Manufacturing Setup record is missing. Please set it up before posting consumption.</source>
-          <target state="translated">Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method CanCloseOrder - NamedType ManufacturingSetupErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 4105562745 - NamedType 2461956333" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Attempt to close production order %1</source>
-          <target state="translated">%1 Intento de cierre de orden de producción</target>
-          <note from="Developer" annotates="general" priority="2">ESP="%1 Intento de cierre de orden de producción"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method LogProductionOrderClose - NamedType ltxtMsgOkLbl</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 4105562745 - NamedType 3051379532" size-unit="char" translate="yes" xml:space="preserve">
-          <source>%1 I cannot close the order due to %2</source>
-          <target state="translated">%1 No puedo cerrar la orden por %2</target>
-          <note from="Developer" annotates="general" priority="2">ESP="%1 No puedo cerrar la orden por %2"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method LogProductionOrderClose - NamedType ltxtMsgErrorErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 3145378164 - Method 1956469873 - NamedType 1998652080" size-unit="char" translate="yes" xml:space="preserve">
-          <source> component item %1</source>
-          <target state="translated"> producto componente %1</target>
-          <note from="Developer" annotates="general" priority="2">ESP=" producto componente %1"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit DC Prod. Order. Close Errores - Method ValidateComponentsForLine - NamedType LineaComponentesLbl</note>
-        </trans-unit>
         <trans-unit id="Page 3998780772 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Consume Components</source>
           <target state="translated">Consumir Componentes</target>
@@ -657,12 +621,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="¿Está seguro de que desea marcar esta orden de producción como finalizada en consumos y crear una nueva actividad de limpieza?"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method MarkProductionOrderAsFinished - NamedType ConfirmFinishOrderQst</note>
         </trans-unit>
-        <trans-unit id="Page 178587815 - Method 3409175058 - NamedType 2163189224" size-unit="char" translate="yes" xml:space="preserve">
-          <source>All applicable components have been consumed successfully.</source>
-          <target state="translated">Todos los componentes aplicables han sido consumidos con éxito.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Todos los componentes aplicables han sido consumidos con éxito."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method ShowConsumptionPageFromWarehouse - NamedType ConsumptionDoneMsg</note>
-        </trans-unit>
         <trans-unit id="Page 178587815 - Control 334747283 - Method 2219734473 - NamedType 14288021" size-unit="char" translate="yes" xml:space="preserve">
           <source>Consume Item</source>
           <target state="translated">Consumir Comp.</target>
@@ -748,9 +706,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 1584468205 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>The Warehouse option always implies performing the remaining quantities. Factories/Order Document: If the OPL is not interrupted, do not perform the remaining quantities; select the "consume all" button. If the OPL is interrupted, perform the remaining quantities.</source>
-          <target state="translated">La opción Almacen siempre impilca Realizar Restos. Fabricas/Doc Orden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="La opción Almacen siempre impilca Realizar Restos. Fabricas/Doc Orden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."</note>
+          <source>Specifies Warehouse implies remaining quantities.Factories/OrderDocument if the OPL isn`t interrupted don`t perform remaining quantities select "consume all" button; else perform remaining quantities.</source>
+          <target state="translated">Opción Almacen siempre impilca Realizar Restos.Fabrica/DocOrden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Opción Almacen siempre impilca Realizar Restos.Fabrica/DocOrden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Quien sirve picking OP - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 1584468205 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -891,17 +849,47 @@
           <note from="Developer" annotates="general" priority="2">ESP="C.Rechazo"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Scrap - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the description of the item to be produced in the production order.</source>
+          <target state="translated">Especifica la descripción del artículo que se va a producir en la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la descripción del artículo que se va a producir en la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 1073155259 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the quantity that has been finished in the production order.</source>
+          <target state="translated">Especifica la cantidad que se ha terminado en la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad que se ha terminado en la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Finished Quantity - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 3162003200 - Control 1073155259 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>QT</source>
           <target state="translated">QT</target>
           <note from="Developer" annotates="general" priority="2">ESP="QT"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Finished Quantity - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 568743302 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the item to be propduced in the production order.</source>
+          <target state="translated">Especifica el artículo que se va a producir en la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el artículo que se va a producir en la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Item No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 2704404533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the total expected quantity to be produced in the production order.</source>
+          <target state="translated">Especifica la cantidad total que se espera producir en la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad total que se espera producir en la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Quantity - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 3162003200 - Control 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>QR</source>
           <target state="translated">QR</target>
           <note from="Developer" annotates="general" priority="2">ESP="QR"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 2367056265 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the quantity that remains to be produced in the production order.</source>
+          <target state="translated">Especifica la cantidad que queda por producir en la orden de producción.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la cantidad que queda por producir en la orden de producción."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Remaining Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 2367056265 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>RT</source>
@@ -1353,6 +1341,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Especificación de seguimiento"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Track. Specification - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3641626520 - Control 1579714849 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the expiration date for the tracking lot.</source>
+          <target state="translated">Especifica la fecha de vencimiento del lote de trazabilidad.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la fecha de vencimiento del lote de trazabilidad."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Track. Specification - Control Expiration Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3641626520 - Control 1482668068 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the tracking lot number.</source>
+          <target state="translated">Especifica el número de lote de trazabilidad.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de lote de trazabilidad."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Track. Specification - Control Lot No. - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 3770930315 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Verification</source>
           <target state="translated">Verificación</target>
@@ -1574,6 +1574,12 @@
           <target state="translated">Tipo de operación</target>
           <note from="Developer" annotates="general" priority="2">ESP="Tipo de operación"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Ro. Line - Field Operation Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1522140983 - NamedType 2502605656" size-unit="char" translate="yes" xml:space="preserve" al-object-target="TableExtension 1522140983">
+          <source>Order cannot be used in MADCS because time is finished.</source>
+          <target state="translated">No se puede usar la orden en MADCS porque el tiempo está finalizado.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="No se puede usar la orden en MADCS porque el tiempo está finalizado."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Production Order - NamedType TimeIsFinishedMsg</note>
         </trans-unit>
         <trans-unit id="TableExtension 1522140983 - Field 2339743065 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2308244223">
           <source>Specifies whether the production order consumption has been finished in MADCS.</source>

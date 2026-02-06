@@ -143,24 +143,29 @@ page 55004 "APA MADCS Outputs"
 
                     field("Item No."; Rec."Item No.")
                     {
+                        ToolTip = 'Specifies the item to be propduced in the production order.', Comment = 'ESP="Especifica el artículo que se va a producir en la orden de producción."';
                         Width = 14;
                     }
                     field(Description; Rec.Description)
                     {
+                        ToolTip = 'Specifies the description of the item to be produced in the production order.', Comment = 'ESP="Especifica la descripción del artículo que se va a producir en la orden de producción."';
                         Width = 11;
                     }
                     field(Quantity; Rec.Quantity)
                     {
+                        ToolTip = 'Specifies the total expected quantity to be produced in the production order.', Comment = 'ESP="Especifica la cantidad total que se espera producir en la orden de producción."';
                         Caption = 'QR', Comment = 'ESP="QR"';
                         Width = 5;
                     }
                     field("Finished Quantity"; Rec."Finished Quantity")
                     {
+                        ToolTip = 'Specifies the quantity that has been finished in the production order.', Comment = 'ESP="Especifica la cantidad que se ha terminado en la orden de producción."';
                         Caption = 'QT', Comment = 'ESP="QT"';
                         Width = 5;
                     }
                     field("Remaining Quantity"; Rec."Remaining Quantity")
                     {
+                        ToolTip = 'Specifies the quantity that remains to be produced in the production order.', Comment = 'ESP="Especifica la cantidad que queda por producir en la orden de producción."';
                         Caption = 'RT', Comment = 'ESP="QP"';
                         Width = 5;
                     }
