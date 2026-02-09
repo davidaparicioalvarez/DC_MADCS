@@ -58,8 +58,8 @@ enum 55001 "APA MADCS Journal Type"
     /// Clean
     /// Represents a Clean journal type.
     /// </summary>
-    value(30; Clean)
+    value(30; Cleaning)
     {
-        Caption = 'Clean', Comment = 'ESP="Limpieza"';
-    }    
+        Caption = 'Cleaning', Comment = 'ESP="Limpieza"';
+    }
 }

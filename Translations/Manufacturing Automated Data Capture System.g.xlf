@@ -1393,10 +1393,10 @@
           <note from="Developer" annotates="general" priority="2">ESP="Tipo de diario MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Enum 145277123 - EnumValue 2326106071 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Clean</source>
+        <trans-unit id="Enum 145277123 - EnumValue 810552423 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cleaning</source>
           <note from="Developer" annotates="general" priority="2">ESP="Limpieza"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Clean - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Cleaning - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 3991974766 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Execution</source>
@@ -1452,6 +1452,11 @@
           <source>Post Time</source>
           <note from="Developer" annotates="general" priority="2">ESP="Registrar Tiempo"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Log Action - EnumValue PostTime - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 2492013944 - EnumValue 1141227335 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown Fault</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Avería Bloqueante"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Log Type - EnumValue BreakDown - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 2492013944 - EnumValue 810552423 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cleaning Task</source>

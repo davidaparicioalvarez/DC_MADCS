@@ -19,7 +19,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
         tabledata "Prod. Order Routing Line" = r,
         tabledata "DC Detalles de paro" = r,
         tabledata "Production Order" = r;
-    
+
     fields
     {
         field(1; Status; Enum "Production Order Status")
@@ -82,7 +82,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     }
     keys
     {
-        key(PK; Status,"Prod. Order No.","Prod. Order Line No.","Line No.")
+        key(PK; Status, "Prod. Order No.", "Prod. Order Line No.", "Line No.")
         {
             Clustered = true;
         }
@@ -90,10 +90,10 @@ table 55001 "APA MADCS Pro. Order Line Time"
 
     fieldgroups
     {
-        fieldgroup(DropDown; "Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","Start Date Time","BreakDown Code")
+        fieldgroup(DropDown; "Prod. Order No.", "Prod. Order Line No.", "Line No.", "Operator Code", "Action", "Start Date Time", "BreakDown Code")
         {
         }
-        fieldgroup(Brick; Status,"Prod. Order No.","Prod. Order Line No.","Line No.","Operator Code","Action","Start Date Time","BreakDown Code")
+        fieldgroup(Brick; Status, "Prod. Order No.", "Prod. Order Line No.", "Line No.", "Operator Code", "Action", "Start Date Time", "BreakDown Code")
         {
         }
     }
@@ -128,16 +128,16 @@ table 55001 "APA MADCS Pro. Order Line Time"
     procedure Description(): Text[100]
     begin
         case Rec.Action of
-            "APA MADCS Journal Type"::Preparation: 
+            "APA MADCS Journal Type"::Preparation:
                 exit(CopyStr(PreparationDescriptionLbl, 1, 100));
-            "APA MADCS Journal Type"::Clean: 
+            "APA MADCS Journal Type"::Cleaning:
                 exit(CopyStr(CleanDescriptionLbl, 1, 100));
-            "APA MADCS Journal Type"::Execution: 
+            "APA MADCS Journal Type"::Execution:
                 exit(CopyStr(ExecutionDescriptionLbl, 1, 100));
-            "APA MADCS Journal Type"::"Execution with Fault": 
+            "APA MADCS Journal Type"::"Execution with Fault":
                 exit(CopyStr(ExecutionWithFaultDescriptionLbl, 1, 100));
-            "APA MADCS Journal Type"::Fault: 
-                exit(CopyStr(FaultDescriptionLbl, 1, 100));                
+            "APA MADCS Journal Type"::Fault:
+                exit(CopyStr(FaultDescriptionLbl, 1, 100));
         end;
     end;
 
@@ -171,7 +171,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
         CleanCannotStartErr: Label 'The cleaning phase cannot be started because the execution phase has not been completed yet.', Comment = 'ESP="La fase de limpieza no puede iniciarse porque la fase de ejecución no se ha completado aún."';
     begin
         if APAMADCSManagement.CleanCanStart(pProdOrderStatus, pProdOrderCode) then
-            this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Clean, BreakDownCode)
+            this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Cleaning, BreakDownCode)
         else
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Action"), CleanCannotStartTitleLbl, CleanCannotStartErr));
     end;
@@ -198,7 +198,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
             if not ProductionOrder.Get(pProdOrderStatus, pProdOrderCode) then
                 APAMADCSManagement.Raise(APAMADCSManagement.BuildApplicationError(ExecutionCannotStartTitleLbl, ExecutionCannotStartErr));
             APAMADCSManagement.Raise(APAMADCSManagement.BuildApplicationError(ExecutionCannotStartTitleLbl, ExecutionCannotStartErr));
-        end;           
+        end;
     end;
 
     /// <summary>
@@ -213,8 +213,8 @@ table 55001 "APA MADCS Pro. Order Line Time"
     /// <param name="BreakDownCode"></param>
     internal procedure NewFaultActivity(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
-        AlertBlockedFaultMsg: Label 'The breakdown code %1 is blocking. A fault activity will be created instead of a execution with fault activity.', Comment='ESP="El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería."';
-        AlertNotBlockedFaultMsg: Label 'The breakdown code %1 is not blocking. A fault activity will be created instead of a execution with fault activity.', Comment='ESP="El código de paro %1 es bloqueante. Se creará una actividad de ejecución con avería en lugar de una actividad de avería."';
+        AlertBlockedFaultMsg: Label 'The breakdown code %1 is blocking. A fault activity will be created instead of a execution with fault activity.', Comment = 'ESP="El código de paro %1 es bloqueante. Se creará una actividad de avería en lugar de una actividad de ejecución con avería."';
+        AlertNotBlockedFaultMsg: Label 'The breakdown code %1 is not blocking. A fault activity will be created instead of a execution with fault activity.', Comment = 'ESP="El código de paro %1 es bloqueante. Se creará una actividad de ejecución con avería en lugar de una actividad de avería."';
     begin
         if (id = Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok)) then begin
             if not this.BreakDownCodeIsBlocking(BreakDownCode) then
@@ -224,7 +224,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
             if this.BreakDownCodeIsBlocking(BreakDownCode) then begin
                 Message(AlertBlockedFaultMsg, BreakDownCode);
                 this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode);
-            end else    
+            end else
                 this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::"Execution with Fault", BreakDownCode);
     end;
 
@@ -241,7 +241,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
             Duration := 0
         else
             Duration := Rec."End Date Time" - Rec."Start Date Time";
-        
+
         Hours := Duration / 1000 / 60 / 60;
         exit(Hours);
     end;
@@ -285,9 +285,9 @@ table 55001 "APA MADCS Pro. Order Line Time"
         if this.IsCleanJournalType(APAMADCSJournalType) then
             this.EnsureCleanOperation(ProdOrderRoutingLine, APAMADCSJournalType)
         else
-            if  this.IsPreparationJournalType(APAMADCSJournalType) then
+            if this.IsPreparationJournalType(APAMADCSJournalType) then
                 this.EnsurePreparationOperation(ProdOrderRoutingLine, APAMADCSJournalType)
-            else       
+            else
                 this.EnsureExecutionFailOperation(ProdOrderRoutingLine, APAMADCSJournalType);
 
         exit(ProdOrderRoutingLine."Operation No.");
@@ -301,7 +301,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     /// <returns></returns>
     internal procedure GetStopCode(BreakDownCode: Code[20]): Code[10]
     var
-        DCDetallesDeParo: Record "DC Detalles de paro"; 
+        DCDetallesDeParo: Record "DC Detalles de paro";
     begin
         Clear(DCDetallesDeParo);
         DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
@@ -320,7 +320,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     /// <returns></returns>
     internal procedure BreakDownCodeIsBlocking(BreakDownCode: Code[20]): Boolean
     var
-        DCDetallesDeParo: Record "DC Detalles de paro"; 
+        DCDetallesDeParo: Record "DC Detalles de paro";
     begin
         Clear(DCDetallesDeParo);
         DCDetallesDeParo.SetCurrentKey("Stop Code", Code);
@@ -358,7 +358,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
 
     local procedure IsCleanJournalType(APAMADCSJournalType: Enum MADCS.MADCS."APA MADCS Journal Type"): Boolean
     begin
-        exit(APAMADCSJournalType in [Enum::"APA MADCS Journal Type"::Clean]);
+        exit(APAMADCSJournalType in [Enum::"APA MADCS Journal Type"::Cleaning]);
     end;
 
     local procedure EnsureCleanOperation(var ProdOrderRoutingLine: Record "Prod. Order Routing Line"; APAMADCSJournalType: Enum "APA MADCS Journal Type")
@@ -369,7 +369,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     begin
         ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
         ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));
-        
+
         if not ProdOrderRoutingLine.FindLast() then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, CleanNotFoundMsgLbl));
     end;
@@ -395,7 +395,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
     begin
         ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
         ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));
-        
+
         if not ProdOrderRoutingLine.FindFirst() then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
     end;

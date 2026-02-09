@@ -307,7 +307,7 @@ page 55003 "APA MADCS Time Part"
         // Set style color based on task status:
         case Rec.Action of
             Rec.Action::Preparation,
-            Rec.Action::Clean:
+            Rec.Action::Cleaning:
                 newPageStyle := PageStyle::None;
             Rec.Action::Execution:
                 newPageStyle := PageStyle::StrongAccent;

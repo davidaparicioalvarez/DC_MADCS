@@ -40,4 +40,8 @@ enum 55005 "APA MADCS Log Type"
     {
         Caption = 'Stop Time', Comment = 'ESP="Detener Tiempo"';
     }
+    value(9; BreakDown)
+    {
+        Caption = 'Breakdown Fault', Comment = 'ESP="Avería Bloqueante"';
+    }
 }
