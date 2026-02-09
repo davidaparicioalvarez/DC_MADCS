@@ -1,6 +1,7 @@
 namespace MADCS.MADCS;
 
 using Microsoft.Manufacturing.Document;
+using Microsoft.Manufacturing.Setup;
 using System.Utilities;
 
 /// <summary>
@@ -122,13 +123,30 @@ page 55003 "APA MADCS Time Part"
                 {
                     ShowCaption = false;
 
-                    field(StopCode; this.BreakDownCode)
+                    field(BreakDownDescription; this.BreakDownDescription)
                     {
                         StyleExpr = this.styleColor;
-                        Caption = 'Stop Code', Comment = 'ESP="Código de Paro"';
-                        ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
-                        Editable = true;
-                        TableRelation = "DC Detalles de paro".Code;
+                        ShowCaption = false;
+                        //Caption = 'Breakdown Code', Comment = 'ESP="Código de Paro"';
+                        //ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
+                        Editable = true;                        
+
+                        trigger OnLookup(var Text: Text): Boolean
+                        var
+                            BreakDownCodeRec: Record "DC Detalles de paro";
+                            BreakDownCodeList: Page "DC Lista Detalles de paro";
+                        begin
+                            Clear(BreakDownCodeRec);
+                            Clear(BreakDownCodeList);
+                            BreakDownCodeList.LookupMode(true);
+                            if BreakDownCodeList.RunModal() = Action::LookupOK then begin
+                                BreakDownCodeList.GetRecord(BreakDownCodeRec);
+                                Text := BreakDownCodeRec.Description;
+                                this.BreakDownCode := BreakDownCodeRec.Code;
+                                exit(true);
+                            end;
+                            exit(false);
+                        end;
                     }
 
                     usercontrol(ALRightButtonGroupColumns2; "APA MADCS ButtonGroup")
@@ -270,6 +288,7 @@ page 55003 "APA MADCS Time Part"
         styleColor: Text;
         MyProdOrdeNo: Code[20];
         BreakDownCode: Code[20];
+        BreakDownDescription: Text;
         MyProdOrdeLineNo: Integer;
         NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;

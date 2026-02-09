@@ -1103,16 +1103,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="No permite el uso de la máquina"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the stop code for the breakdown.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Especifica el código de paro para la avería."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 4254920319 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Stop Code</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Código de Paro"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control StopCode - Property Caption</note>
-        </trans-unit>
         <trans-unit id="Page 3641626520 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking Specification</source>
           <note from="Developer" annotates="general" priority="2">ESP="Especificación de seguimiento"</note>
