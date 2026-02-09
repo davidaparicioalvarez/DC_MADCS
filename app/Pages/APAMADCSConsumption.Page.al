@@ -47,7 +47,7 @@ page 55002 "APA MADCS Consumption"
 
                         trigger OnLoad()
                         var
-                            ConsumeAllLbl: Label 'Consume All', Comment = 'ESP="Consumir Todo"';
+                            ConsumeAllLbl: Label 'Cons. All WAR/DOC', Comment = 'ESP="Cons. Todo FAB/DOC"';
                             ConsumeAllTextLbl: Label 'Consume all components except for warehouse serving', Comment = 'ESP="Consumir todos los componentes excepto quién sirve almacén"';
 
                         begin
@@ -73,7 +73,7 @@ page 55002 "APA MADCS Consumption"
 
                         trigger OnLoad()
                         var
-                            ConsumeItemLbl: Label 'Consume Item', Comment = 'ESP="Consumir Comp."';
+                            ConsumeItemLbl: Label 'Cons. Component', Comment = 'ESP="Cons. Componente"';
                             ConsumeItemTextLbl: Label 'Consume the selected component', Comment = 'ESP="Consumir el componente seleccionado"';
 
                         begin

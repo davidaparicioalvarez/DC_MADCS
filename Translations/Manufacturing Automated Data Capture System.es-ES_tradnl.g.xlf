@@ -634,9 +634,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method MarkProductionOrderAsFinished - NamedType ConfirmFinishOrderQst</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 334747283 - Method 2219734473 - NamedType 14288021" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consume Item</source>
-          <target state="translated">Consumir Comp.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Consumir Comp."</note>
+          <source>Cons. Component</source>
+          <target state="translated">Cons. Componente</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cons. Componente"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control ALButtonGroupItem - Method OnLoad - NamedType ConsumeItemLbl</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 334747283 - Method 2219734473 - NamedType 4198271658" size-unit="char" translate="yes" xml:space="preserve">
@@ -646,9 +646,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control ALButtonGroupItem - Method OnLoad - NamedType ConsumeItemTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2603053863 - Method 2219734473 - NamedType 3157582089" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consume All</source>
-          <target state="translated">Consumir Todo</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Consumir Todo"</note>
+          <source>Cons. All WAR/DOC</source>
+          <target state="translated">Cons. Todo FAB/DOC</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cons. Todo FAB/DOC"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control ALButtonGroupAll - Method OnLoad - NamedType ConsumeAllLbl</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2603053863 - Method 2219734473 - NamedType 533539254" size-unit="char" translate="yes" xml:space="preserve">
@@ -1996,9 +1996,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field APA MADCS Qty. After Consump. - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="TableExtension 2160695598 - Field 2012296755 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
-          <source>Rest To Consume</source>
-          <target state="translated">Resto por Consumir</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Resto por Consumir"</note>
+          <source>Remaining Quantity</source>
+          <target state="translated">Cantidad Resto</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Resto"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Prod. Order Componen - Field APA MADCS Qty. After Consump. - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2160695598 - Field 1448836525 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3495052746">
