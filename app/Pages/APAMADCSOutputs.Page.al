@@ -76,12 +76,6 @@ page 55004 "APA MADCS Outputs"
                     {
                         ShowCaption = false;
 
-                        field(Scrap; this.ScrapQuantity)
-                        {
-                            Caption = 'Scrap', Comment = 'ESP="C.Rechazo"';
-                            ToolTip = 'Specifies the quantity of scrap produced.', Comment = 'ESP="Indica la cantidad de desecho producida."';
-                        }
-
                         usercontrol(ALInfButtonPost; "APA MADCS ButtonGroup")
                         {
                             Visible = true;
@@ -96,7 +90,7 @@ page 55004 "APA MADCS Outputs"
 
                             trigger OnClick(id: Text)
                             var
-                                OuputCorrectMsg: Label 'Output of %1 units and %2 scrap posted successfully.', Comment = 'ESP="Salida de %1 unidades y %2 de desecho registrada con éxito."';
+                                OuputCorrectMsg: Label 'Output of %1 units posted successfully.', Comment = 'ESP="Salida de %1 unidades registrada con éxito."';
                             begin
                                 this.APAMADCSManagement.PostOutput(Rec, this.OutputQuantity, this.LotNo, this.ScrapQuantity);
                                 this.LotNo := '';

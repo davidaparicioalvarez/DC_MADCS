@@ -708,16 +708,6 @@
           <note from="Developer" annotates="general" priority="2">ESP="Registrar salida"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control ALInfButtonPost - Method OnLoad - NamedType PostOutputLbl</note>
         </trans-unit>
-        <trans-unit id="Page 3162003200 - Control 2575590693 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Specifies the quantity of scrap produced.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Indica la cantidad de desecho producida."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Scrap - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="Page 3162003200 - Control 2575590693 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Scrap</source>
-          <note from="Developer" annotates="general" priority="2">ESP="C.Rechazo"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Scrap - Property Caption</note>
-        </trans-unit>
         <trans-unit id="Page 3162003200 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the description of the item to be produced in the production order.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Especifica la descripción del artículo que se va a producir en la orden de producción."</note>
