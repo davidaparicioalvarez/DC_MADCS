@@ -832,9 +832,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control LotNo - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 3014637486 - Method 2115891537 - NamedType 1948103448" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Output of %1 units and %2 scrap posted successfully.</source>
-          <target state="translated">Salida de %1 unidades y %2 de desecho registrada con éxito.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Salida de %1 unidades y %2 de desecho registrada con éxito."</note>
+          <source>Output of %1 units posted successfully.</source>
+          <target state="translated">Salida de %1 unidades registrada con éxito.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Salida de %1 unidades registrada con éxito."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control ALInfButtonPost - Method OnClick - NamedType OuputCorrectMsg</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 3014637486 - Method 2219734473 - NamedType 4091959022" size-unit="char" translate="yes" xml:space="preserve">

@@ -28,6 +28,36 @@ page 55001 "APA MADCS Consume Components"
     {
         area(Content)
         {
+            group(buttonGrp)
+            {
+                ShowCaption = false;
+
+                usercontrol(ALButtonGroupAll; "APA MADCS ButtonGroup")
+                {
+                    Visible = true;
+
+                    trigger OnLoad()
+                    var
+                        ConsumeAllLbl: Label 'Consume Lot', Comment = 'ESP="Consumir Lote"';
+                        ConsumeAllTextLbl: Label 'Consume by rest selected line with lot and rest to consume.', Comment = 'ESP="Consumir por resto la línea seleccionada con lote y resto a consumir."';
+                    begin
+                        CurrPage.ALButtonGroupAll.AddButton(ConsumeAllLbl, ConsumeAllTextLbl, this.ALButtonConsumeAllTok, this.DangerButtonTok);
+                    end;
+
+                    trigger OnClick(id: Text)
+                    var
+                        NoComponentToConsumeMsg: Label 'No components to consume based on the remaining quantity.', Comment = 'ESP="No hay componentes para consumir en función de la cantidad restante."';
+                    begin
+                        // Consume all items with "Consumo por resto" = false (quien sirve: Fábrica)
+                        if Rec."APA MADCS Qty. After Consump." <> (Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity") then
+                            this.Consume()
+                        else
+                            Message(NoComponentToConsumeMsg);
+                        CurrPage.Update(false);
+                    end;
+                }
+            }
+
             repeater(General)
             {
                 field("Item No."; Rec."Item No.")
@@ -81,35 +111,6 @@ page 55001 "APA MADCS Consume Components"
                     end;
                 }
             }
-            group(buttonGrp)
-            {
-                ShowCaption = false;
-
-                usercontrol(ALButtonGroupAll; "APA MADCS ButtonGroup")
-                {
-                    Visible = true;
-
-                    trigger OnLoad()
-                    var
-                        ConsumeAllLbl: Label 'Consume Lot', Comment = 'ESP="Consumir Lote"';
-                        ConsumeAllTextLbl: Label 'Consume by rest selected line with lot and rest to consume.', Comment = 'ESP="Consumir por resto la línea seleccionada con lote y resto a consumir."';
-                    begin
-                        CurrPage.ALButtonGroupAll.AddButton(ConsumeAllLbl, ConsumeAllTextLbl, this.ALButtonConsumeAllTok, this.DangerButtonTok);
-                    end;
-
-                    trigger OnClick(id: Text)
-                    var
-                        NoComponentToConsumeMsg: Label 'No components to consume based on the remaining quantity.', Comment = 'ESP="No hay componentes para consumir en función de la cantidad restante."';
-                    begin
-                        // Consume all items with "Consumo por resto" = false (quien sirve: Fábrica)
-                        if Rec."APA MADCS Qty. After Consump." <> (Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity") then
-                            this.Consume()
-                        else
-                            Message(NoComponentToConsumeMsg);
-                        CurrPage.Update(false);
-                    end;
-                }
-            }
         }
     }
 
@@ -160,7 +161,7 @@ page 55001 "APA MADCS Consume Components"
     begin
         Rec.CalcFields("APA MADCS Consumed Quantity");
         QuantityToConsume := Rec."APA MADCS Quantity" - Rec."APA MADCS Consumed Quantity" - Rec."APA MADCS Qty. After Consump.";
-        if QuantityToConsume <= 0 then 
+        if QuantityToConsume <= 0 then
             this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(BadQuantityMsg, StrSubstNo(BadQuantityErr, Rec."APA MADCS Qty. After Consump.", Rec."APA MADCS Quantity", Rec."APA MADCS Consumed Quantity")));
         Clear(ProdOrderComponent);
         if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
