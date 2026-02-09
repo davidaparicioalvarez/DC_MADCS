@@ -66,7 +66,7 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnLoad()
                         var
-                            ExecutionLbl: Label 'Execution', Comment = 'ESP="Ejecución"';
+                            ExecutionLbl: Label 'EXECUTION without fault', Comment = 'ESP="EJECUCIÓN sin avería"';
                             ExecutionTextLbl: Label 'Init execution phase', Comment = 'ESP="Iniciar fase de ejecución"';
                             EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TRABAJOS"';
                             EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
@@ -137,8 +137,8 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnLoad()
                         var
-                            BreakDownLbl: Label 'No Blocked Breakdown', Comment = 'ESP="Avería no bloqueante"';
-                            BreakDownTextLbl: Label 'Register breakdown', Comment = 'ESP="Permite el uso de la máquina, pero no en condiciones óptimas"';
+                            BreakDownLbl: Label 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
+                            BreakDownTextLbl: Label 'Register no blocked breakdown', Comment = 'ESP="Permite el uso de la máquina, pero no en condiciones óptimas"';
                             BlockedBreakDownLbl: Label 'Blocked Breakdown', Comment = 'ESP="Avería bloqueante"';
                             BlockedBreakDownTextLbl: Label 'Register blocked breakdown', Comment = 'ESP="No permite el uso de la máquina"';
                         begin

@@ -92,11 +92,10 @@ page 55004 "APA MADCS Outputs"
                             var
                                 OuputCorrectMsg: Label 'Output of %1 units posted successfully.', Comment = 'ESP="Salida de %1 unidades registrada con éxito."';
                             begin
-                                this.APAMADCSManagement.PostOutput(Rec, this.OutputQuantity, this.LotNo, this.ScrapQuantity);
+                                this.APAMADCSManagement.PostOutput(Rec, this.OutputQuantity, this.LotNo);
                                 this.LotNo := '';
-                                this.ScrapQuantity := 0;
                                 CurrPage.Update(false);
-                                Message(OuputCorrectMsg, this.OutputQuantity, this.ScrapQuantity);
+                                Message(OuputCorrectMsg, this.OutputQuantity);
                             end;
                         }
                     }
@@ -177,7 +176,6 @@ page 55004 "APA MADCS Outputs"
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         OutputQuantity: Decimal;
-        ScrapQuantity: Decimal;
         LotNo: Code[50];
         PrimaryButtonTok: Label 'primary', Locked = true;
         DangerButtonTok: Label 'danger', Locked = true;

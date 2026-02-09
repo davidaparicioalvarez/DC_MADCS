@@ -223,8 +223,7 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="ProdOrderLine">Record "Prod. Order Line"</param>
     /// <param name="OutputQuantity">Decimal quantity to post as output</param>
     /// <param name="LotNo">Code[50] Lot number for tracked items</param>
-    /// <param name="ScrapQuantity">Decimal quantity of scrap produced</param>
-    procedure PostOutput(var ProdOrderLine: Record "Prod. Order Line"; OutputQuantity: Decimal; LotNo: Code[50]; ScrapQuantity: Decimal)
+    procedure PostOutput(var ProdOrderLine: Record "Prod. Order Line"; OutputQuantity: Decimal; LotNo: Code[50])
     var
         Item: Record Item;
         ItemJnlLine: Record "Item Journal Line";
@@ -247,7 +246,7 @@ codeunit 55000 "APA MADCS Management"
         this.GetManufacturingSetupForOutput(ManufacturingSetup, ItemJnlTemplate, ItemJnlBatch);
 
         // Setup journal line for complete consumption
-        this.SetupOutputJournalLine(ItemJnlLine, ProdOrderLine, ItemJnlTemplate, ItemJnlBatch, OutputQuantity, ScrapQuantity);
+        this.SetupOutputJournalLine(ItemJnlLine, ProdOrderLine, ItemJnlTemplate, ItemJnlBatch, OutputQuantity);
 
         // Apply item tracking if needed
         if Item."Item Tracking Code" <> '' then
@@ -1303,8 +1302,7 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="ItemJnlTemplate">Configured journal template.</param>
     /// <param name="ItemJnlBatch">Configured journal batch.</param>
     /// <param name="OutputQuantity">Quantity to post as output.</param>
-    /// <param name="ScrapQuantity">Quantity of scrap produced.</param>
-    local procedure SetupOutputJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; OutputQuantity: Decimal; ScrapQuantity: Decimal)
+    local procedure SetupOutputJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderLine: Record "Prod. Order Line"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; OutputQuantity: Decimal)
     begin
         Clear(ItemJnlLine);
         ItemJnlLine."Journal Template Name" := ItemJnlTemplate.Name;
@@ -1333,7 +1331,6 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine."Reason Code" := ItemJnlBatch."Reason Code";
         ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
         ItemJnlLine.Validate("Output Quantity", OutputQuantity);
-        ItemJnlLine.Validate("Scrap Quantity", ScrapQuantity);
     end;
 
     /// <summary>

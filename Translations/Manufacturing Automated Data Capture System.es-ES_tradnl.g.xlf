@@ -1252,9 +1252,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns1 - Method OnLoad - NamedType CleanTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 2078504788" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Execution</source>
-          <target state="translated">Ejecución</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Ejecución"</note>
+          <source>EXECUTION without fault</source>
+          <target state="translated">EJECUCIÓN sin avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="EJECUCIÓN sin avería"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType ExecutionLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 3285496055" size-unit="char" translate="yes" xml:space="preserve">
@@ -1300,13 +1300,13 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnClick - NamedType BreakdownMsgErrLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
-          <source>No Blocked Breakdown</source>
-          <target state="translated">Avería no bloqueante</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Avería no bloqueante"</note>
+          <source>Execution WITH FAULT</source>
+          <target state="translated">Ejecución CON AVERÍA</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Ejecución CON AVERÍA"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BreakDownLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 3707734870" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Register breakdown</source>
+          <source>Register no blocked breakdown</source>
           <target state="translated">Permite el uso de la máquina, pero no en condiciones óptimas</target>
           <note from="Developer" annotates="general" priority="2">ESP="Permite el uso de la máquina, pero no en condiciones óptimas"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BreakDownTextLbl</note>
