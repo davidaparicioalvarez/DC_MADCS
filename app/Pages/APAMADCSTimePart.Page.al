@@ -70,13 +70,36 @@ page 55003 "APA MADCS Time Part"
                             ExecutionTextLbl: Label 'Init execution phase', Comment = 'ESP="Iniciar fase de ejecución"';
                             EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TRABAJOS"';
                             EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
-                            FinalizeTimeOrderLbl: Label 'End (Times)', Comment = 'ESP="Fin (Tiempos)"';
-                            FinalizeTimeOrderTxtLbl: Label 'Finalize times in order and mark it. No more times can be registered.', Comment = 'ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."';
 
                         begin
                             CurrPage.ALInfButtonGroupColumns2.AddButton(ExecutionLbl, ExecutionTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok), this.InfoButtonTok);
                             CurrPage.ALInfButtonGroupColumns2.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
-                            CurrPage.ALInfButtonGroupColumns2.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok), this.DangerButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        begin
+                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                            case id of
+                                Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
+                                    Message(this.ClosedAllActivitiesMsg);
+                                else
+                                    Message(this.NewActivityCreatedMsg);
+                            end;
+                            CurrPage.Update(false);
+                        end;
+                    }
+
+                    usercontrol(ALInfButtonGroupColumns3; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
+
+                        trigger OnLoad()
+                        var
+                            FinalizeTimeOrderLbl: Label 'End (Times)', Comment = 'ESP="Fin (Tiempos)"';
+                            FinalizeTimeOrderTxtLbl: Label 'Finalize times in order and mark it. No more times can be registered.', Comment = 'ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."';
+
+                        begin
+                            CurrPage.ALInfButtonGroupColumns3.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok), this.DangerButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -84,23 +107,13 @@ page 55003 "APA MADCS Time Part"
                             ProdOrderLine: Record "Prod. Order Line";
                         begin
                             this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
-                            case id of
-                                Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
-                                    Message(this.ClosedAllActivitiesMsg);
-                                Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok):
-                                    begin
-                                        Clear(ProdOrderLine);
-                                        if not ProdOrderLine.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.") then
-                                           this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Prod. Order Line No."), this.ProdOrderLineNotFoundErrLbl, this.ProdOrderLineNotFoundMsgLbl));
-                                        if this.MarkProductionOrderAsFinished(ProdOrderLine) then begin
-                                            Message(this.ClosedAllActivitiesAndOrderMsg);
-                                            CurrPage.Close();
-                                        end
-                                    end;
-                                else
-                                    Message(this.NewActivityCreatedMsg);
+                            Clear(ProdOrderLine);
+                            if not ProdOrderLine.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.") then
+                                this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Prod. Order Line No."), this.ProdOrderLineNotFoundErrLbl, this.ProdOrderLineNotFoundMsgLbl));
+                            if this.MarkProductionOrderAsFinished(ProdOrderLine) then begin
+                                Message(this.ClosedAllActivitiesAndOrderMsg);
+                                CurrPage.Close();
                             end;
-                            CurrPage.Update(false);
                         end;
                     }
                 }
@@ -138,7 +151,7 @@ page 55003 "APA MADCS Time Part"
                             BreakdownTitleErrLbl: Label 'Breakdown Code Required', Comment = 'ESP="Código de Avería Requerido"';
                             BreakdownMsgErrLbl: Label 'Please enter a Breakdown Code before registering a breakdown.', Comment = 'ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."';
                         begin
-                            if this.BreakDownCode = '' then 
+                            if this.BreakDownCode = '' then
                                 this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("BreakDown Code"), BreakdownTitleErrLbl, BreakdownMsgErrLbl));
                             this.APAMADCSManagement.ProcessBreakdownAndBlockedBreakdownTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
                             Message(this.NewActivityCreatedMsg);
@@ -147,7 +160,7 @@ page 55003 "APA MADCS Time Part"
                     }
                 }
             }
-            
+
             group(RepeaterGrp)
             {
                 ShowCaption = false;
@@ -256,7 +269,7 @@ page 55003 "APA MADCS Time Part"
         MyStatus: Enum "Production Order Status";
         styleColor: Text;
         MyProdOrdeNo: Code[20];
-        BreakDownCode: Code[20];        
+        BreakDownCode: Code[20];
         MyProdOrdeLineNo: Integer;
         NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
@@ -302,8 +315,8 @@ page 55003 "APA MADCS Time Part"
                 newPageStyle := PageStyle::Ambiguous;
             Rec.Action::Fault:
                 newPageStyle := PageStyle::Unfavorable;
-        else
-            newPageStyle := PageStyle::None;
+            else
+                newPageStyle := PageStyle::None;
         end;
 
         this.styleColor := Format(newPageStyle);

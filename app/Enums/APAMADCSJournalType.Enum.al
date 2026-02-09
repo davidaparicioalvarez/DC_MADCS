@@ -61,5 +61,5 @@ enum 55001 "APA MADCS Journal Type"
     value(30; Clean)
     {
         Caption = 'Clean', Comment = 'ESP="Limpieza"';
-    }
+    }    
 }

@@ -1287,17 +1287,17 @@
           <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType EndTextLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 545156573" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 3263723205 - Method 2219734473 - NamedType 545156573" size-unit="char" translate="yes" xml:space="preserve">
           <source>End (Times)</source>
           <target state="translated">Fin (Tiempos)</target>
           <note from="Developer" annotates="general" priority="2">ESP="Fin (Tiempos)"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType FinalizeTimeOrderLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns3 - Method OnLoad - NamedType FinalizeTimeOrderLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 2018595941" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 3263723205 - Method 2219734473 - NamedType 2018595941" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finalize times in order and mark it. No more times can be registered.</source>
           <target state="translated">Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType FinalizeTimeOrderTxtLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns3 - Method OnLoad - NamedType FinalizeTimeOrderTxtLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 768589621 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
           <source>Breakdown Code Required</source>
@@ -1449,6 +1449,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Inventario de almacén"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Lot No. Information - Field APA MADCS Warehouse Inventory - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2094276204 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the operation number for the cleaning task in MADCS.</source>
+          <target state="translated">Especifica el número de operación para la tarea de limpieza en MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de operación para la tarea de limpieza en MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Cleaning Task - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2094276204 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Cleaning Task</source>
+          <target state="translated">Tarea de limpieza MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Tarea de limpieza MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Cleaning Task - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 853581073 - Field 2188072503 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
           <source>Specifies the item journal batch to be used for MADCS consumption journals.</source>
           <target state="translated">Especifica la sección del diario que se utilizará para los diarios de consumo MADCS.</target>
@@ -1473,6 +1485,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Plantilla de diario de consumo MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Consump. Jnl. Templ. - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 937684897 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the operation number for the execution task in MADCS.</source>
+          <target state="translated">Especifica el número de operación para la tarea de ejecución en MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de operación para la tarea de ejecución en MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Execution Task - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 937684897 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Execution Task</source>
+          <target state="translated">Tarea de ejecución MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Tarea de ejecución MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Execution Task - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 853581073 - Field 234200863 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
           <source>Specifies the item journal batch to be used for MADCS output journals.</source>
           <target state="translated">Especifica la sección del diario que se utilizará para los diarios de salida MADCS.</target>
@@ -1496,6 +1520,18 @@
           <target state="translated">Plantilla de diario de salida MADCS</target>
           <note from="Developer" annotates="general" priority="2">ESP="Plantilla de diario de salida MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Output Jnl. Templ. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2807655888 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the operation number for the preparation task in MADCS.</source>
+          <target state="translated">Especifica el número de operación para la tarea de preparación en MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el número de operación para la tarea de preparación en MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Preparation Task - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2807655888 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Preparation Task</source>
+          <target state="translated">Tarea de preparación MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Tarea de preparación MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Preparation Task - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 853581073 - Field 1317867342 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
           <source>Specifies the implementation method for handling production order close errors in MADCS.</source>

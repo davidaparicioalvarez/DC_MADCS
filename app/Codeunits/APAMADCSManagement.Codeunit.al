@@ -756,6 +756,37 @@ codeunit 55000 "APA MADCS Management"
                 end 
             end;
     end;
+
+    /// <summary>
+    /// procedure GetManufacturingSetupTaskData
+    /// Retrieves necessary data for processing a manufacturing task based on the journal type.
+    /// </summary>
+    /// <param name="APAMADCSJournalType"></param>
+    /// <returns></returns>
+    procedure GetManufacturingSetupTaskData(APAMADCSJournalType: Enum "APA MADCS Journal Type") TaskNo: Code[10]
+    var
+        ManufacturingSetup: Record "Manufacturing Setup";
+    begin
+        Clear(ManufacturingSetup);
+        if not ManufacturingSetup.Get() then
+            this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
+            
+        ManufacturingSetup.TestField("APA MADCS Preparation Task");
+        ManufacturingSetup.TestField("APA MADCS Cleaning Task");
+        ManufacturingSetup.TestField("APA MADCS Execution Task");
+
+        case APAMADCSJournalType of
+            "APA MADCS Journal Type"::Preparation:
+                TaskNo := ManufacturingSetup."APA MADCS Preparation Task";
+            "APA MADCS Journal Type"::Clean:
+                TaskNo := ManufacturingSetup."APA MADCS Cleaning Task";
+            "APA MADCS Journal Type"::Execution,
+            "APA MADCS Journal Type"::"Execution with Fault":
+                TaskNo := ManufacturingSetup."APA MADCS Execution Task";
+        end;
+
+        exit(TaskNo);
+    end;
     #endregion procedures
 
 

@@ -44,5 +44,26 @@ tableextension 55003 "APA MADCS Manufacturing Setup" extends "Manufacturing Setu
             ToolTip = 'Specifies the implementation method for handling production order close errors in MADCS.', Comment = 'ESP="Especifica el método de implementación para manejar los errores de cierre de órdenes de producción en MADCS."';
             DataClassification = SystemMetadata;
         }
+
+        field(55005; "APA MADCS Preparation Task"; Code[10])
+        {
+            Caption = 'MADCS Preparation Task', Comment = 'ESP="Tarea de preparación MADCS"';
+            ToolTip = 'Specifies the operation number for the preparation task in MADCS.', Comment = 'ESP="Especifica el número de operación para la tarea de preparación en MADCS."';
+            DataClassification = SystemMetadata;
+        }
+
+        field(55006; "APA MADCS Execution Task"; Code[10])
+        {
+            Caption = 'MADCS Execution Task', Comment = 'ESP="Tarea de ejecución MADCS"';
+            ToolTip = 'Specifies the operation number for the execution task in MADCS.', Comment = 'ESP="Especifica el número de operación para la tarea de ejecución en MADCS."';
+            DataClassification = SystemMetadata;
+        }
+
+        field(55007; "APA MADCS Cleaning Task"; Code[10])
+        {
+            Caption = 'MADCS Cleaning Task', Comment = 'ESP="Tarea de limpieza MADCS"';
+            ToolTip = 'Specifies the operation number for the cleaning task in MADCS.', Comment = 'ESP="Especifica el número de operación para la tarea de limpieza en MADCS."';
+            DataClassification = SystemMetadata;
+        }
     }
 }

@@ -32,6 +32,18 @@ pageextension 55000 "APA MADCS Manufacturing Setup" extends "Manufacturing Setup
                 {
                     ApplicationArea = All;
                 }
+                field("APA MADCS Preparation Task"; Rec."APA MADCS Preparation Task")
+                {
+                    ApplicationArea = All;
+                }
+                field("APA MADCS Execution Task"; Rec."APA MADCS Execution Task")
+                {
+                    ApplicationArea = All;
+                }
+                field("APA MADCS Cleaning Task"; Rec."APA MADCS Cleaning Task")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }
