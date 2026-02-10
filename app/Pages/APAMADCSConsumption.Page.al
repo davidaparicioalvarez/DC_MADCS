@@ -150,7 +150,7 @@ page 55002 "APA MADCS Consumption"
                     {
                         Caption = 'Picking Servicer', Comment = 'ESP="Quien sirve picking"';
                         ToolTip = 'Specifies Warehouse implies remaining quantities.Factories/OrderDocument if the OPL isn`t interrupted don`t perform remaining quantities select "consume all" button; else perform remaining quantities.', Comment = 'ESP="Opción Almacen siempre impilca Realizar Restos.Fabrica/DocOrden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."';
-                        Width = 10;
+                        Width = 4;
                         StyleExpr = this.styleColor;
                     }
                     field(Quantity; Rec."Expected Quantity")
