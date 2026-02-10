@@ -398,6 +398,21 @@
           <note from="Developer" annotates="general" priority="2">ESP="No tiene permiso para registrar consumos."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method PostQuantityLotComponentConsumption - NamedType ErrNoPermissionPostConsumptionErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1193165807 - NamedType 3433467817" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Stop code is blocking, for this stop code you should use the Blocked Breakdown button</source>
+          <note from="Developer" annotates="general" priority="2">ESP="El código de avería es bloqueante, para este código de paro debe usar el botón de Avería Bloqueante"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ProcessBreakdownAndBlockedBreakdownTask - NamedType BlockedBreakDownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1193165807 - NamedType 613271514" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Stop code is not blocking, for this stop code you should use the Execution with fault button</source>
+          <note from="Developer" annotates="general" priority="2">ESP="El código de avería no es bloqueante, para este código de paro debe usar el botón de Ejecución con avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ProcessBreakdownAndBlockedBreakdownTask - NamedType NoBlockedBreakDownLbl</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1193165807 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ProcessBreakdownAndBlockedBreakdownTask - NamedType BreakDownLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 4282172380 - NamedType 1302664427" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error initializing verification data.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error al inicializar los datos de verificación."</note>

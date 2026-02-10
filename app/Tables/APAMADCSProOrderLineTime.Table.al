@@ -393,11 +393,9 @@ table 55001 "APA MADCS Pro. Order Line Time"
         TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
         MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
     begin
-        ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
-        ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));
-
-        if not ProdOrderRoutingLine.FindFirst() then
+        if APAMADCSJournalType <> APAMADCSJournalType::Fault then
             APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+        ProdOrderRoutingLine."Operation No." := ''; // For fault activities, the operation number is not relevant, so we set it to empty.
     end;
 
     local procedure CreateNewActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; ActionType: Enum "APA MADCS Journal Type"; BreakDownCode: Code[20])

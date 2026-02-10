@@ -20,6 +20,7 @@ page 55006 "APA MADCS Verification"
     DeleteAllowed = false;
     ApplicationArea = All;
     UsageCategory = None;
+    RefreshOnActivate = true;
     Permissions =
         tabledata "Prod. Order Component" = rimd,
         tabledata "Reservation Entry" = r,

@@ -595,15 +595,26 @@ codeunit 55000 "APA MADCS Management"
     procedure ProcessBreakdownAndBlockedBreakdownTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
+        BlockedBreakDownLbl: Label 'Stop code is blocking, for this stop code you should use the Blocked Breakdown button', Comment = 'ESP="El código de avería es bloqueante, para este código de paro debe usar el botón de Avería Bloqueante"';
+        NoBlockedBreakDownLbl: Label 'Stop code is not blocking, for this stop code you should use the Execution with fault button', Comment = 'ESP="El código de avería no es bloqueante, para este código de paro debe usar el botón de Ejecución con avería"';
+        BreakDownLbl: Label 'Breakdown', Comment = 'ESP="Avería"';
     begin
-        if Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
-            this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
-            Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
-            this.LogAction(Activities, Enum::"APA MADCS Log Type"::Fault);
-        end else begin
-            this.FinalizeLastActivity(OperatorCode); // only for blocked tasks
-            Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
-            this.LogAction(Activities, Enum::"APA MADCS Log Type"::BreakDown);
+        case id of
+            Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok): // NON BLOCKING FAULT
+                if not Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
+                    this.FinalizeLastActivity(OperatorCode); // only for blocked tasks
+                    Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
+                    this.LogAction(Activities, Enum::"APA MADCS Log Type"::BreakDown);
+                end else
+                    this.Raise(this.BuildApplicationError(BreakDownLbl, BlockedBreakDownLbl));
+
+            Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok): // BLOCKING FAULT
+                if Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
+                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
+                    Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
+                    this.LogAction(Activities, Enum::"APA MADCS Log Type"::Fault);
+                end else
+                    this.Raise(this.BuildApplicationError(BreakDownLbl, NoBlockedBreakDownLbl));
         end;
     end;
 

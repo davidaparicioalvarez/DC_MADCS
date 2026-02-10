@@ -19,6 +19,7 @@ page 55000 "APA MADCS Rel Prod Order Lines"
     ApplicationArea = All;
     UsageCategory = Lists;
     Editable = false;
+    RefreshOnActivate = true;
     Permissions =
         tabledata "Prod. Order Line" = r,
         tabledata "Prod. Order Component" = r;

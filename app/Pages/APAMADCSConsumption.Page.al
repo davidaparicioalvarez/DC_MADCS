@@ -24,6 +24,7 @@ page 55002 "APA MADCS Consumption"
     DeleteAllowed = false;
     ApplicationArea = All;
     UsageCategory = None;
+    RefreshOnActivate = true;
     Permissions =
         tabledata "Warehouse Entry" = r,
         tabledata "Prod. Order Line" = r;

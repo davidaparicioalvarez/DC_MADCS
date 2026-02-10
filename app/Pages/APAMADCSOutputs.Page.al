@@ -20,6 +20,7 @@ page 55004 "APA MADCS Outputs"
     DeleteAllowed = false;
     ApplicationArea = All;
     UsageCategory = None;
+    RefreshOnActivate = true;
     Permissions =
         tabledata "Prod. Order Line" = rm,
         tabledata "Prod. Order Routing Line" = rm;

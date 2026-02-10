@@ -22,6 +22,7 @@ page 55003 "APA MADCS Time Part"
     DeleteAllowed = false;
     ModifyAllowed = false;
     Editable = true;
+    RefreshOnActivate = true;
     Permissions =
         tabledata "Prod. Order Line" = r;
 

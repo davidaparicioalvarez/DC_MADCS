@@ -19,6 +19,7 @@ page 55001 "APA MADCS Consume Components"
     ModifyAllowed = true;
     DeleteAllowed = false;
     Editable = true;
+    RefreshOnActivate = true;
     ApplicationArea = All;
     Permissions =
         tabledata "Tracking Specification" = r,
