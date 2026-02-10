@@ -147,6 +147,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Código de Paro"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Field BreakDown Code - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2825751362 - Field 3927916541 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the description of the breakdown.</source>
+          <target state="translated">Especifica la descripción del paro.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica la descripción del paro."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Field BreakDown Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Table 2825751362 - Field 3927916541 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>BreakDown Reason</source>
+          <target state="translated">Motivo avería</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Motivo avería"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table APA MADCS Pro. Order Line Time - Field BreakDown Description - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 2825751362 - Field 233366074 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the end date and time of the time entry.</source>
           <target state="translated">Especifica la fecha y hora de fin de la entrada de tiempo.</target>
@@ -1329,17 +1341,29 @@
           <note from="Developer" annotates="general" priority="2">ESP="Permite el uso de la máquina, pero no en condiciones óptimas"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BreakDownTextLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 3433467817" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown Code Required</source>
+          <target state="translated">Código de Avería Requerido</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de Avería Requerido"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnClick - NamedType BreakdownTitleErrLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Please enter a Breakdown Code before registering a breakdown.</source>
+          <target state="translated">Por favor, introduzca un Código de Avería antes de registrar una avería.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnClick - NamedType BreakdownMsgErrLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2219734473 - NamedType 3433467817" size-unit="char" translate="yes" xml:space="preserve">
           <source>Blocked Breakdown</source>
           <target state="translated">Avería bloqueante</target>
           <note from="Developer" annotates="general" priority="2">ESP="Avería bloqueante"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BlockedBreakDownLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnLoad - NamedType BlockedBreakDownLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 1224036118" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2219734473 - NamedType 1224036118" size-unit="char" translate="yes" xml:space="preserve">
           <source>Register blocked breakdown</source>
           <target state="translated">No permite el uso de la máquina</target>
           <note from="Developer" annotates="general" priority="2">ESP="No permite el uso de la máquina"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 3641626520 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking Specification</source>

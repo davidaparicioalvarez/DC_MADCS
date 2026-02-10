@@ -130,7 +130,7 @@ page 55003 "APA MADCS Time Part"
                         ShowCaption = false;
                         //Caption = 'Breakdown Code', Comment = 'ESP="Código de Paro"';
                         //ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
-                        Editable = true;                        
+                        Editable = true;
 
                         trigger OnLookup(var Text: Text): Boolean
                         var
@@ -139,6 +139,8 @@ page 55003 "APA MADCS Time Part"
                         begin
                             Clear(BreakDownCodeRec);
                             Clear(BreakDownCodeList);
+                            BreakDownCodeRec.SetRange(Disabling, false);
+                            BreakDownCodeList.SetTableView(BreakDownCodeRec);
                             BreakDownCodeList.LookupMode(true);
                             if BreakDownCodeList.RunModal() = Action::LookupOK then begin
                                 BreakDownCodeList.GetRecord(BreakDownCodeRec);
@@ -158,11 +160,8 @@ page 55003 "APA MADCS Time Part"
                         var
                             BreakDownLbl: Label 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
                             BreakDownTextLbl: Label 'Register no blocked breakdown', Comment = 'ESP="Permite el uso de la máquina, pero no en condiciones óptimas"';
-                            BlockedBreakDownLbl: Label 'Blocked Breakdown', Comment = 'ESP="Avería bloqueante"';
-                            BlockedBreakDownTextLbl: Label 'Register blocked breakdown', Comment = 'ESP="No permite el uso de la máquina"';
                         begin
                             CurrPage.ALRightButtonGroupColumns2.AddButton(BreakDownLbl, BreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok), this.WarningButtonTok);
-                            CurrPage.ALRightButtonGroupColumns2.AddButton(BlockedBreakDownLbl, BlockedBreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok), this.DangerButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -174,6 +173,63 @@ page 55003 "APA MADCS Time Part"
                                 this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("BreakDown Code"), BreakdownTitleErrLbl, BreakdownMsgErrLbl));
                             this.APAMADCSManagement.ProcessBreakdownAndBlockedBreakdownTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
                             Message(this.NewActivityCreatedMsg);
+                            this.BreakDownCode := '';
+                            this.BreakDownDescription := '';
+                            CurrPage.Update(false);
+                        end;
+                    }
+
+                    field(BlockedBreakDownDescription; this.BlockedBreakDownDescription)
+                    {
+                        StyleExpr = this.styleColor;
+                        ShowCaption = false;
+                        //Caption = 'Breakdown Code', Comment = 'ESP="Código de Paro"';
+                        //ToolTip = 'Specifies the stop code for the breakdown.', Comment = 'ESP="Especifica el código de paro para la avería."';
+                        Editable = true;
+
+                        trigger OnLookup(var Text: Text): Boolean
+                        var
+                            BreakDownCodeRec: Record "DC Detalles de paro";
+                            BreakDownCodeList: Page "DC Lista Detalles de paro";
+                        begin
+                            Clear(BreakDownCodeRec);
+                            Clear(BreakDownCodeList);
+                            BreakDownCodeRec.SetRange(Disabling, true);
+                            BreakDownCodeList.SetTableView(BreakDownCodeRec);
+                            BreakDownCodeList.LookupMode(true);
+                            if BreakDownCodeList.RunModal() = Action::LookupOK then begin
+                                BreakDownCodeList.GetRecord(BreakDownCodeRec);
+                                Text := BreakDownCodeRec.Description;
+                                this.BlockedBreakDownCode := BreakDownCodeRec.Code;
+                                exit(true);
+                            end;
+                            exit(false);
+                        end;
+                    }
+
+                    usercontrol(ALRightButtonGroupColumns3; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
+
+                        trigger OnLoad()
+                        var
+                            BlockedBreakDownLbl: Label 'Blocked Breakdown', Comment = 'ESP="Avería bloqueante"';
+                            BlockedBreakDownTextLbl: Label 'Register blocked breakdown', Comment = 'ESP="No permite el uso de la máquina"';
+                        begin
+                            CurrPage.ALRightButtonGroupColumns3.AddButton(BlockedBreakDownLbl, BlockedBreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok), this.DangerButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        var
+                            BreakdownTitleErrLbl: Label 'Breakdown Code Required', Comment = 'ESP="Código de Avería Requerido"';
+                            BreakdownMsgErrLbl: Label 'Please enter a Breakdown Code before registering a breakdown.', Comment = 'ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."';
+                        begin
+                            if this.BlockedBreakDownCode = '' then
+                                this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("BreakDown Code"), BreakdownTitleErrLbl, BreakdownMsgErrLbl));
+                            this.APAMADCSManagement.ProcessBreakdownAndBlockedBreakdownTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BlockedBreakDownCode);
+                            Message(this.NewActivityCreatedMsg);
+                            this.BlockedBreakDownCode := '';
+                            this.BlockedBreakDownDescription := '';
                             CurrPage.Update(false);
                         end;
                     }
@@ -256,6 +312,13 @@ page 55003 "APA MADCS Time Part"
                     field("BreakDown Code"; Rec."BreakDown Code")
                     {
                         StyleExpr = this.styleColor;
+                        Visible = false;
+                        Width = 10;
+                        Editable = false;
+                    }
+                    field("BreakDown Description"; Rec."BreakDown Description")
+                    {
+                        StyleExpr = this.styleColor;
                         Visible = true;
                         Width = 10;
                         Editable = false;
@@ -288,6 +351,8 @@ page 55003 "APA MADCS Time Part"
         MyStatus: Enum "Production Order Status";
         styleColor: Text;
         MyProdOrdeNo: Code[20];
+        BlockedBreakDownCode: Code[20];
+        BlockedBreakDownDescription: Text;
         BreakDownCode: Code[20];
         BreakDownDescription: Text;
         MyProdOrdeLineNo: Integer;

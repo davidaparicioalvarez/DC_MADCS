@@ -73,6 +73,14 @@ table 55001 "APA MADCS Pro. Order Line Time"
             ToolTip = 'Specifies the code of the breakdown.', Comment = 'ESP="Especifica el código de paro."';
             TableRelation = "DC Detalles de paro".Code;
         }
+        field(12; "BreakDown Description"; Text[250])
+        {
+            Caption = 'BreakDown Reason', Comment = 'ESP="Motivo avería"';
+            ToolTip = 'Specifies the description of the breakdown.', Comment = 'ESP="Especifica la descripción del paro."';
+            FieldClass = FlowField;
+            Editable = false;
+            CalcFormula = lookup("DC Detalles de paro".Description where(Code = field("BreakDown Code")));
+        }
         field(11; Posted; Boolean)
         {
             Caption = 'Posted', Comment = 'ESP="Registrada"';
@@ -393,9 +401,21 @@ table 55001 "APA MADCS Pro. Order Line Time"
         TittleMsgLbl: Label 'Error Looking for Operation No.', Comment = 'ESP="Error al buscar el Nº de Operación."';
         MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
     begin
-        if APAMADCSJournalType <> APAMADCSJournalType::Fault then
-            APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
-        ProdOrderRoutingLine."Operation No." := ''; // For fault activities, the operation number is not relevant, so we set it to empty.
+        case APAMADCSJournalType of
+            Enum::"APA MADCS Journal Type"::"Execution with Fault":
+                begin
+                    ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
+                    ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));
+
+                    if not ProdOrderRoutingLine.FindFirst() then
+                        APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+                end;
+            Enum::"APA MADCS Journal Type"::Fault:
+                ProdOrderRoutingLine."Operation No." := ''; // For fault activities, the operation number is not relevant, so we set it to empty.
+            else
+                APAMADCSManagement.Raise(APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Operation No."), TittleMsgLbl, MessageMsgLbl));
+        end;
+
     end;
 
     local procedure CreateNewActivity(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; ActionType: Enum "APA MADCS Journal Type"; BreakDownCode: Code[20])
