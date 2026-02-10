@@ -730,9 +730,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Qty. Picked - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 1789440078 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Pick Q</source>
-          <target state="translated">Q Servida</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Q Servida"</note>
+          <source>Picked Quantity</source>
+          <target state="translated">Cantidad Servida</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Servida"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Qty. Picked - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2704404533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
@@ -742,9 +742,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Original Q</source>
-          <target state="translated">Q Original</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Q Original"</note>
+          <source>Original Quantity</source>
+          <target state="translated">Cantidad Original</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Original"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 1584468205 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
@@ -766,9 +766,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Remaining Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2367056265 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Remaining Q</source>
-          <target state="translated">Q Pendiente</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Q Pendiente"</note>
+          <source>Remaining Quantity</source>
+          <target state="translated">Cantidad Pendiente</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Pendiente"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Remaining Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1124023000 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
@@ -892,9 +892,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Finished Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 1073155259 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>QT</source>
-          <target state="translated">QT</target>
-          <note from="Developer" annotates="general" priority="2">ESP="QT"</note>
+          <source>Finished Quantity</source>
+          <target state="translated">Cantidad Terminada</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Terminada"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Finished Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 568743302 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
@@ -910,9 +910,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 2704404533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>QR</source>
-          <target state="translated">QR</target>
-          <note from="Developer" annotates="general" priority="2">ESP="QR"</note>
+          <source>Requested Quantity</source>
+          <target state="translated">Cantidad Requerida</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Requerida"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 2367056265 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
@@ -922,9 +922,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Remaining Quantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 2367056265 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>RT</source>
-          <target state="translated">QP</target>
-          <note from="Developer" annotates="general" priority="2">ESP="QP"</note>
+          <source>Remaining Quantity</source>
+          <target state="translated">Cantidad Pendiente</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Pendiente"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Remaining Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 664708464 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">

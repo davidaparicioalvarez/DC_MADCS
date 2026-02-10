@@ -155,21 +155,21 @@ page 55002 "APA MADCS Consumption"
                     }
                     field(Quantity; Rec."Expected Quantity")
                     {
-                        Caption = 'Original Q', Comment = 'ESP="Q Original"';
+                        Caption = 'Original Quantity', Comment = 'ESP="Cantidad Original"';
                         ToolTip = 'Specifies the original quantity of the component.', Comment = 'ESP="Indica la cantidad original del componente."';
                         Width = 5;
                         StyleExpr = this.styleColor;
                     }
                     field("Qty. Picked"; Rec."Qty. Picked")
                     {
-                        Caption = 'Pick Q', Comment = 'ESP="Q Servida"';
+                        Caption = 'Picked Quantity', Comment = 'ESP="Cantidad Servida"';
                         ToolTip = 'Specifies the quantity of the component to pick for consumption.', Comment = 'ESP="Indica la cantidad del componente a recoger para el consumo."';
                         Width = 5;
                         StyleExpr = this.styleColor;
                     }
                     field("Remaining Quantity"; Rec."Remaining Quantity")
                     {
-                        Caption = 'Remaining Q', Comment = 'ESP="Q Pendiente"';
+                        Caption = 'Remaining Quantity', Comment = 'ESP="Cantidad Pendiente"';
                         ToolTip = 'Specifies the remaining quantity of the component to be consumed.', Comment = 'ESP="Indica la cantidad restante del componente por consumir."';
                         Width = 5;
                         StyleExpr = this.styleColor;
