@@ -1215,6 +1215,24 @@
           <note from="Developer" annotates="general" priority="2">ESP="Verificaciones"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action VerificationAct - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2146115489 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>MADCS Role Center</source>
+          <target state="translated">MADCS Role Center</target>
+          <note from="Developer" annotates="general" priority="2">ESP="MADCS Role Center"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Role Center - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2146115489 - Action 2994061188 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Access to the MADCS functionality.</source>
+          <target state="translated">Acceso a la funcionalidad de MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Acceso a la funcionalidad de MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Role Center - Action MADCS - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2146115489 - Action 2994061188 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>MADCS</source>
+          <target state="translated">MADCS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="MADCS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Role Center - Action MADCS - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 1569277430 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Time</source>
           <target state="translated">Tiempo</target>
