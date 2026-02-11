@@ -501,12 +501,12 @@ codeunit 55000 "APA MADCS Management"
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonPreparationTok):
                 begin
-                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, Enum::"APA MADCS Journal Type"::Preparation); // finalize for all operators except preparation
+                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Preparation); // finalize for all operators except preparation
                     Activities.NewPreparationActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                 end;
             Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok):
                 begin
-                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, Enum::"APA MADCS Journal Type"::Cleaning); // finalize for all operators except cleaning
+                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Cleaning); // finalize for all operators except cleaning
                     Activities.NewCleaningActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                 end;
         end;
@@ -568,7 +568,8 @@ codeunit 55000 "APA MADCS Management"
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok):
                 begin
-                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // finalize for all operators except execution
+                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Execution); // finalize for all operators except execution
+                    this.FinalizeLastActivity(OperatorCode); // only for execution tasks
                     Activities.NewExecutionActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::Execution)
                 end;
@@ -579,6 +580,29 @@ codeunit 55000 "APA MADCS Management"
                 end;
             else
                 this.LogAction(Activities, Enum::"APA MADCS Log Type"::StopTime);
+        end;
+    end;
+
+    /// <summary>
+    /// procedure StopMyTask
+    /// Processes the execution task and stops all other tasks.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="pProdOrderStatus"></param>
+    /// <param name="pProdOrder"></param>
+    /// <param name="pProdOrderLine"></param>
+    /// <param name="OperatorCode"></param>
+    /// <param name="BreakDownCode"></param>
+    procedure StopMyTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
+    var
+        Activities: Record "APA MADCS Pro. Order Line Time";
+    begin
+        case id of
+            Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeMyTaskTok):
+                begin
+                    this.FinalizeLastActivity(OperatorCode); // only for execution tasks
+                    this.LogAction(Activities, Enum::"APA MADCS Log Type"::Execution)
+                end;
         end;
     end;
 
@@ -602,12 +626,11 @@ codeunit 55000 "APA MADCS Management"
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok): // NON BLOCKING FAULT
                 if not Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
-                    this.FinalizeLastActivity(OperatorCode); // only for blocked tasks
+                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
                     Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::BreakDown);
                 end else
                     this.Raise(this.BuildApplicationError(BreakDownLbl, BlockedBreakDownLbl));
-
             Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok): // BLOCKING FAULT
                 if Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
                     this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
@@ -868,8 +891,9 @@ codeunit 55000 "APA MADCS Management"
     /// </summary>
     /// <param name="pProdOrderStatus">Production order status to filter.</param>
     /// <param name="pProdOrder">Production order number to filter.</param>
+    /// <param name="OperatorCode">Operator identifier to filter activities.</param>
     /// <param name="ActivityToExclude">Activity type to exclude from finalization.</param>
-    local procedure FinalizeAllActivitiesExcept(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; ActivityToExclude: Enum "APA MADCS Journal Type")
+    local procedure FinalizeAllActivitiesExcept(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; OperatorCode: Code[20]; ActivityToExclude: Enum "APA MADCS Journal Type")
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
@@ -891,6 +915,7 @@ codeunit 55000 "APA MADCS Management"
                 // Log the action
                 this.LogAction(Activities, Enum::"APA MADCS Log Type"::FinalizeTask);
             until Activities.Next() = 0;
+        this.FinalizeLastActivity(OperatorCode); // finalize for the operator that is starting a new task
     end;
 
     /// <summary>

@@ -33,9 +33,9 @@ enum 55004 "APA MADCS Buttons"
     {
         Caption = 'ALButtonEnd', Locked = true;
     }
-    value(7; ALButtonFinalizeTimeTok)
+    value(7; ALButtonFinalizeTasksTok)
     {
-        Caption = 'ALButtonFinalizeTime', Locked = true;
+        Caption = 'ALButtonFinalizeTasks', Locked = true;
     }
     value(8; ALButtonFinalizeOutputTok)
     {
@@ -56,5 +56,9 @@ enum 55004 "APA MADCS Buttons"
     value(12; ALButtonConsumeItemTok)
     {
         Caption = 'ALButtonConsumeItem', Locked = true;
+    }
+    value(13; ALButtonFinalizeMyTaskTok)
+    {
+        Caption = 'ALButtonFinalizeMyTask', Locked = true;
     }
 }

@@ -62,7 +62,7 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
-                    usercontrol(ALInfButtonExecutionStopAll; "APA MADCS ButtonGroup")
+                    usercontrol(ALInfButtonExecution; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -70,12 +70,9 @@ page 55003 "APA MADCS Time Part"
                         var
                             ExecutionLbl: Label 'EXECUTION without fault', Comment = 'ESP="EJECUCIÓN sin avería"';
                             ExecutionTextLbl: Label 'Init execution phase', Comment = 'ESP="Iniciar fase de ejecución"';
-                            EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TRABAJOS"';
-                            EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
 
                         begin
-                            CurrPage.ALInfButtonExecutionStopAll.AddButton(ExecutionLbl, ExecutionTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok), this.InfoButtonTok);
-                            CurrPage.ALInfButtonExecutionStopAll.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
+                            CurrPage.ALInfButtonExecution.AddButton(ExecutionLbl, ExecutionTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok), this.InfoButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -91,6 +88,46 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
+                    usercontrol(ALInfButtonStopAll; "APA MADCS ButtonGroup")
+                    {
+                        Visible = true;
+
+                        trigger OnLoad()
+                        var
+                            EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TRABAJOS"';
+                            EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
+                            FinalizeMyTaskOrderLbl: Label 'STOP MY TASK', Comment = 'ESP="PARAR MI TAREA"';
+                            FinalizeMyTaskOrderTxtLbl: Label 'Finalize my task in order', Comment = 'ESP="Finalizar mi tarea en la orden"';
+
+                        begin
+                            CurrPage.ALInfButtonStopAll.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
+                            CurrPage.ALInfButtonStopAll.AddButton(FinalizeMyTaskOrderLbl, FinalizeMyTaskOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeMyTaskTok), this.PrimaryButtonTok);
+                        end;
+
+                        trigger OnClick(id: Text)
+                        begin
+                            case id of
+                                Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
+                                    begin
+                                        this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                                        case id of
+                                            Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
+                                                Message(this.ClosedAllActivitiesMsg);
+                                            else
+                                                Message(this.NewActivityCreatedMsg);
+                                        end;
+                                        CurrPage.Update(false);
+                                    end;
+                                Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeMyTaskTok):
+                                    begin
+                                        this.APAMADCSManagement.StopMyTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                                        Message(this.ClosedMyActivitiesMsg);
+                                        CurrPage.Update(false);
+                                    end;
+                            end;
+                        end;
+                    }
+
                     usercontrol(ALInfButtonFinalizeTime; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
@@ -99,22 +136,26 @@ page 55003 "APA MADCS Time Part"
                         var
                             FinalizeTimeOrderLbl: Label 'End (Times)', Comment = 'ESP="Fin (Tiempos)"';
                             FinalizeTimeOrderTxtLbl: Label 'Finalize times in order and mark it. No more times can be registered.', Comment = 'ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."';
-
                         begin
-                            CurrPage.ALInfButtonFinalizeTime.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok), this.DangerButtonTok);
+                            CurrPage.ALInfButtonFinalizeTime.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTasksTok), this.DangerButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
                         var
                             ProdOrderLine: Record "Prod. Order Line";
                         begin
-                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
-                            Clear(ProdOrderLine);
-                            if not ProdOrderLine.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.") then
-                                this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Prod. Order Line No."), this.ProdOrderLineNotFoundErrLbl, this.ProdOrderLineNotFoundMsgLbl));
-                            if this.MarkProductionOrderAsFinished(ProdOrderLine) then begin
-                                Message(this.ClosedAllActivitiesAndOrderMsg);
-                                CurrPage.Close();
+                            case id of
+                                Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTasksTok):
+                                    begin
+                                        this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                                        Clear(ProdOrderLine);
+                                        if not ProdOrderLine.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.") then
+                                            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildValidationError(Rec.RecordId(), Rec.FieldNo("Prod. Order Line No."), this.ProdOrderLineNotFoundErrLbl, this.ProdOrderLineNotFoundMsgLbl));
+                                        if this.MarkProductionOrderAsFinished(ProdOrderLine) then begin
+                                            Message(this.ClosedAllActivitiesAndOrderMsg);
+                                            CurrPage.Close();
+                                        end;
+                                    end;
                             end;
                         end;
                     }
@@ -349,20 +390,21 @@ page 55003 "APA MADCS Time Part"
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         MyStatus: Enum "Production Order Status";
-                      styleColor: Text;
-                      MyProdOrdeNo: Code[20];
-                      BlockedBreakDownCode: Code[20];
-                      BlockedBreakDownDescription: Text;
-                      BreakDownCode: Code[20];
-                      BreakDownDescription: Text;
-                      MyProdOrdeLineNo: Integer;
-                      NormalButtonTok: Label 'normal', Locked = true;
+        styleColor: Text;
+        MyProdOrdeNo: Code[20];
+        BlockedBreakDownCode: Code[20];
+        BlockedBreakDownDescription: Text;
+        BreakDownCode: Code[20];
+        BreakDownDescription: Text;
+        MyProdOrdeLineNo: Integer;
+        NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
         InfoButtonTok: Label 'info', Locked = true;
         WarningButtonTok: Label 'warning', Locked = true;
         DangerButtonTok: Label 'danger', Locked = true;
         NewActivityCreatedMsg: Label 'New activity created successfully.', Comment = 'ESP="Nueva actividad creada con éxito."';
         ClosedAllActivitiesMsg: Label 'All active activities have been closed successfully.', Comment = 'ESP="Todas las actividades activas se han cerrado con éxito."';
+        ClosedMyActivitiesMsg: Label 'My active activities have been closed successfully.', Comment = 'ESP="Mis actividades activas se han cerrado con éxito."';
         ClosedAllActivitiesAndOrderMsg: Label 'All active activities have been closed and the production order will not accept more times.', Comment = 'ESP="Todas las actividades activas se han cerrado y la orden de producción no admitirá más tiempos."';
         ProdOrderLineNotFoundErrLbl: Label 'Production Order Line Not Found', Comment = 'ESP="Línea de Orden de Producción No Encontrada"';
         ProdOrderLineNotFoundMsgLbl: Label 'The Production Order Line associated with this time entry could not be found.', Comment = 'ESP="No se pudo encontrar la Línea de Orden de Producción asociada con esta entrada de tiempo."';

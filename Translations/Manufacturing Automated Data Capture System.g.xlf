@@ -1043,6 +1043,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="Todas las actividades activas se han cerrado con éxito."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - NamedType ClosedAllActivitiesMsg</note>
         </trans-unit>
+        <trans-unit id="Page 1569277430 - NamedType 494177048" size-unit="char" translate="yes" xml:space="preserve">
+          <source>My active activities have been closed successfully.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Mis actividades activas se han cerrado con éxito."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - NamedType ClosedMyActivitiesMsg</note>
+        </trans-unit>
         <trans-unit id="Page 1569277430 - NamedType 978589116" size-unit="char" translate="yes" xml:space="preserve">
           <source>New activity created successfully.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Nueva actividad creada con éxito."</note>
@@ -1063,25 +1068,15 @@
           <note from="Developer" annotates="general" priority="2">ESP="¿Está seguro de que desea marcar esta orden de producción como finalizada?"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Method MarkProductionOrderAsFinished - NamedType ConfirmFinishOrderQst</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 2078504788" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 2556908356 - Method 2219734473 - NamedType 2078504788" size-unit="char" translate="yes" xml:space="preserve">
           <source>EXECUTION without fault</source>
           <note from="Developer" annotates="general" priority="2">ESP="EJECUCIÓN sin avería"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType ExecutionLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecution - Method OnLoad - NamedType ExecutionLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 3285496055" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 2556908356 - Method 2219734473 - NamedType 3285496055" size-unit="char" translate="yes" xml:space="preserve">
           <source>Init execution phase</source>
           <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de ejecución"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType ExecutionTextLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
-          <source>STOP ALL WORK</source>
-          <note from="Developer" annotates="general" priority="2">ESP="PARAR TRABAJOS"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType EndLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Finalize the active phase</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType EndTextLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecution - Method OnLoad - NamedType ExecutionTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 930640783 - Method 2219734473 - NamedType 545156573" size-unit="char" translate="yes" xml:space="preserve">
           <source>End (Times)</source>
@@ -1112,6 +1107,26 @@
           <source>Init cleaning phase</source>
           <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de limpieza"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonPreparationClean - Method OnLoad - NamedType CleanTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
+          <source>STOP ALL WORK</source>
+          <note from="Developer" annotates="general" priority="2">ESP="PARAR TRABAJOS"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonStopAll - Method OnLoad - NamedType EndLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finalize the active phase</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonStopAll - Method OnLoad - NamedType EndTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 1287006073" size-unit="char" translate="yes" xml:space="preserve">
+          <source>STOP MY TASK</source>
+          <note from="Developer" annotates="general" priority="2">ESP="PARAR MI TAREA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonStopAll - Method OnLoad - NamedType FinalizeMyTaskOrderLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 128019425" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Finalize my task in order</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Finalizar mi tarea en la orden"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonStopAll - Method OnLoad - NamedType FinalizeMyTaskOrderTxtLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 1993222435 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
           <source>Breakdown Code Required</source>
