@@ -1063,95 +1063,95 @@
           <note from="Developer" annotates="general" priority="2">ESP="¿Está seguro de que desea marcar esta orden de producción como finalizada?"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Method MarkProductionOrderAsFinished - NamedType ConfirmFinishOrderQst</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1988329971 - Method 2219734473 - NamedType 972073109" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Preparation</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Preparación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns1 - Method OnLoad - NamedType PreparationLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1988329971 - Method 2219734473 - NamedType 3775114922" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Init preparation phase</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de preparación"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns1 - Method OnLoad - NamedType PreparationTextLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1988329971 - Method 2219734473 - NamedType 1917808569" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Cleaning</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Limpieza"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns1 - Method OnLoad - NamedType CleanLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1988329971 - Method 2219734473 - NamedType 4164940614" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Init cleaning phase</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de limpieza"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns1 - Method OnLoad - NamedType CleanTextLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 2078504788" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 2078504788" size-unit="char" translate="yes" xml:space="preserve">
           <source>EXECUTION without fault</source>
           <note from="Developer" annotates="general" priority="2">ESP="EJECUCIÓN sin avería"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType ExecutionLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType ExecutionLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 3285496055" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 3285496055" size-unit="char" translate="yes" xml:space="preserve">
           <source>Init execution phase</source>
           <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de ejecución"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType ExecutionTextLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType ExecutionTextLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
           <source>STOP ALL WORK</source>
           <note from="Developer" annotates="general" priority="2">ESP="PARAR TRABAJOS"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType EndLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType EndLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3901419822 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 996780427 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finalize the active phase</source>
           <note from="Developer" annotates="general" priority="2">ESP="Finalizar la fase activa"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns2 - Method OnLoad - NamedType EndTextLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonExecutionStopAll - Method OnLoad - NamedType EndTextLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3263723205 - Method 2219734473 - NamedType 545156573" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 930640783 - Method 2219734473 - NamedType 545156573" size-unit="char" translate="yes" xml:space="preserve">
           <source>End (Times)</source>
           <note from="Developer" annotates="general" priority="2">ESP="Fin (Tiempos)"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns3 - Method OnLoad - NamedType FinalizeTimeOrderLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonFinalizeTime - Method OnLoad - NamedType FinalizeTimeOrderLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 3263723205 - Method 2219734473 - NamedType 2018595941" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 930640783 - Method 2219734473 - NamedType 2018595941" size-unit="char" translate="yes" xml:space="preserve">
           <source>Finalize times in order and mark it. No more times can be registered.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonGroupColumns3 - Method OnLoad - NamedType FinalizeTimeOrderTxtLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonFinalizeTime - Method OnLoad - NamedType FinalizeTimeOrderTxtLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 852626986 - Method 2219734473 - NamedType 972073109" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Preparation</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Preparación"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonPreparationClean - Method OnLoad - NamedType PreparationLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 852626986 - Method 2219734473 - NamedType 3775114922" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Init preparation phase</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de preparación"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonPreparationClean - Method OnLoad - NamedType PreparationTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 852626986 - Method 2219734473 - NamedType 1917808569" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cleaning</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Limpieza"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonPreparationClean - Method OnLoad - NamedType CleanLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 852626986 - Method 2219734473 - NamedType 4164940614" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Init cleaning phase</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Iniciar fase de limpieza"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonPreparationClean - Method OnLoad - NamedType CleanTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 1993222435 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
           <source>Breakdown Code Required</source>
           <note from="Developer" annotates="general" priority="2">ESP="Código de Avería Requerido"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnClick - NamedType BreakdownTitleErrLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonBlockedBreakdowon - Method OnClick - NamedType BreakdownTitleErrLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 1993222435 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
           <source>Please enter a Breakdown Code before registering a breakdown.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnClick - NamedType BreakdownMsgErrLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonBlockedBreakdowon - Method OnClick - NamedType BreakdownMsgErrLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Execution WITH FAULT</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Ejecución CON AVERÍA"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BreakDownLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 768589621 - Method 2219734473 - NamedType 3707734870" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Register no blocked breakdown</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Permite el uso de la máquina, pero no en condiciones óptimas"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns2 - Method OnLoad - NamedType BreakDownTextLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Breakdown Code Required</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Código de Avería Requerido"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnClick - NamedType BreakdownTitleErrLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Please enter a Breakdown Code before registering a breakdown.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnClick - NamedType BreakdownMsgErrLbl</note>
-        </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2219734473 - NamedType 3433467817" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 1993222435 - Method 2219734473 - NamedType 3433467817" size-unit="char" translate="yes" xml:space="preserve">
           <source>Blocked Breakdown</source>
           <note from="Developer" annotates="general" priority="2">ESP="Avería bloqueante"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnLoad - NamedType BlockedBreakDownLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonBlockedBreakdowon - Method OnLoad - NamedType BlockedBreakDownLbl</note>
         </trans-unit>
-        <trans-unit id="Page 1569277430 - Control 1406286238 - Method 2219734473 - NamedType 1224036118" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1569277430 - Control 1993222435 - Method 2219734473 - NamedType 1224036118" size-unit="char" translate="yes" xml:space="preserve">
           <source>Register blocked breakdown</source>
           <note from="Developer" annotates="general" priority="2">ESP="No permite el uso de la máquina"</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonGroupColumns3 - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonBlockedBreakdowon - Method OnLoad - NamedType BlockedBreakDownTextLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 818398069 - Method 2115891537 - NamedType 3943051238" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Breakdown Code Required</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de Avería Requerido"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonExecutionFail - Method OnClick - NamedType BreakdownTitleErrLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 818398069 - Method 2115891537 - NamedType 1218054373" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Please enter a Breakdown Code before registering a breakdown.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Por favor, introduzca un Código de Avería antes de registrar una avería."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonExecutionFail - Method OnClick - NamedType BreakdownMsgErrLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 818398069 - Method 2219734473 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Execution WITH FAULT</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Ejecución CON AVERÍA"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonExecutionFail - Method OnLoad - NamedType BreakDownLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 1569277430 - Control 818398069 - Method 2219734473 - NamedType 3707734870" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Register no blocked breakdown</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Permite el uso de la máquina, pero no en condiciones óptimas"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALRightButtonExecutionFail - Method OnLoad - NamedType BreakDownTextLbl</note>
         </trans-unit>
         <trans-unit id="Page 3641626520 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Tracking Specification</source>
@@ -1439,18 +1439,18 @@
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Cleaning - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 3991974766 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Execution</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Ejecución"</note>
+          <source>EXECUTION without fault</source>
+          <note from="Developer" annotates="general" priority="2">ESP="EJECUCION sin avería"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Execution - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 1072123038 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Execution with Fault</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Ejecución con Avería"</note>
+          <source>Execution WITH FAULT</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Ejecución CON AVERÍA"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Execution with Fault - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 213071998 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Fault</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Avería"</note>
+          <source>Blocking Fault</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Avería bloqueante"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum APA MADCS Journal Type - EnumValue Fault - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 145277123 - EnumValue 1034101843 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">

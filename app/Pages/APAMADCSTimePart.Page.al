@@ -39,7 +39,7 @@ page 55003 "APA MADCS Time Part"
                 {
                     ShowCaption = false;
 
-                    usercontrol(ALInfButtonGroupColumns1; "APA MADCS ButtonGroup")
+                    usercontrol(ALInfButtonPreparationClean; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -50,8 +50,8 @@ page 55003 "APA MADCS Time Part"
                             CleanLbl: Label 'Cleaning', Comment = 'ESP="Limpieza"';
                             CleanTextLbl: Label 'Init cleaning phase', Comment = 'ESP="Iniciar fase de limpieza"';
                         begin
-                            CurrPage.ALInfButtonGroupColumns1.AddButton(PreparationLbl, PreparationTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonPreparationTok), this.NormalButtonTok);
-                            CurrPage.ALInfButtonGroupColumns1.AddButton(CleanLbl, CleanTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok), this.NormalButtonTok);
+                            CurrPage.ALInfButtonPreparationClean.AddButton(PreparationLbl, PreparationTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonPreparationTok), this.NormalButtonTok);
+                            CurrPage.ALInfButtonPreparationClean.AddButton(CleanLbl, CleanTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok), this.NormalButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -62,7 +62,7 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
-                    usercontrol(ALInfButtonGroupColumns2; "APA MADCS ButtonGroup")
+                    usercontrol(ALInfButtonExecutionStopAll; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -74,8 +74,8 @@ page 55003 "APA MADCS Time Part"
                             EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
 
                         begin
-                            CurrPage.ALInfButtonGroupColumns2.AddButton(ExecutionLbl, ExecutionTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok), this.InfoButtonTok);
-                            CurrPage.ALInfButtonGroupColumns2.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
+                            CurrPage.ALInfButtonExecutionStopAll.AddButton(ExecutionLbl, ExecutionTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok), this.InfoButtonTok);
+                            CurrPage.ALInfButtonExecutionStopAll.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -91,7 +91,7 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
-                    usercontrol(ALInfButtonGroupColumns3; "APA MADCS ButtonGroup")
+                    usercontrol(ALInfButtonFinalizeTime; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -101,7 +101,7 @@ page 55003 "APA MADCS Time Part"
                             FinalizeTimeOrderTxtLbl: Label 'Finalize times in order and mark it. No more times can be registered.', Comment = 'ESP="Finalizar tiempo en orden y marcarla. Ya no se podrán registrar más tiempos."';
 
                         begin
-                            CurrPage.ALInfButtonGroupColumns3.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok), this.DangerButtonTok);
+                            CurrPage.ALInfButtonFinalizeTime.AddButton(FinalizeTimeOrderLbl, FinalizeTimeOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeTimeTok), this.DangerButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -152,7 +152,7 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
-                    usercontrol(ALRightButtonGroupColumns2; "APA MADCS ButtonGroup")
+                    usercontrol(ALRightButtonExecutionFail; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -161,7 +161,7 @@ page 55003 "APA MADCS Time Part"
                             BreakDownLbl: Label 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
                             BreakDownTextLbl: Label 'Register no blocked breakdown', Comment = 'ESP="Permite el uso de la máquina, pero no en condiciones óptimas"';
                         begin
-                            CurrPage.ALRightButtonGroupColumns2.AddButton(BreakDownLbl, BreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok), this.WarningButtonTok);
+                            CurrPage.ALRightButtonExecutionFail.AddButton(BreakDownLbl, BreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok), this.WarningButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -207,7 +207,7 @@ page 55003 "APA MADCS Time Part"
                         end;
                     }
 
-                    usercontrol(ALRightButtonGroupColumns3; "APA MADCS ButtonGroup")
+                    usercontrol(ALRightButtonBlockedBreakdowon; "APA MADCS ButtonGroup")
                     {
                         Visible = true;
 
@@ -216,7 +216,7 @@ page 55003 "APA MADCS Time Part"
                             BlockedBreakDownLbl: Label 'Blocked Breakdown', Comment = 'ESP="Avería bloqueante"';
                             BlockedBreakDownTextLbl: Label 'Register blocked breakdown', Comment = 'ESP="No permite el uso de la máquina"';
                         begin
-                            CurrPage.ALRightButtonGroupColumns3.AddButton(BlockedBreakDownLbl, BlockedBreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok), this.DangerButtonTok);
+                            CurrPage.ALRightButtonBlockedBreakdowon.AddButton(BlockedBreakDownLbl, BlockedBreakDownTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok), this.DangerButtonTok);
                         end;
 
                         trigger OnClick(id: Text)
@@ -349,14 +349,14 @@ page 55003 "APA MADCS Time Part"
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         MyStatus: Enum "Production Order Status";
-        styleColor: Text;
-        MyProdOrdeNo: Code[20];
-        BlockedBreakDownCode: Code[20];
-        BlockedBreakDownDescription: Text;
-        BreakDownCode: Code[20];
-        BreakDownDescription: Text;
-        MyProdOrdeLineNo: Integer;
-        NormalButtonTok: Label 'normal', Locked = true;
+                      styleColor: Text;
+                      MyProdOrdeNo: Code[20];
+                      BlockedBreakDownCode: Code[20];
+                      BlockedBreakDownDescription: Text;
+                      BreakDownCode: Code[20];
+                      BreakDownDescription: Text;
+                      MyProdOrdeLineNo: Integer;
+                      NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
         InfoButtonTok: Label 'info', Locked = true;
         WarningButtonTok: Label 'warning', Locked = true;
@@ -375,7 +375,8 @@ page 55003 "APA MADCS Time Part"
     /// <param name="pStatus"></param>
     /// <param name="pProdOrderNo"></param>
     /// <param name="pProdOrderLineNo"></param>
-    procedure InitializeData(pStatus: Enum "Production Order Status"; pProdOrderNo: Code[20]; pProdOrderLineNo: Integer)
+    procedure InitializeData(pStatus: Enum "Production Order Status"; pProdOrderNo: Code[20];
+                                          pProdOrderLineNo: Integer)
     begin
         this.MyStatus := pStatus;
         this.MyProdOrdeNo := pProdOrderNo;

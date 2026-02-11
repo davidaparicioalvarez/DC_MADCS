@@ -402,7 +402,8 @@ table 55001 "APA MADCS Pro. Order Line Time"
         MessageMsgLbl: Label 'The operation number could not be found for the production order line.', Comment = 'ESP="No se pudo encontrar el número de operación para la línea de orden de producción."';
     begin
         case APAMADCSJournalType of
-            Enum::"APA MADCS Journal Type"::"Execution with Fault":
+            Enum::"APA MADCS Journal Type"::"Execution with Fault",
+            Enum::"APA MADCS Journal Type"::"Execution":
                 begin
                     ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
                     ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));

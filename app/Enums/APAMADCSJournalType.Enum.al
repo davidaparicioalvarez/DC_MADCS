@@ -24,7 +24,7 @@ enum 55001 "APA MADCS Journal Type"
     /// </summary>
     value(1; Fault)
     {
-        Caption = 'Fault', Comment = 'ESP="Avería"';
+        Caption = 'Blocking Fault', Comment = 'ESP="Avería bloqueante"';
     }
 
     /// <summary>
@@ -33,7 +33,7 @@ enum 55001 "APA MADCS Journal Type"
     /// </summary>
     value(2; "Execution with Fault")
     {
-        Caption = 'Execution with Fault', Comment = 'ESP="Ejecución con Avería"';
+        Caption = 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ enum 55001 "APA MADCS Journal Type"
     /// </summary>
     value(20; Execution)
     {
-        Caption = 'Execution', Comment = 'ESP="Ejecución"';
+        Caption = 'EXECUTION without fault', Comment = 'ESP="EJECUCION sin avería"';
     }
 
     /// <summary>

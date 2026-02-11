@@ -568,7 +568,7 @@ codeunit 55000 "APA MADCS Management"
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok):
                 begin
-                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, Enum::"APA MADCS Journal Type"::Execution); // finalize for all operators except execution
+                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // finalize for all operators except execution
                     Activities.NewExecutionActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::Execution)
                 end;
