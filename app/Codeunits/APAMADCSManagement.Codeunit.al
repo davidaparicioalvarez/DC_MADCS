@@ -714,6 +714,8 @@ codeunit 55000 "APA MADCS Management"
         if not ManufacturingSetup.Get() then
             this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
         if ProdOrder.Get(ProdOrderLine.Status, ProdOrderLine."Prod. Order No.") then begin
+            ProdOrder.TestField("APA MADCS Consumption finished");
+            ProdOrder.TestField("APA MADCS Output finished");
             ProdOrder."APA MADCS Time finished" := true;
             ProdOrder.Modify(true);
             APAMADCSProOrdCloseErr := ManufacturingSetup."APA MADCS Pro. Ord. Close Impl";
