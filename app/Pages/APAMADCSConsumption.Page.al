@@ -169,7 +169,7 @@ page 55002 "APA MADCS Consumption"
                     }
                     field("Remaining Quantity"; Rec."Remaining Quantity")
                     {
-                        Caption = 'Remaining Quantity', Comment = 'ESP="Cantidad Pendiente"';
+                        Caption = 'Remaining Quantity', Comment = 'ESP="Cantidad Resto"';
                         ToolTip = 'Specifies the remaining quantity of the component to be consumed.', Comment = 'ESP="Indica la cantidad restante del componente por consumir."';
                         Width = 5;
                         StyleExpr = this.styleColor;
