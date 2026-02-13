@@ -53,8 +53,9 @@ codeunit 55000 "APA MADCS Management"
     /// Checks if the current production order can consume components.
     /// </summary>
     /// <param name="ProdOrderComponent"></param>
+    /// <param name="OperatorCode"></param>
     /// <returns></returns>
-    procedure IsMarkedForConsume(ProdOrderComponent: Record "Prod. Order Component"): Boolean
+    procedure IsMarkedForConsume(ProdOrderComponent: Record "Prod. Order Component"; OperatorCode: Code[20]): Boolean
     var
         ProdOrder: Record "Production Order";
     begin
@@ -829,6 +830,27 @@ codeunit 55000 "APA MADCS Management"
         end;
 
         exit(TaskNo);
+    end;
+
+    /// <summary>
+    /// procedure GetMyActualActivity
+    /// Retrieves the current active activity for the given operator code. If no active task is found, raises an error.
+    /// </summary>
+    /// <param name="OperatorCode"></param>
+    /// <param name="Activity"></param>
+    procedure GetMyActualActivity(OperatorCode: Code[20]; var Activity: Record "APA MADCS Pro. Order Line Time")
+    var
+        NoActiveTaskTitleMsg: Label 'No active task', Comment = 'ESP="No hay tarea activa"';
+        NoActiveTaskErr: Label 'No active task found for the operator.', Comment = 'ESP="No se encontró una tarea activa para el operario."';
+    begin
+        Clear(Activity);
+        Activity.SetCurrentKey("Operator Code");
+        Activity.SetRange(Posted, false);
+        Activity.SetRange("Operator Code", OperatorCode);
+        if Activity.FindFirst() then
+            exit
+        else
+            this.Raise(this.BuildApplicationError(NoActiveTaskTitleMsg, NoActiveTaskErr));
     end;
     #endregion procedures
 

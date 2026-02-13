@@ -179,6 +179,18 @@ page 55002 "APA MADCS Consumption"
         }
     }
 
+    trigger OnInit()
+    var
+        Activity: Record "APA MADCS Pro. Order Line Time";
+        NoExecActionTitleLbl: Label 'No execution task.', Comment = 'ESP="No hay tarea de ejecución."';
+        NoExecActionTitleMsg: Label 'No active execution task found for the current user.', Comment = 'ESP="No se encontró una tarea de ejecución activa para el usuario actual."';
+    begin
+        // Verify that there is a Execution task
+        this.APAMADCSManagement.GetMyActualActivity(this.APAMADCSManagement.GetOperatorCode(), Activity);
+        if not (Activity.Action in [Activity.Action::Execution, Activity.Action::"Execution with Fault"]) then
+            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(NoExecActionTitleLbl, NoExecActionTitleMsg));
+    end;
+
     trigger OnAfterGetRecord()
     begin
         this.SetStyleColor();

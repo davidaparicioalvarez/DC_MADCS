@@ -222,7 +222,7 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                         ProdOrderComponent.SetRange("Prod. Order No.", Rec."Prod. Order No.");
                         ProdOrderComponent.SetRange("Prod. Order Line No.", Rec."Line No.");
                         if ProdOrderComponent.FindFirst() then
-                            if not this.APAMADCSManagement.IsMarkedForConsume(ProdOrderComponent) then
+                            if not this.APAMADCSManagement.IsMarkedForConsume(ProdOrderComponent, this.APAMADCSManagement.GetOperatorCode()) then
                                 this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(ConsumeTitleErr, CannotConsumeErr));
                         RunModal(Page::"APA MADCS Consumption", ProdOrderComponent);
                         CurrPage.Update(false);

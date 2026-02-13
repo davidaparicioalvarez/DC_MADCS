@@ -373,6 +373,16 @@
           <note from="Developer" annotates="general" priority="2">ESP="Falta el lote de diario de artículos especificado para la salida MADCS. Por favor, verifique la Configuración de Fabricación."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetManufacturingSetupForOutput - NamedType ItemJournalBatchMissingErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 4290819963 - NamedType 1250083171" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No active task</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No hay tarea activa"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetMyActualActivity - NamedType NoActiveTaskTitleMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 4290819963 - NamedType 515658735" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No active task found for the operator.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No se encontró una tarea activa para el operario."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetMyActualActivity - NamedType NoActiveTaskErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2051529445 - NamedType 2534762797" size-unit="char" translate="yes" xml:space="preserve">
           <source>Operator %1 not found in ADCS users.</source>
           <note from="Developer" annotates="general" priority="2">ESP="El operador %1 no se encuentra en los usuarios ADCS."</note>
@@ -553,6 +563,16 @@
           <note from="Developer" annotates="general" priority="2">ESP="¿Está seguro de que desea marcar esta orden de producción como finalizada en consumos y crear una nueva actividad de limpieza?"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method MarkProductionOrderAsFinished - NamedType ConfirmFinishOrderQst</note>
         </trans-unit>
+        <trans-unit id="Page 178587815 - Method 4194163325 - NamedType 2179780874" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No execution task.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No hay tarea de ejecución."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method OnInit - NamedType NoExecActionTitleLbl</note>
+        </trans-unit>
+        <trans-unit id="Page 178587815 - Method 4194163325 - NamedType 296363359" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No active execution task found for the current user.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No se encontró una tarea de ejecución activa para el usuario actual."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method OnInit - NamedType NoExecActionTitleMsg</note>
+        </trans-unit>
         <trans-unit id="Page 178587815 - Control 334747283 - Method 2219734473 - NamedType 14288021" size-unit="char" translate="yes" xml:space="preserve">
           <source>Cons. Component</source>
           <note from="Developer" annotates="general" priority="2">ESP="Cons. Componente"</note>
@@ -640,7 +660,7 @@
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 2367056265 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Remaining Quantity</source>
-          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Pendiente"</note>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Resto"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Control Remaining Quantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1124023000 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
