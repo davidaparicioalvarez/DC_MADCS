@@ -1653,6 +1653,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Implementación de error de cierre de orden de producción MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Pro. Ord. Close Impl - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2541457308 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>Specifies the timer interval in seconds for MADCS operations.</source>
+          <target state="translated">Especifica el intervalo del temporizador en segundos para las operaciones de MADCS.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el intervalo del temporizador en segundos para las operaciones de MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Timer Interval - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 853581073 - Field 2541457308 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1379888169">
+          <source>MADCS Timer Interval (segundos)</source>
+          <target state="translated">Intervalo del temporizador MADCS (segundos)</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Intervalo del temporizador MADCS (segundos)"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS Manufacturing Setup - Field APA MADCS Timer Interval - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 1761940193 - Field 2339743065 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4218928473">
           <source>Indicates whether the production order line can be finished based on MADCS verification.</source>
           <target state="translated">Indica si la línea de orden de producción puede ser finalizada en función de la verificación de MADCS.</target>

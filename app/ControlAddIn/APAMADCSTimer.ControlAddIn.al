@@ -4,13 +4,13 @@ controladdin "APA MADCS Timer"
 
 
     HorizontalShrink = true;
-    HorizontalStretch = true;
-    MinimumHeight = 1;
-    MinimumWidth = 1;
-    RequestedHeight = 1;
-    RequestedWidth = 1;
+    HorizontalStretch = false;
+    MinimumHeight = 10;
+    MinimumWidth = 10;
+    RequestedHeight = 10;
+    RequestedWidth = 10;
     VerticalShrink = true;
-    VerticalStretch = true;
+    VerticalStretch = false;
 
     /// <summary>
     /// Starts the timer in the JavaScript control with the specified number of milliseconds. When the timer elapses, it triggers the TimerElapsed event.

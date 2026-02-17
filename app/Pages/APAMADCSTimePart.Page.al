@@ -29,7 +29,7 @@ page 55003 "APA MADCS Time Part"
     layout
     {
         area(Content)
-        {           
+        {
             grid(Columns1)
             {
                 ShowCaption = false;
@@ -42,15 +42,16 @@ page 55003 "APA MADCS Time Part"
                     usercontrol(APAMADCSTimer; "APA MADCS Timer")
                     {
                         Visible = true;
-                        
+
                         trigger ControlAddInReady()
                         begin
-
+                            // Control is now ready, start the timer
+                            this.isTimerControlReady := true;
+                            this.StartTimerIfReady();
                         end;
 
                         trigger RefreshPage()
                         begin
-                            Message('Hi this is triggered from Timer and executed every 5000 milliseconds');
                             CurrPage.Update(false);
                         end;
                     }
@@ -395,12 +396,13 @@ page 55003 "APA MADCS Time Part"
 
     trigger OnOpenPage()
     begin
-        CurrPage.APAMADCSTimer.StartTimer(5000);
+        // Timer will be started once the control is ready (ControlAddInReady event)
+        this.StartTimerIfReady();
     end;
 
     trigger OnClosePage()
     begin
-        CurrPage.APAMADCSTimer.StopTimer();
+        this.StopTimerIfReady();
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -423,6 +425,7 @@ page 55003 "APA MADCS Time Part"
         BreakDownCode: Code[20];
         BreakDownDescription: Text;
         MyProdOrdeLineNo: Integer;
+        isTimerControlReady: Boolean;
         NormalButtonTok: Label 'normal', Locked = true;
         PrimaryButtonTok: Label 'primary', Locked = true;
         InfoButtonTok: Label 'info', Locked = true;
@@ -485,5 +488,19 @@ page 55003 "APA MADCS Time Part"
         if not ConfirmMgmt.GetResponseOrDefault(ConfirmFinishOrderQst) then
             exit(false);
         exit(this.APAMADCSManagement.MarkProductionOrderAsTimeFinished(ProdOrderLine));
+    end;
+
+    local procedure StartTimerIfReady()
+    begin
+        // Only start the timer if the control is ready
+        if this.isTimerControlReady then
+            CurrPage.APAMADCSTimer.StartTimer(this.APAMADCSManagement.GetTimerInterval());
+    end;
+
+    local procedure StopTimerIfReady()
+    begin
+        // Only stop the timer if the control is ready
+        if this.isTimerControlReady then
+            CurrPage.APAMADCSTimer.StopTimer();
     end;
 }

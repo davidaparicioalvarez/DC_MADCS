@@ -65,5 +65,12 @@ tableextension 55003 "APA MADCS Manufacturing Setup" extends "Manufacturing Setu
             ToolTip = 'Specifies the operation number for the cleaning task in MADCS.', Comment = 'ESP="Especifica el número de operación para la tarea de limpieza en MADCS."';
             DataClassification = SystemMetadata;
         }
+
+        field(55008; "APA MADCS Timer Interval"; Integer)
+        {
+            Caption = 'MADCS Timer Interval (segundos)', Comment = 'ESP="Intervalo del temporizador MADCS (segundos)"';
+            ToolTip = 'Specifies the timer interval in seconds for MADCS operations.', Comment = 'ESP="Especifica el intervalo del temporizador en segundos para las operaciones de MADCS."';
+            DataClassification = SystemMetadata;
+        }
     }
 }

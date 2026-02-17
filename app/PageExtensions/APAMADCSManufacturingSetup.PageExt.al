@@ -44,6 +44,10 @@ pageextension 55000 "APA MADCS Manufacturing Setup" extends "Manufacturing Setup
                 {
                     ApplicationArea = All;
                 }
+                field("APA MADCS Timer Interval"; Rec."APA MADCS Timer Interval")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
     }

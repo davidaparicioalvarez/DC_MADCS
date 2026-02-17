@@ -806,6 +806,22 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
+    /// procedure GetTimerInterval
+    /// Retrieves the timer interval for refreshing the picking status of production orders. This can be used
+    /// </summary>
+    /// <returns></returns>
+    internal procedure GetTimerInterval(): Integer
+    var
+        ManufacturingSetup: Record "Manufacturing Setup";
+    begin
+        Clear(ManufacturingSetup);
+        if not ManufacturingSetup.Get() then
+            this.Raise(this.BuildApplicationError(this.ManufacturingSetupMissMsg, this.ManufacturingSetupErr));
+        ManufacturingSetup.TestField("APA MADCS Timer Interval");
+        exit(ManufacturingSetup."APA MADCS Timer Interval" * 1000); // Convert seconds to milliseconds
+    end;
+
+    /// <summary>
     /// procedure UpdatePickingStatusField
     /// Updates the "APA MADCS Picking Status" field based on the picking status of the production order components.
     /// </summary>
