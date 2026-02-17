@@ -313,6 +313,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="Ya hay una tarea posterior iniciada para esta orden de producción. No puede iniciar la tarea."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - NamedType TaskTextErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - NamedType 2534762797" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Operator %1 not found in ADCS users.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="El operador %1 no se encuentra en los usuarios ADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - NamedType UserNotFoundMsg</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2188843926 - NamedType 2645315771" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bad Output</source>
           <note from="Developer" annotates="general" priority="2">ESP="Salida incorrecta"</note>
@@ -342,6 +347,11 @@
           <source>Error Looking for Production Order.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error al buscar la Orden de Producción."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ExecutionCanStart - NamedType NoProdOrderErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1635399439 - NamedType 4190704266" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bad Configuration</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Configuración incorrecta"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetMachineCenterCode - NamedType BadConfigurationMsg</note>
         </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 204360777 - NamedType 946495499" size-unit="char" translate="yes" xml:space="preserve">
           <source>Item Journal Template Missing</source>
@@ -392,11 +402,6 @@
           <source>No active task found for the operator.</source>
           <note from="Developer" annotates="general" priority="2">ESP="No se encontró una tarea activa para el operario."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetMyActualActivity - NamedType NoActiveTaskErr</note>
-        </trans-unit>
-        <trans-unit id="Codeunit 1470976125 - Method 2051529445 - NamedType 2534762797" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Operator %1 not found in ADCS users.</source>
-          <note from="Developer" annotates="general" priority="2">ESP="El operador %1 no se encuentra en los usuarios ADCS."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method LogInOperator - NamedType UserNotFoundMsg</note>
         </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2861038669 - NamedType 2716043997" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permissions Error.</source>
@@ -1297,6 +1302,16 @@
           <source>MADCS Production Order Info</source>
           <note from="Developer" annotates="general" priority="2">ESP="Información de la orden de producción MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension APA MADCS Rel. Prod. Order - Control MADCS Production Order Info - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1586015352 - Field 611293074 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2268254512">
+          <source>Specifies the MADCS machine center code.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el código del centro de máquina para MADCS."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS ADCS User - Field APA MADCS Machine Center - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1586015352 - Field 611293074 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2268254512">
+          <source>Associated Machine Center</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Centro de Maquina asociado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension APA MADCS ADCS User - Field APA MADCS Machine Center - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1586015352 - Field 3594200569 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2268254512">
           <source>Specifies the MADCS password.</source>

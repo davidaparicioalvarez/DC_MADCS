@@ -38,7 +38,8 @@ codeunit 55000 "APA MADCS Management"
         tabledata "Item Tracking Code" = r,
         tabledata "Capacity Ledger Entry" = r,
         tabledata "DC Errores Cierre Orden" = rmid,
-        tabledata "DC Tolerancias Admitidas" = r;
+        tabledata "DC Tolerancias Admitidas" = r,
+        tabledata "Capacity Unit of Measure" = r;
 
     var
         CurrentOperatorCode: Code[20];
@@ -47,6 +48,7 @@ codeunit 55000 "APA MADCS Management"
         ManufacturingSetupErr: Label 'The Manufacturing Setup record is missing. Please set it up before posting consumption.', Comment = 'ESP="Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo."';
         TaskErr: Label 'Task error', Comment = 'ESP="Error en la tarea"';
         TaskTextErr: Label 'There is a later task already started for this production order. You cannot start preparation task.', Comment = 'ESP="Ya hay una tarea posterior iniciada para esta orden de producción. No puede iniciar la tarea."';
+        UserNotFoundMsg: Label 'Operator %1 not found in ADCS users.', Comment = 'ESP="El operador %1 no se encuentra en los usuarios ADCS."';
 
     #region procedures
 
@@ -80,7 +82,6 @@ codeunit 55000 "APA MADCS Management"
         OperatorLoginPage: Page "APA MADCS Operator Login";
         OperatorCode: Code[20];
         Password: Text;
-        UserNotFoundMsg: Label 'Operator %1 not found in ADCS users.', Comment = 'ESP="El operador %1 no se encuentra en los usuarios ADCS."';
     begin
         if this.Logged then
             exit(true);
@@ -103,13 +104,13 @@ codeunit 55000 "APA MADCS Management"
         // Validate operator code exists in ADCS User table
         Clear(ADCSUser);
         if not ADCSUser.Get(OperatorCode) then begin
-            Message(UserNotFoundMsg, OperatorCode);
+            Message(this.UserNotFoundMsg, OperatorCode);
             exit(false);
         end;
 
         // Validate password
         if ADCSUser."APA MADCS Password" <> Password then begin
-            Message(UserNotFoundMsg, OperatorCode);
+            Message(this.UserNotFoundMsg, OperatorCode);
             exit(false);
         end;
 
@@ -921,8 +922,65 @@ codeunit 55000 "APA MADCS Management"
     end;
     #endregion procedures
 
-
     #region local procedures
+    /// <summary>
+    /// internal procedure TimeUsed
+    /// Calculates the total minutes used between the start and end date times.
+    /// </summary>
+    /// <param name="Activity"></param>
+    /// <param name="UnitOfMeasure"></param>
+    /// <returns></returns>
+    internal procedure TimeUsed(Activity: Record "APA MADCS Pro. Order Line Time"; UnitOfMeasure: Code[10]) Time: Decimal
+    var
+        CapUnitOfMeasure: Record "Capacity Unit of Measure";
+        Duration: Decimal;
+    begin
+        if not CapUnitOfMeasure.Get(UnitOfMeasure) then
+            this.Raise(this.BuildApplicationError('Invalid Unit of Measure', 'The provided unit of measure is not valid.'));
+
+        if Activity."End Date Time" = 0DT then
+            Duration := 0
+        else
+            Duration := (Activity."End Date Time" - Activity."Start Date Time") / 1000;
+
+        case CapUnitOfMeasure.Type of
+            CapUnitOfMeasure.Type::" ":
+                Time := Duration / 60; // Default to minutes when no type is specified
+            CapUnitOfMeasure.Type::"100/Hour":
+                Time := Duration / 60 / 60 * 100;
+            CapUnitOfMeasure.Type::Days:
+                Time := Duration / 60 / 60 / 24;
+            CapUnitOfMeasure.Type::Hours:
+                Time := Duration / 60 / 60;
+            CapUnitOfMeasure.Type::Minutes:
+                Time := Duration / 60;
+            CapUnitOfMeasure.Type::Seconds:
+                Time := Duration;
+        end;
+
+        exit(Time);
+    end;
+
+    local procedure GetMachineCenterCode(var MachineCenterCode: Code[20]): Boolean
+    var
+        ADCSUser: Record "ADCS User";
+        BadConfigurationMsg: Label 'Bad Configuration', Comment = 'ESP="Configuración incorrecta"';
+        OperatorCode: Code[20];
+    begin
+        // Validate operator code exists in ADCS User table
+        OperatorCode := this.GetOperatorCode();
+        Clear(ADCSUser);
+        if not ADCSUser.Get(OperatorCode) then begin
+            this.Raise(this.BuildApplicationError(BadConfigurationMsg, StrSubstNo(this.UserNotFoundMsg, OperatorCode)));
+            exit(false);
+        end;
+
+        ADCSUser.TestField("APA MADCS Machine Center");
+        MachineCenterCode := ADCSUser."APA MADCS Machine Center";
+
+        exit(true);
+    end;
+
     local procedure CurrenFaultTaskBreakdownCode(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer): Code[20]
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -954,11 +1012,11 @@ codeunit 55000 "APA MADCS Management"
                 Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::Preparation);
             Enum::"APA MADCS Journal Type"::Execution,
             Enum::"APA MADCS Journal Type"::"Execution with Fault":
-                 Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::"Execution with Fault");
+                Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::"Execution with Fault");
             Enum::"APA MADCS Journal Type"::Cleaning:
                 Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::Cleaning);
             Enum::"APA MADCS Journal Type"::Fault:
-                 exit(false);
+                exit(false);
         end;
         exit(not Activities.IsEmpty());
     end;
@@ -1057,6 +1115,7 @@ codeunit 55000 "APA MADCS Management"
     var
         ItemJournalLine: Record "Item Journal Line";
         PostItemJnlLine: Codeunit "Item Jnl.-Post Line";
+    //MachineCenter: Code[20];
     begin
         Clear(ItemJournalLine);
         ItemJournalLine."Journal Template Name" := '';
@@ -1068,22 +1127,25 @@ codeunit 55000 "APA MADCS Management"
         ItemJournalLine.Validate("Item No.", Activities.ItemNo());
         ItemJournalLine.Validate("Operation No.", Activities."Operation No.");
         ItemJournalLine.Validate("Document No.", Activities."Prod. Order No.");
-        // Only one operation per production order line in MADCS
         ItemJournalLine.Validate("Posting Date", Activities."End Date Time".Date());
+        //this.GetMachineCenterCode(MachineCenter);
+        //ItemJournalLine.Validate(Type, ItemJournalLine.Type::"Machine Center");
+        //ItemJournalLine.Validate("No.", MachineCenter);
+        // Only one operation per production order line in MADCS
         case Activities.Action of
             "APA MADCS Journal Type"::Preparation,
             "APA MADCS Journal Type"::Cleaning:
-                ItemJournalLine.Validate("Setup Time", Activities.MinutesUsed());
+                ItemJournalLine.Validate("Setup Time", this.TimeUsed(Activities, ItemJournalLine."Cap. Unit of Measure Code"));
             "APA MADCS Journal Type"::Execution:
-                ItemJournalLine.Validate("Run Time", Activities.MinutesUsed());
+                ItemJournalLine.Validate("Run Time", this.TimeUsed(Activities, ItemJournalLine."Cap. Unit of Measure Code"));
             "APA MADCS Journal Type"::"Execution with Fault":
                 begin
-                    ItemJournalLine.Validate("Run Time", Activities.MinutesUsed());
+                    ItemJournalLine.Validate("Run Time", this.TimeUsed(Activities, ItemJournalLine."Cap. Unit of Measure Code"));
                     ItemJournalLine.Validate("Stop Code", Activities.GetStopCode(Activities."BreakDown Code"));
                     ItemJournalLine.Validate("Stop Detail Code", Activities."BreakDown Code");
                 end;
             "APA MADCS Journal Type"::Fault:
-                ItemJournalLine.Validate("Stop Time", Activities.MinutesUsed());
+                ItemJournalLine.Validate("Stop Time", this.TimeUsed(Activities, ItemJournalLine."Cap. Unit of Measure Code"));
         end;
         ItemJournalLine.Validate(Quantity, 0);
         ItemJournalLine.Validate("Output Quantity", 0);

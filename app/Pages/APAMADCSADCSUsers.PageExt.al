@@ -13,6 +13,10 @@ pageextension 55001 "APA MADCS ADCS Users" extends "ADCS Users"
                 ApplicationArea = All;
                 ExtendedDatatype = Masked;
             }
+            field("APA MADCS Machine Center"; Rec."APA MADCS Machine Center")
+            {
+                ApplicationArea = All;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace MADCS.MADCS;
 
 using Microsoft.Manufacturing.Document;
+using Microsoft.Manufacturing.Capacity;
 
 /// <summary>
 /// APA MADCS Pro. Order Line Time
@@ -234,24 +235,6 @@ table 55001 "APA MADCS Pro. Order Line Time"
                 this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::Fault, BreakDownCode);
             end else
                 this.CreateNewActivity(pProdOrderStatus, pProdOrderCode, pProdOrderLine, OperatorCode, Enum::"APA MADCS Journal Type"::"Execution with Fault", BreakDownCode);
-    end;
-
-    /// <summary>
-    /// internal procedure MinutesUsed
-    /// Calculates the total minutes used between the start and end date times.
-    /// </summary>
-    /// <returns></returns>
-    internal procedure MinutesUsed() Hours: Decimal
-    var
-        Duration: Decimal;
-    begin
-        if Rec."End Date Time" = 0DT then
-            Duration := 0
-        else
-            Duration := Rec."End Date Time" - Rec."Start Date Time";
-
-        Hours := Duration / 1000 / 60 / 60;
-        exit(Hours);
     end;
 
     /// <summary>
