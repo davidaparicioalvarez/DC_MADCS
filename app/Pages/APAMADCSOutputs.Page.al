@@ -48,7 +48,7 @@ page 55004 "APA MADCS Outputs"
 
                             trigger OnDrillDown()
                             begin
-                                this.FindLotNoForOutput(this.LotNo);
+                                this.APAMADCSManagement.FindLotNoForOutput(Rec, this.LotNo, true)
                             end;
                         }
                     }
@@ -58,7 +58,7 @@ page 55004 "APA MADCS Outputs"
 
                         field(OutputQuantity; this.OutputQuantity)
                         {
-                            Caption = 'Quan.', Comment = 'ESP="Cant."';
+                            Caption = 'Finished Quantity', Comment = 'ESP="Cantidad Terminada"';
                             ToolTip = 'Specifies the quantity of output produced.', Comment = 'ESP="Indica la cantidad de salida producida."';
                             QuickEntry = true;
 
@@ -174,17 +174,17 @@ page 55004 "APA MADCS Outputs"
         this.OutputQuantity := Rec."Remaining Quantity";
     end;
 
+    trigger OnAfterGetRecord()
+    begin
+        this.APAMADCSManagement.FindLotNoForOutput(Rec, this.LotNo, false);
+    end;
+
     var
         APAMADCSManagement: Codeunit "APA MADCS Management";
         OutputQuantity: Decimal;
         LotNo: Code[50];
         PrimaryButtonTok: Label 'primary', Locked = true;
         DangerButtonTok: Label 'danger', Locked = true;
-
-    local procedure FindLotNoForOutput(var myLotNo: Code[50]): Boolean
-    begin
-        exit(this.APAMADCSManagement.FindLotNoForOutput(Rec, myLotNo));
-    end;
 
     local procedure MarkProductionOrderAsFinished(ProdOrderLine: Record "Prod. Order Line"): Boolean
     var

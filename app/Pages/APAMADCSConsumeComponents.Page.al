@@ -39,7 +39,7 @@ page 55001 "APA MADCS Consume Components"
 
                     trigger OnLoad()
                     var
-                        ConsumeAllLbl: Label 'Consume Lot', Comment = 'ESP="Consumir Lote"';
+                        ConsumeAllLbl: Label 'Consume', Comment = 'ESP="Consumir"';
                         ConsumeAllTextLbl: Label 'Consume by rest selected line with lot and rest to consume.', Comment = 'ESP="Consumir por resto la línea seleccionada con lote y resto a consumir."';
                     begin
                         CurrPage.ALButtonGroupAll.AddButton(ConsumeAllLbl, ConsumeAllTextLbl, this.ALButtonConsumeAllTok, this.DangerButtonTok);

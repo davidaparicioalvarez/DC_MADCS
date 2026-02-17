@@ -48,21 +48,11 @@ page 55006 "APA MADCS Verification"
                     end;
 
                     trigger OnClick(id: Text)
-                    var
-                        NotAllComponentsVerifiedMsg: Label 'Not all components have been verified. Please verify all components before starting the preparation phase.', Comment = 'ESP="No todos los componentes han sido verificados. Por favor, verifique todos los componentes antes de iniciar la fase de preparación."';
-                        AllVerifiedMsg: Label 'All components have already been verified. No further action is possible. Please, launch preparation phase from Time page.', Comment = 'ESP="Todos los componentes ya han sido verificados. No es posible realizar más acciones. Por favor, inicie la fase de preparación desde la página Tiempos."';
                     begin
                         // Verify if all components are verified before starting preparation
 
-                        if not this.AreAllVerified() then begin
-                            Message(NotAllComponentsVerifiedMsg);
-                            exit;
-                        end;
-                        if Rec."Prod. Order Line No." <> 0 then begin
-                            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", this.APAMADCSManagement.GetOperatorCode(), '');
-                            Message(this.NewActivityCreatedMsg);
-                        end else
-                            Message(AllVerifiedMsg);
+                        this.FinalizeVerifications(id);
+
                         CurrPage.Update(false);
                     end;
                 }
@@ -128,6 +118,11 @@ page 55006 "APA MADCS Verification"
         this.SetStyleColor();
     end;
 
+    trigger OnClosePage()
+    begin
+        this.FinalizeVerifications(Format(Enum::"APA MADCS Buttons"::ALButtonPreparationTok));
+    end;
+
     trigger OnAfterGetRecord()
     begin
         this.SetStyleColor();
@@ -166,9 +161,9 @@ page 55006 "APA MADCS Verification"
     var
         ProdOrderComponent: Record "Prod. Order Component";
     begin
-        APAMADCSManagement.ValidateAndDeleteTemporaryTables(Rec);
-        APAMADCSManagement.LoadProdOrderComponentsForValidation(Rec, ProdOrderComponent);
-        APAMADCSManagement.LogInOperator();
+        this.APAMADCSManagement.ValidateAndDeleteTemporaryTables(Rec);
+        this.APAMADCSManagement.LoadProdOrderComponentsForValidation(Rec, ProdOrderComponent);
+        this.APAMADCSManagement.LogInOperator();
     end;
 
     local procedure MarkAsVerified(Verified: Boolean)
@@ -205,5 +200,21 @@ page 55006 "APA MADCS Verification"
         ProdOrderComponent.SetRange("Prod. Order Line No.", Rec."Prod. Order Line No.");
         ProdOrderComponent.SetRange("APA MADCS Verified", false);
         exit(ProdOrderComponent.IsEmpty());
+    end;
+
+    local procedure FinalizeVerifications(id: Text)
+    var
+        NotAllComponentsVerifiedMsg: Label 'Not all components have been verified. Please verify all components before starting the preparation phase.', Comment = 'ESP="No todos los componentes han sido verificados. Por favor, verifique todos los componentes antes de iniciar la fase de preparación."';
+        AllVerifiedMsg: Label 'All components have already been verified. No further action is possible. Please, launch preparation phase from Time page.', Comment = 'ESP="Todos los componentes ya han sido verificados. No es posible realizar más acciones. Por favor, inicie la fase de preparación desde la página Tiempos."';
+    begin
+        if not this.AreAllVerified() then begin
+            Message(NotAllComponentsVerifiedMsg);
+            exit;
+        end;
+        if Rec."Prod. Order Line No." <> 0 then begin
+            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", this.APAMADCSManagement.GetOperatorCode());
+            Message(this.NewActivityCreatedMsg);
+        end else
+            Message(AllVerifiedMsg);
     end;
 }

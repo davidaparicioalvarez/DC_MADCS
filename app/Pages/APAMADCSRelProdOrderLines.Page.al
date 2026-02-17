@@ -12,7 +12,8 @@ page 55000 "APA MADCS Rel Prod Order Lines"
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Line";
-    SourceTableView = where(Status = const(Released),
+    SourceTableView = sorting("Agrupacion Centros", "Orden Preparacion")
+                      where(Status = const(Released),
                             "Orden Preparacion" = filter(<> 0),
                             "APA MADCS Picking Status" = const("Totaly Picked"),
                             "APA MADCS Time finished" = const(false));
@@ -30,11 +31,11 @@ page 55000 "APA MADCS Rel Prod Order Lines"
         {
             repeater(Group)
             {
-                field("Orden Preparacion"; Rec."Orden Preparacion")
+                field("Agrupacion Centros"; Rec."Agrupacion Centros")
                 {
                     StyleExpr = this.styleColor;
                 }
-                field("Agrupacion Centros"; Rec."Agrupacion Centros")
+                field("Orden Preparacion"; Rec."Orden Preparacion")
                 {
                     StyleExpr = this.styleColor;
                 }
@@ -189,11 +190,15 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                     trigger OnAction()
                     var
                         ProdOrderLine: Record "Prod. Order Line";
+                        OutputsMsg: Label 'Outputs', Comment = 'ESP="Salidas"';
+                        OutputCannotStartErr: Label 'Cannot manage outputs because there is not an execution task for the operator. Please create an execution task before managing outputs.', Comment = 'ESP="No se pueden gestionar las salidas porque no hay una tarea de ejecución para el operador. Por favor, cree una tarea de ejecución antes de gestionar las salidas."';
                     begin
                         Clear(ProdOrderLine);
                         ProdOrderLine.SetRange(Status, Rec.Status);
                         ProdOrderLine.SetRange("Prod. Order No.", Rec."Prod. Order No.");
                         ProdOrderLine.SetRange("Line No.", Rec."Line No.");
+                        if not (this.APAMADCSManagement.CurrentTask(this.APAMADCSManagement.GetOperatorCode()) in [Enum::"APA MADCS Journal Type"::Execution, Enum::"APA MADCS Journal Type"::"Execution with Fault"]) then
+                            this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(OutputsMsg, OutputCannotStartErr));
                         RunModal(Page::"APA MADCS Outputs", ProdOrderLine);
                         CurrPage.Update(false);
                     end;

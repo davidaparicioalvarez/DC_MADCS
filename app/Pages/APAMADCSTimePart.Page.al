@@ -29,7 +29,7 @@ page 55003 "APA MADCS Time Part"
     layout
     {
         area(Content)
-        {
+        {           
             grid(Columns1)
             {
                 ShowCaption = false;
@@ -38,6 +38,22 @@ page 55003 "APA MADCS Time Part"
                 group(leftGrpColumns1)
                 {
                     ShowCaption = false;
+
+                    usercontrol(APAMADCSTimer; "APA MADCS Timer")
+                    {
+                        Visible = true;
+                        
+                        trigger ControlAddInReady()
+                        begin
+
+                        end;
+
+                        trigger RefreshPage()
+                        begin
+                            Message('Hi this is triggered from Timer and executed every 5000 milliseconds');
+                            CurrPage.Update(false);
+                        end;
+                    }
 
                     usercontrol(ALInfButtonPreparationClean; "APA MADCS ButtonGroup")
                     {
@@ -56,7 +72,7 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnClick(id: Text)
                         begin
-                            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                            this.APAMADCSManagement.ProcessPreparationCleaningTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode());
                             Message(this.NewActivityCreatedMsg);
                             CurrPage.Update(false);
                         end;
@@ -77,7 +93,7 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnClick(id: Text)
                         begin
-                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), this.BreakDownCode);
+                            this.APAMADCSManagement.ProcessExecutionAndStopAllTask(id, this.MyStatus, this.MyProdOrdeNo, this.MyProdOrdeLineNo, this.APAMADCSManagement.GetOperatorCode(), '');
                             case id of
                                 Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
                                     Message(this.ClosedAllActivitiesMsg);
@@ -376,6 +392,16 @@ page 55003 "APA MADCS Time Part"
 
         }
     }
+
+    trigger OnOpenPage()
+    begin
+        CurrPage.APAMADCSTimer.StartTimer(5000);
+    end;
+
+    trigger OnClosePage()
+    begin
+        CurrPage.APAMADCSTimer.StopTimer();
+    end;
 
     trigger OnAfterGetCurrRecord()
     begin

@@ -45,6 +45,8 @@ codeunit 55000 "APA MADCS Management"
         Logged: Boolean;
         ManufacturingSetupMissMsg: Label 'Manufacturing Setup Missing', Comment = 'ESP="Falta la configuración de fabricación"';
         ManufacturingSetupErr: Label 'The Manufacturing Setup record is missing. Please set it up before posting consumption.', Comment = 'ESP="Falta el registro de Configuración de Fabricación. Por favor, configúrelo antes de registrar el consumo."';
+        TaskErr: Label 'Task error', Comment = 'ESP="Error en la tarea"';
+        TaskTextErr: Label 'There is a later task already started for this production order. You cannot start preparation task.', Comment = 'ESP="Ya hay una tarea posterior iniciada para esta orden de producción. No puede iniciar la tarea."';
 
     #region procedures
 
@@ -494,21 +496,24 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="pProdOrder"></param>
     /// <param name="pProdOrderLine"></param>
     /// <param name="OperatorCode"></param>
-    /// <param name="BreakDownCode"></param>
-    procedure ProcessPreparationCleaningTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
+    procedure ProcessPreparationCleaningTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonPreparationTok):
                 begin
+                    if this.LaterTaskExists(pProdOrderStatus, pProdOrder, pProdOrderLine, Enum::"APA MADCS Journal Type"::Preparation) then begin
+                        this.Raise(this.BuildApplicationError(this.TaskErr, this.TaskTextErr));
+                        exit;
+                    end;
                     this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Preparation); // finalize for all operators except preparation
-                    Activities.NewPreparationActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
+                    Activities.NewPreparationActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, '');
                 end;
             Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok):
                 begin
                     this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Cleaning); // finalize for all operators except cleaning
-                    Activities.NewCleaningActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
+                    Activities.NewCleaningActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, '');
                 end;
         end;
         this.LogAction(Activities, Enum::"APA MADCS Log Type"::Cleaning);
@@ -569,6 +574,10 @@ codeunit 55000 "APA MADCS Management"
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonExecutionTok):
                 begin
+                    if this.LaterTaskExists(pProdOrderStatus, pProdOrder, pProdOrderLine, Enum::"APA MADCS Journal Type"::Execution) then begin
+                        this.Raise(this.BuildApplicationError(this.TaskErr, this.TaskTextErr));
+                        exit;
+                    end;
                     this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::Execution); // finalize for all operators except execution
                     this.FinalizeLastActivity(OperatorCode); // only for execution tasks
                     Activities.NewExecutionActivity(pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
@@ -620,14 +629,19 @@ codeunit 55000 "APA MADCS Management"
     procedure ProcessBreakdownAndBlockedBreakdownTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
+        ActualBreakDownCode: Code[20];
         BlockedBreakDownLbl: Label 'Stop code is blocking, for this stop code you should use the Blocked Breakdown button', Comment = 'ESP="El código de avería es bloqueante, para este código de paro debe usar el botón de Avería Bloqueante"';
         NoBlockedBreakDownLbl: Label 'Stop code is not blocking, for this stop code you should use the Execution with fault button', Comment = 'ESP="El código de avería no es bloqueante, para este código de paro debe usar el botón de Ejecución con avería"';
+        BreakdownDifferentLbl: Label 'A different breakdown code is already registered for this production order. Please finalize it before registering a new one.', Comment = 'ESP="Ya hay un código de avería diferente registrado para esta orden de producción. Por favor, finalícelo antes de registrar uno nuevo."';
         BreakDownLbl: Label 'Breakdown', Comment = 'ESP="Avería"';
     begin
+        ActualBreakDownCode := this.CurrenFaultTaskBreakdownCode(pProdOrderStatus, pProdOrder, pProdOrderLine);
+        if (ActualBreakDownCode <> '') and (ActualBreakDownCode <> BreakDownCode) then
+            this.Raise(this.BuildApplicationError(BreakDownLbl, BreakdownDifferentLbl));
         case id of
             Format(Enum::"APA MADCS Buttons"::ALButtonBreakdownTok): // NON BLOCKING FAULT
                 if not Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
-                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
+                    this.FinalizeAllActivitiesExcept(pProdOrderStatus, pProdOrder, OperatorCode, Enum::"APA MADCS Journal Type"::"Execution with Fault"); // for all operators
                     Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::BreakDown);
                 end else
@@ -647,8 +661,9 @@ codeunit 55000 "APA MADCS Management"
     /// </summary>
     /// <param name="ProdOrderLine">Production order line to filter reservation entries.</param>
     /// <param name="LotNo">Selected lot number.</param>
+    /// <param name="ShowPage">Boolean indicating whether to show the selection page.</param>
     /// <returns name="Found">True when a lot was selected.</returns>
-    internal procedure FindLotNoForOutput(ProdOrderLine: Record "Prod. Order Line"; var LotNo: Code[50]): Boolean
+    internal procedure FindLotNoForOutput(ProdOrderLine: Record "Prod. Order Line"; var LotNo: Code[50]; ShowPage: Boolean): Boolean
     var
         ReservationEntries: Record "Reservation Entry";
         TrackingSpecification: Record "Tracking Specification";
@@ -666,18 +681,24 @@ codeunit 55000 "APA MADCS Management"
 
         ProdOrderLineReserve.InitFromProdOrderLine(TrackingSpecification, ProdOrderLine);
         ProdOrderLineReserve.FindReservEntry(ProdOrderLine, ReservationEntries);
-        ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderLine."Due Date");
-        ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
+        if not ShowPage then begin
+            if ReservationEntries.FindFirst() then begin
+                LotNo := ReservationEntries."Lot No.";
+                exit(LotNo <> '');
+            end;
+        end else begin
+            ItemTrackingLines.SetSourceSpec(TrackingSpecification, ProdOrderLine."Due Date");
+            ItemTrackingLines.GetTrackingSpec(TempTrackingSpecification);
 
-        Clear(APAMADCSTrackingSpecification);
-        APAMADCSTrackingSpecification.InitializeTrackingData(TempTrackingSpecification);
-        APAMADCSTrackingSpecification.LookupMode(true);
-        if APAMADCSTrackingSpecification.RunModal() = Action::LookupOK then begin
-            APAMADCSTrackingSpecification.GetSelectedTrackingSpec(TempTrackingSpecification);
-            LotNo := TempTrackingSpecification."Lot No.";
-            exit(LotNo <> '');
+            Clear(APAMADCSTrackingSpecification);
+            APAMADCSTrackingSpecification.InitializeTrackingData(TempTrackingSpecification);
+            APAMADCSTrackingSpecification.LookupMode(true);
+            if APAMADCSTrackingSpecification.RunModal() = Action::LookupOK then begin
+                APAMADCSTrackingSpecification.GetSelectedTrackingSpec(TempTrackingSpecification);
+                LotNo := TempTrackingSpecification."Lot No.";
+                exit(LotNo <> '');
+            end;
         end;
-
         exit(false);
     end;
 
@@ -739,7 +760,7 @@ codeunit 55000 "APA MADCS Management"
         if ProdOrder.Get(ProdOrderComponent.Status, ProdOrderComponent."Prod. Order No.") then begin
             ProdOrder."APA MADCS Consumption finished" := true;
             ProdOrder.Modify(true);
-            this.ProcessPreparationCleaningTask(Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok), ProdOrderComponent.Status, ProdOrderComponent."Prod. Order No.", ProdOrderComponent."Prod. Order Line No.", this.GetOperatorCode(), '');
+            this.ProcessPreparationCleaningTask(Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok), ProdOrderComponent.Status, ProdOrderComponent."Prod. Order No.", ProdOrderComponent."Prod. Order Line No.", this.GetOperatorCode());
             exit(true);
         end;
         exit(false);
@@ -762,6 +783,26 @@ codeunit 55000 "APA MADCS Management"
                 // Update the picking status as needed
                 ProductionOrder.UpdatePickingStatusField(true);
             until ProductionOrder.Next() = 0;
+    end;
+
+    /// <summary>
+    /// procedure CurrentTask
+    /// Retrieves the current active task for the given operator code. If no active task is found
+    /// </summary>
+    /// <param name="OperatorCode"></param>
+    /// <returns></returns>
+    internal procedure CurrentTask(OperatorCode: Code[20]): Enum "APA MADCS Journal Type"
+    var
+        Activities: Record "APA MADCS Pro. Order Line Time";
+    begin
+        // Find my current activity and stop it
+        // Consume time used in recent stopped activity
+        Clear(Activities);
+        Activities.SetCurrentKey("Operator Code");
+        Activities.SetRange(Posted, false);
+        Activities.SetRange("Operator Code", OperatorCode);
+        if Activities.FindFirst() then
+            exit(Activities.Action);
     end;
 
     /// <summary>
@@ -856,6 +897,46 @@ codeunit 55000 "APA MADCS Management"
 
 
     #region local procedures
+    local procedure CurrenFaultTaskBreakdownCode(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer): Code[20]
+    var
+        Activities: Record "APA MADCS Pro. Order Line Time";
+    begin
+        Clear(Activities);
+        Activities.SetCurrentKey(Status, "Prod. Order No.", "Prod. Order Line No.");
+        Activities.SetRange(Status, pProdOrderStatus);
+        Activities.SetRange("Prod. Order No.", pProdOrder);
+        Activities.SetRange("Prod. Order Line No.", pProdOrderLine);
+        Activities.SetRange(Posted, false);
+        Activities.SetFilter(Action, '%1|%2', Enum::"APA MADCS Journal Type"::Fault, Enum::"APA MADCS Journal Type"::"Execution with Fault");
+        if Activities.FindFirst() then
+            exit(Activities."BreakDown Code");
+        exit('');
+    end;
+
+    local procedure LaterTaskExists(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; APAMADCSJournalType: Enum "APA MADCS Journal Type"): Boolean
+    var
+        Activities: Record "APA MADCS Pro. Order Line Time";
+    begin
+        Clear(Activities);
+        Activities.SetCurrentKey(Status, "Prod. Order No.", "Prod. Order Line No.");
+        Activities.SetRange(Status, pProdOrderStatus);
+        Activities.SetRange("Prod. Order No.", pProdOrder);
+        Activities.SetRange("Prod. Order Line No.", pProdOrderLine);
+        Activities.SetRange(Posted, false);
+        case APAMADCSJournalType of
+            Enum::"APA MADCS Journal Type"::Preparation:
+                Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::Preparation);
+            Enum::"APA MADCS Journal Type"::Execution,
+            Enum::"APA MADCS Journal Type"::"Execution with Fault":
+                 Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::"Execution with Fault");
+            Enum::"APA MADCS Journal Type"::Cleaning:
+                Activities.SetFilter(Action, '>%1', Enum::"APA MADCS Journal Type"::Cleaning);
+            Enum::"APA MADCS Journal Type"::Fault:
+                 exit(false);
+        end;
+        exit(not Activities.IsEmpty());
+    end;
+
     /// <summary>
     /// Finalizes the last active task for an operator, posting time and marking it posted.
     /// </summary>

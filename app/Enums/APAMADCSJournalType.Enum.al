@@ -19,24 +19,6 @@ enum 55001 "APA MADCS Journal Type"
     }
 
     /// <summary>
-    /// Fault
-    /// Represents a fault journal type.
-    /// </summary>
-    value(1; Fault)
-    {
-        Caption = 'Blocking Fault', Comment = 'ESP="Avería bloqueante"';
-    }
-
-    /// <summary>
-    /// "Execution with Fault"
-    /// Represents a fault journal type.
-    /// </summary>
-    value(2; "Execution with Fault")
-    {
-        Caption = 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
-    }
-
-    /// <summary>
     /// Preparation
     /// Represents a Preparation journal type.
     /// </summary>
@@ -55,6 +37,15 @@ enum 55001 "APA MADCS Journal Type"
     }
 
     /// <summary>
+    /// "Execution with Fault"
+    /// Represents a fault journal type.
+    /// </summary>
+    value(21; "Execution with Fault")
+    {
+        Caption = 'Execution WITH FAULT', Comment = 'ESP="Ejecución CON AVERÍA"';
+    }
+
+    /// <summary>
     /// Clean
     /// Represents a Clean journal type.
     /// </summary>
@@ -62,4 +53,14 @@ enum 55001 "APA MADCS Journal Type"
     {
         Caption = 'Cleaning', Comment = 'ESP="Limpieza"';
     }
+
+    /// <summary>
+    /// Fault
+    /// Represents a fault journal type.
+    /// </summary>
+    value(99; Fault)
+    {
+        Caption = 'Blocking Fault', Comment = 'ESP="Avería bloqueante"';
+    }
+
 }

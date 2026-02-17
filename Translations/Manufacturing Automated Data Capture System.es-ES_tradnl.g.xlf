@@ -363,6 +363,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Falta la configuración de fabricación"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - NamedType ManufacturingSetupMissMsg</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - NamedType 1245977492" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Task error</source>
+          <target state="translated">Error en la tarea</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Error en la tarea"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - NamedType TaskErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - NamedType 2569527431" size-unit="char" translate="yes" xml:space="preserve">
+          <source>There is a later task already started for this production order. You cannot start preparation task.</source>
+          <target state="translated">Ya hay una tarea posterior iniciada para esta orden de producción. No puede iniciar la tarea.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Ya hay una tarea posterior iniciada para esta orden de producción. No puede iniciar la tarea."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - NamedType TaskTextErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2188843926 - NamedType 2645315771" size-unit="char" translate="yes" xml:space="preserve">
           <source>Bad Output</source>
           <target state="translated">Salida incorrecta</target>
@@ -513,6 +525,12 @@
           <note from="Developer" annotates="general" priority="2">ESP="El código de avería no es bloqueante, para este código de paro debe usar el botón de Ejecución con avería"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ProcessBreakdownAndBlockedBreakdownTask - NamedType NoBlockedBreakDownLbl</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1193165807 - NamedType 2071862694" size-unit="char" translate="yes" xml:space="preserve">
+          <source>A different breakdown code is already registered for this production order. Please finalize it before registering a new one.</source>
+          <target state="translated">Ya hay un código de avería diferente registrado para esta orden de producción. Por favor, finalícelo antes de registrar uno nuevo.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Ya hay un código de avería diferente registrado para esta orden de producción. Por favor, finalícelo antes de registrar uno nuevo."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ProcessBreakdownAndBlockedBreakdownTask - NamedType BreakdownDifferentLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 1193165807 - NamedType 259079657" size-unit="char" translate="yes" xml:space="preserve">
           <source>Breakdown</source>
           <target state="translated">Avería</target>
@@ -598,9 +616,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control ALButtonGroupAll - Method OnClick - NamedType NoComponentToConsumeMsg</note>
         </trans-unit>
         <trans-unit id="Page 3998780772 - Control 2603053863 - Method 2219734473 - NamedType 3157582089" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Consume Lot</source>
-          <target state="translated">Consumir Lote</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Consumir Lote"</note>
+          <source>Consume</source>
+          <target state="translated">Consumir</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Consumir"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consume Components - Control ALButtonGroupAll - Method OnLoad - NamedType ConsumeAllLbl</note>
         </trans-unit>
         <trans-unit id="Page 3998780772 - Control 2603053863 - Method 2219734473 - NamedType 533539254" size-unit="char" translate="yes" xml:space="preserve">
@@ -856,9 +874,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control OutputQuantity - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 4293406336 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Quan.</source>
-          <target state="translated">Cant.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="Cant."</note>
+          <source>Finished Quantity</source>
+          <target state="translated">Cantidad Terminada</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Cantidad Terminada"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control OutputQuantity - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3162003200 - Control 4293406336 - Method 2126772001 - NamedType 2920916724" size-unit="char" translate="yes" xml:space="preserve">
@@ -1215,6 +1233,18 @@
           <note from="Developer" annotates="general" priority="2">ESP="Salidas"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OutputsAct - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1887554702 - Method 1377591017 - NamedType 2327492839" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Outputs</source>
+          <target state="translated">Salidas</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Salidas"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OutputsAct - Method OnAction - NamedType OutputsMsg</note>
+        </trans-unit>
+        <trans-unit id="Page 3516759027 - Action 1887554702 - Method 1377591017 - NamedType 3736040029" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cannot manage outputs because there is not an execution task for the operator. Please create an execution task before managing outputs.</source>
+          <target state="translated">No se pueden gestionar las salidas porque no hay una tarea de ejecución para el operador. Por favor, cree una tarea de ejecución antes de gestionar las salidas.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="No se pueden gestionar las salidas porque no hay una tarea de ejecución para el operador. Por favor, cree una tarea de ejecución antes de gestionar las salidas."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Rel Prod Order Lines - Action OutputsAct - Method OnAction - NamedType OutputCannotStartErr</note>
+        </trans-unit>
         <trans-unit id="Page 3516759027 - Action 2157109501 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Manage the time tracking for the production order.</source>
           <target state="translated">Gestiona el seguimiento del tiempo para la orden de producción.</target>
@@ -1455,17 +1485,17 @@
           <note from="Developer" annotates="general" priority="2">ESP="Se ha creado una nueva actividad de preparación."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification - NamedType NewActivityCreatedMsg</note>
         </trans-unit>
-        <trans-unit id="Page 3770930315 - Control 3901419822 - Method 2115891537 - NamedType 3183437425" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 3770930315 - Method 1310266100 - NamedType 3183437425" size-unit="char" translate="yes" xml:space="preserve">
           <source>Not all components have been verified. Please verify all components before starting the preparation phase.</source>
           <target state="translated">No todos los componentes han sido verificados. Por favor, verifique todos los componentes antes de iniciar la fase de preparación.</target>
           <note from="Developer" annotates="general" priority="2">ESP="No todos los componentes han sido verificados. Por favor, verifique todos los componentes antes de iniciar la fase de preparación."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification - Control ALInfButtonGroupColumns2 - Method OnClick - NamedType NotAllComponentsVerifiedMsg</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification - Method FinalizeVerifications - NamedType NotAllComponentsVerifiedMsg</note>
         </trans-unit>
-        <trans-unit id="Page 3770930315 - Control 3901419822 - Method 2115891537 - NamedType 3407942706" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 3770930315 - Method 1310266100 - NamedType 3407942706" size-unit="char" translate="yes" xml:space="preserve">
           <source>All components have already been verified. No further action is possible. Please, launch preparation phase from Time page.</source>
           <target state="translated">Todos los componentes ya han sido verificados. No es posible realizar más acciones. Por favor, inicie la fase de preparación desde la página Tiempos.</target>
           <note from="Developer" annotates="general" priority="2">ESP="Todos los componentes ya han sido verificados. No es posible realizar más acciones. Por favor, inicie la fase de preparación desde la página Tiempos."</note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification - Control ALInfButtonGroupColumns2 - Method OnClick - NamedType AllVerifiedMsg</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Verification - Method FinalizeVerifications - NamedType AllVerifiedMsg</note>
         </trans-unit>
         <trans-unit id="Page 3770930315 - Control 3901419822 - Method 2219734473 - NamedType 972073109" size-unit="char" translate="yes" xml:space="preserve">
           <source>End (Verification)</source>
