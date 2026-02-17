@@ -821,6 +821,16 @@ codeunit 55000 "APA MADCS Management"
         exit(ManufacturingSetup."APA MADCS Timer Interval" * 1000); // Convert seconds to milliseconds
     end;
 
+    internal procedure GetProdOrderCenterGroup(MyStatus: Enum "Production Order Status"; MyProdOrdeNo: Code[20]): Text
+    var
+        ProductionOrder: Record "Production Order";
+    begin
+        Clear(ProductionOrder);
+        if ProductionOrder.Get(MyStatus, MyProdOrdeNo) then
+            exit(DelChr(ProductionOrder."Agrupacion Centros", '=', '*'));
+        exit('');
+    end;
+
     /// <summary>
     /// procedure UpdatePickingStatusField
     /// Updates the "APA MADCS Picking Status" field based on the picking status of the production order components.

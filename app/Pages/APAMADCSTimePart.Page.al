@@ -192,18 +192,19 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnLookup(var Text: Text): Boolean
                         var
-                            BreakDownCodeRec: Record "DC Detalles de paro";
+                            BreakDownCodes: Record "DC Detalles de paro";
                             BreakDownCodeList: Page "DC Lista Detalles de paro";
                         begin
-                            Clear(BreakDownCodeRec);
+                            Clear(BreakDownCodes);
                             Clear(BreakDownCodeList);
-                            BreakDownCodeRec.SetRange(Disabling, false);
-                            BreakDownCodeList.SetTableView(BreakDownCodeRec);
+                            BreakDownCodes.SetRange(Disabling, false);
+                            BreakDownCodes.SetFilter(Code, '%1', this.APAMADCSManagement.GetProdOrderCenterGroup(this.MyStatus, this.MyProdOrdeNo) + '*');
+                            BreakDownCodeList.SetTableView(BreakDownCodes);
                             BreakDownCodeList.LookupMode(true);
                             if BreakDownCodeList.RunModal() = Action::LookupOK then begin
-                                BreakDownCodeList.GetRecord(BreakDownCodeRec);
-                                Text := BreakDownCodeRec.Description;
-                                this.BreakDownCode := BreakDownCodeRec.Code;
+                                BreakDownCodeList.GetRecord(BreakDownCodes);
+                                Text := BreakDownCodes.Description;
+                                this.BreakDownCode := BreakDownCodes.Code;
                                 exit(true);
                             end;
                             exit(false);
