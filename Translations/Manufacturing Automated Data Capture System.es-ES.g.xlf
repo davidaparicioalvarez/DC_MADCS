@@ -921,6 +921,12 @@
           <note from="Developer" annotates="general" priority="2">ESP="Registrar salida"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control ALInfButtonPost - Method OnLoad - NamedType PostOutputLbl</note>
         </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 2814799924 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the bin code of the item to be produced in the production order, if applicable.</source>
+          <target state="translated">Especifica el código de ubicación del artículo que se va a producir en la orden de producción, si corresponde.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el código de ubicación del artículo que se va a producir en la orden de producción, si corresponde."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Bin Code - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 3162003200 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the description of the item to be produced in the production order.</source>
           <target state="translated">Especifica la descripción del artículo que se va a producir en la orden de producción.</target>
@@ -968,6 +974,24 @@
           <target state="translated">Cantidad Pendiente</target>
           <note from="Developer" annotates="general" priority="2">ESP="Cantidad Pendiente"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control Remaining Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 2403109399 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies first RPV associated.</source>
+          <target state="translated">Especifica el primer RPV asociado.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el primer RPV asociado."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control RPV1 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 21231954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies second RPV associated.</source>
+          <target state="translated">Especifica el segundo RPV asociado.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el segundo RPV asociado."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control RPV2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 3162003200 - Control 3678502633 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies third RPV associated.</source>
+          <target state="translated">Especifica el tercer RPV asociado.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="Especifica el tercer RPV asociado."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Outputs - Control RPV3 - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 664708464 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Quality Measure Parameters</source>

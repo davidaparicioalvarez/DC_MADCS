@@ -139,6 +139,11 @@ page 55002 "APA MADCS Consumption"
                         Width = 10;
                         StyleExpr = this.styleColor;
                     }
+                    field("Destination Bin Code"; Rec."Destination Bin Code")
+                    {
+                        Width = 10;
+                        StyleExpr = this.styleColor;
+                    }
                     field("Consumo por resto"; Rec."Consumo por resto")
                     {
                         Caption = 'CR', Comment = 'ESP="CR"';

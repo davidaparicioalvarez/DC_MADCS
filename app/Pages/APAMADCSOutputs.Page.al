@@ -138,12 +138,32 @@ page 55004 "APA MADCS Outputs"
                     field("Item No."; Rec."Item No.")
                     {
                         ToolTip = 'Specifies the item to be propduced in the production order.', Comment = 'ESP="Especifica el artículo que se va a producir en la orden de producción."';
-                        Width = 14;
+                        Width = 12;
                     }
                     field(Description; Rec.Description)
                     {
                         ToolTip = 'Specifies the description of the item to be produced in the production order.', Comment = 'ESP="Especifica la descripción del artículo que se va a producir en la orden de producción."';
                         Width = 11;
+                    }
+                    field("Bin Code"; Rec."Bin Code")
+                    {
+                        ToolTip = 'Specifies the bin code of the item to be produced in the production order, if applicable.', Comment = 'ESP="Especifica el código de ubicación del artículo que se va a producir en la orden de producción, si corresponde."';
+                        Width = 5;
+                    }
+                    field(RPV1; Rec.RPV1)
+                    {
+                        ToolTip = 'Specifies first RPV associated.', Comment = 'ESP="Especifica el primer RPV asociado."';
+                        Width = 5;
+                    }
+                    field(RPV2; Rec.RPV2)
+                    {
+                        ToolTip = 'Specifies second RPV associated.', Comment = 'ESP="Especifica el segundo RPV asociado."';
+                        Width = 5;
+                    }
+                    field(RPV3; Rec.RPV3)
+                    {
+                        ToolTip = 'Specifies third RPV associated.', Comment = 'ESP="Especifica el tercer RPV asociado."';
+                        Width = 5;
                     }
                     field(Quantity; Rec.Quantity)
                     {
