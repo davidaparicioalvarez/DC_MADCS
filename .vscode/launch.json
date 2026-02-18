@@ -20,5 +20,21 @@
             "usePublicURLFromServer": true,
             "schemaUpdateMode": "ForceSync"
         }
+        ,
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "REMOTO normal",
+            "server": "http://srvnavision.dcasado.local",
+            "port": 8050,
+            "serverInstance": "BC190",
+            "authentication": "UserPassword",
+            "startupObjectType": "Page",
+            "startupObjectId": 672,
+            "breakOnError": true,
+            "breakOnRecordWrite": false,
+            "enableSqlInformationDebugger": true,
+            "schemaUpdateMode": "Synchronize"
+        }
     ]
 }

@@ -111,11 +111,10 @@ page 55003 "APA MADCS Time Part"
 
                         trigger OnLoad()
                         var
-                            EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TRABAJOS"';
+                            EndLbl: Label 'STOP ALL WORK', Comment = 'ESP="PARAR TODOS"';
                             EndTextLbl: Label 'Finalize the active phase', Comment = 'ESP="Finalizar la fase activa"';
                             FinalizeMyTaskOrderLbl: Label 'STOP MY TASK', Comment = 'ESP="PARAR MI TAREA"';
                             FinalizeMyTaskOrderTxtLbl: Label 'Finalize my task in order', Comment = 'ESP="Finalizar mi tarea en la orden"';
-
                         begin
                             CurrPage.ALInfButtonStopAll.AddButton(EndLbl, EndTextLbl, Format(Enum::"APA MADCS Buttons"::ALButtonEndTok), this.PrimaryButtonTok);
                             CurrPage.ALInfButtonStopAll.AddButton(FinalizeMyTaskOrderLbl, FinalizeMyTaskOrderTxtLbl, Format(Enum::"APA MADCS Buttons"::ALButtonFinalizeMyTaskTok), this.PrimaryButtonTok);

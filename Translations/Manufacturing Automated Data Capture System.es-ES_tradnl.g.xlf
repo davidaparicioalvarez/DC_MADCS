@@ -1199,8 +1199,8 @@
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 3609573591" size-unit="char" translate="yes" xml:space="preserve">
           <source>STOP ALL WORK</source>
-          <target state="translated">PARAR TRABAJOS</target>
-          <note from="Developer" annotates="general" priority="2">ESP="PARAR TRABAJOS"</note>
+          <target state="translated">PARAR TODOS</target>
+          <note from="Developer" annotates="general" priority="2">ESP="PARAR TODOS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Time Part - Control ALInfButtonStopAll - Method OnLoad - NamedType EndLbl</note>
         </trans-unit>
         <trans-unit id="Page 1569277430 - Control 2759510229 - Method 2219734473 - NamedType 1410407396" size-unit="char" translate="yes" xml:space="preserve">

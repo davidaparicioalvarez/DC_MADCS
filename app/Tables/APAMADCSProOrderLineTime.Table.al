@@ -388,7 +388,7 @@ table 55001 "APA MADCS Pro. Order Line Time"
             Enum::"APA MADCS Journal Type"::"Execution with Fault",
             Enum::"APA MADCS Journal Type"::"Execution":
                 begin
-                    ProdOrderRoutingLine.SetFilter("Setup Time", '<>%1', 0);
+                    ProdOrderRoutingLine.SetFilter("Run Time", '<>%1', 0);
                     ProdOrderRoutingLine.SetFilter("Operation No.", '%1', APAMADCSManagement.GetManufacturingSetupTaskData(APAMADCSJournalType));
 
                     if not ProdOrderRoutingLine.FindFirst() then

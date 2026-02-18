@@ -373,7 +373,7 @@ codeunit 55000 "APA MADCS Management"
         ADCSUser: Record "ADCS User";
     begin
         // Check if user is in the "ADCS User" permission set
-        exit(ADCSUser.Get(UserId()));
+        exit(ADCSUser.Get(this.GetOperatorCode()));
     end;
 
     /// <summary>
@@ -1142,7 +1142,7 @@ codeunit 55000 "APA MADCS Management"
     var
         ItemJournalLine: Record "Item Journal Line";
         PostItemJnlLine: Codeunit "Item Jnl.-Post Line";
-    //MachineCenter: Code[20];
+        MachineCenter: Code[20];
     begin
         Clear(ItemJournalLine);
         ItemJournalLine."Journal Template Name" := '';
@@ -1155,9 +1155,9 @@ codeunit 55000 "APA MADCS Management"
         ItemJournalLine.Validate("Operation No.", Activities."Operation No.");
         ItemJournalLine.Validate("Document No.", Activities."Prod. Order No.");
         ItemJournalLine.Validate("Posting Date", Activities."End Date Time".Date());
-        //this.GetMachineCenterCode(MachineCenter);
-        //ItemJournalLine.Validate(Type, ItemJournalLine.Type::"Machine Center");
-        //ItemJournalLine.Validate("No.", MachineCenter);
+        this.GetMachineCenterCode(MachineCenter);
+        ItemJournalLine.Validate(Type, ItemJournalLine.Type::"Machine Center");
+        ItemJournalLine.Validate("No.", MachineCenter);
         // Only one operation per production order line in MADCS
         case Activities.Action of
             "APA MADCS Journal Type"::Preparation,
