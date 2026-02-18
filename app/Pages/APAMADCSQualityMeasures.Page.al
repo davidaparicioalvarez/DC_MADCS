@@ -38,43 +38,36 @@ page 55008 "APA MADCS Quality Measures"
                         field("Operation No."; Rec."Operation No.")
                         {
                             Caption = 'Op. No.', Comment = 'ESP="Nº. Op."';
-                            ToolTip = 'Specifies the operation number associated with the quality measure.', Comment = 'ESP="Especifica el número de operación asociado con la medida de calidad."';
                             Width = 2;
                         }
                         field("Type"; Rec."Type")
                         {
                             Caption = 'Type', Comment = 'ESP="Tipo"';
-                            ToolTip = 'Specifies the type of quality measure being recorded.', Comment = 'ESP="Especifica el tipo de medida de calidad que se está registrando."';
                             Width = 10;
                         }
                         field("No."; Rec."No.")
                         {
                             Caption = 'No.', Comment = 'ESP="Nº"';
-                            ToolTip = 'Specifies the identification number of the quality measure.', Comment = 'ESP="Especifica el número de identificación de la medida de calidad."';
                             Width = 5;
                         }
                         field(Description; Rec.Description)
                         {
                             Caption = 'Description', Comment = 'ESP="Descripción"';
-                            ToolTip = 'Specifies a description of the quality measure.', Comment = 'ESP="Especifica una descripción de la medida de calidad."';
                             Width = 25;
                         }
                         field("Starting Date-Time"; Rec."Starting Date-Time")
                         {
                             Caption = 'Start', Comment = 'ESP="Inicio"';
-                            ToolTip = 'Specifies the starting date and time for the quality measure.', Comment = 'ESP="Especifica la fecha y hora de inicio de la medida de calidad."';
                             Width = 15;
                         }
                         field("Ending Date-Time"; Rec."Ending Date-Time")
                         {
                             Caption = 'End', Comment = 'ESP="Fin"';
-                            ToolTip = 'Specifies the ending date and time for the quality measure.', Comment = 'ESP="Especifica la fecha y hora de finalización de la medida de calidad."';
                             Width = 15;
                         }
                         field("Setup Time"; Rec."Setup Time")
                         {
                             Caption = 'Time', Comment = 'ESP="Preparación"';
-                            ToolTip = 'Specifies the setup time for the quality measure.', Comment = 'ESP="Especifica el tiempo de preparación para la medida de calidad."';
                             Width = 10;
                         }
                         field("Setup Time Unit of Meas. Code"; Rec."Setup Time Unit of Meas. Code")
@@ -85,7 +78,6 @@ page 55008 "APA MADCS Quality Measures"
                         field("Run Time"; Rec."Run Time" * Rec."Input Quantity")
                         {
                             Caption = 'Time', Comment = 'ESP="Ejecución"';
-                            ToolTip = 'Specifies the run time for the quality measure.', Comment = 'ESP="Especifica el tiempo de ejecución para la medida de calidad."';
                             Width = 10;
                         }
                         field("Run Time Unit of Meas. Code"; Rec."Run Time Unit of Meas. Code")

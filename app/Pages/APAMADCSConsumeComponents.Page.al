@@ -63,14 +63,12 @@ page 55001 "APA MADCS Consume Components"
             {
                 field("Item No."; Rec."Item No.")
                 {
-                    ToolTip = 'Specifies the item number of the production order component.', Comment = 'ESP="Especifica el número de producto del componente de la orden de producción."';
                     Editable = false;
                     StyleExpr = this.styleColor;
                     Width = 13;
                 }
                 field(Description; Rec.Description)
                 {
-                    ToolTip = 'Specifies the description of the production order component item.', Comment = 'ESP="Especifica la descripción del componente de la orden de producción."';
                     Editable = false;
                     StyleExpr = this.styleColor;
                     Width = 10;
@@ -126,6 +124,12 @@ page 55001 "APA MADCS Consume Components"
         DangerButtonTok: Label 'danger', Locked = true;
         ALButtonConsumeAllTok: Label 'ALButtonConsumeAll', Locked = true;
 
+    /// <summary>
+    /// Initializes the page with item number and picking server configuration.
+    /// Clears existing temporary data and loads components filtered by item and warehouse service type.
+    /// </summary>
+    /// <param name="ItemNo">Item number to filter production order components.</param>
+    /// <param name="QuienSirvePickingOP">Picking service type enumeration value (Factory/Warehouse).</param>
     procedure Initialize(ItemNo: Code[20]; QuienSirvePickingOP: Enum "DC Quien Sirve Picking OP")
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -134,6 +138,11 @@ page 55001 "APA MADCS Consume Components"
         this.APAMADCSManagement.LoadProdOrderComponentsForWarehouseConsumption(Rec, ProdOrderComponent, ItemNo, QuienSirvePickingOP);
     end;
 
+    /// <summary>
+    /// Determines the appropriate page style based on component verification status.
+    /// Sets favorable style (green) if verified, otherwise uses attention style (red).
+    /// Provides visual feedback to users on verification status.
+    /// </summary>
     local procedure SetStyleColor()
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -152,6 +161,11 @@ page 55001 "APA MADCS Consume Components"
         this.styleColor := Format(newPageStyle);
     end;
 
+    /// <summary>
+    /// Processes the consumption of a component based on remaining quantity calculation.
+    /// Validates the remaining quantity against expected and consumed quantities.
+    /// Consumes the difference between expected quantity and the remaining quantity entered by user.
+    /// </summary>
     local procedure Consume()
     var
         ProdOrderComponent: Record "Prod. Order Component";

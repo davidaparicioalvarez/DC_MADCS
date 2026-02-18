@@ -53,12 +53,12 @@ codeunit 55000 "APA MADCS Management"
     #region procedures
 
     /// <summary>
-    /// procedure IsMarkedForConsume
-    /// Checks if the current production order can consume components.
+    /// Checks if the production order is marked for component consumption.
+    /// Components can be consumed when output is finished.
     /// </summary>
-    /// <param name="ProdOrderComponent"></param>
-    /// <param name="OperatorCode"></param>
-    /// <returns></returns>
+    /// <param name="ProdOrderComponent">Production order component to evaluate.</param>
+    /// <param name="OperatorCode">Operator code (currently unused in validation).</param>
+    /// <returns name="IsMarked">Boolean indicating if the production order is ready for consumption (output finished).</returns>
     procedure IsMarkedForConsume(ProdOrderComponent: Record "Prod. Order Component"; OperatorCode: Code[20]): Boolean
     var
         ProdOrder: Record "Production Order";
@@ -120,10 +120,10 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure GetOperatorCode
-    /// Gets the current operator code for logging purposes.
+     /// Gets the current operator code for logging and tracking purposes.
+    /// Triggers login if not already logged in.
     /// </summary>
-    /// <returns></returns>
+    /// <returns name="OperatorCode">Current operator code, or empty string if login fails.</returns>
     procedure GetOperatorCode(): Code[20]
     begin
         if not this.Logged then
@@ -434,10 +434,10 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure ValidateAndDeleteTemporaryTables
     /// Validates that the provided record is temporary and deletes all its records.
+    /// Ensures data integrity by verifying temporary table status before deletion.
     /// </summary>
-    /// <param name="Rec"></param>
+    /// <param name="Rec">Temporary production order component record to validate and clear.</param>
     procedure ValidateAndDeleteTemporaryTables(var Rec: Record "Prod. Order Component" temporary)
     var
         TempTrackingSpecification: Record "Tracking Specification" temporary;
@@ -450,13 +450,13 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure LoadProdOrderComponentsForWarehouseConsumption
-    /// Loads production order components into the temporary record for the given production order.
+    /// Loads production order components into the temporary record for warehouse consumption.
+    /// Filters components by item number and picking service type, then processes each for tracking.
     /// </summary>
-    /// <param name="Rec"></param>
-    /// <param name="ProdOrderComponent"></param>
-    /// <param name="ItemNo"></param>
-    /// <param name="QuienSirvePickingOP"></param>
+    /// <param name="Rec">Temporary record to populate with filtered components.</param>
+    /// <param name="ProdOrderComponent">Source production order component record with filters applied.</param>
+    /// <param name="ItemNo">Item number to filter components.</param>
+    /// <param name="QuienSirvePickingOP">Picking service type to filter components.</param>
     procedure LoadProdOrderComponentsForWarehouseConsumption(var Rec: Record "Prod. Order Component" temporary; var ProdOrderComponent: Record "Prod. Order Component"; ItemNo: Code[20]; QuienSirvePickingOP: Enum "DC Quien Sirve Picking OP")
     begin
         Clear(ProdOrderComponent);
@@ -472,11 +472,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure LoadProdOrderComponentsForValidation
-    /// Loads production order components into the temporary record for the given production order.
+    /// Loads production order components into the temporary record for validation purposes.
+    /// Processes all components for the production order including item tracking splits.
     /// </summary>
-    /// <param name="Rec"></param>
-    /// <param name="ProdOrderComponent"></param>
+    /// <param name="Rec">Temporary record to populate with production order components.</param>
+    /// <param name="ProdOrderComponent">Source production order component record with production order filter applied.</param>
     procedure LoadProdOrderComponentsForValidation(var Rec: Record "Prod. Order Component" temporary; var ProdOrderComponent: Record "Prod. Order Component")
     begin
         Clear(ProdOrderComponent);
@@ -489,14 +489,14 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure ProcessPreparationCleaningTask
-    /// Processes the preparation or cleaning task based on the provided id.
+    /// Processes the preparation or cleaning task based on the provided button id.
+    /// Creates and logs the corresponding activity for the production order line.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrder"></param>
-    /// <param name="pProdOrderLine"></param>
-    /// <param name="OperatorCode"></param>
+    /// <param name="id">Button identifier to determine which task to process.</param>
+    /// <param name="pProdOrderStatus">Production order status.</param>
+    /// <param name="pProdOrder">Production order number.</param>
+    /// <param name="pProdOrderLine">Production order line number.</param>
+    /// <param name="OperatorCode">Operator code performing the task.</param>
     procedure ProcessPreparationCleaningTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -521,12 +521,12 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure CleanCanStart
     /// Validates if cleaning can start for the given production order.
+    /// Cleaning can only start after both consumption and output activities are finished.
     /// </summary>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrderCode"></param>
-    /// <returns name="CanStart">Boolean indicating if cleaning can start.</returns>
+    /// <param name="pProdOrderStatus">Production order status to validate.</param>
+    /// <param name="pProdOrderCode">Production order number to validate.</param>
+    /// <returns name="CanStart">Boolean indicating if cleaning can start (true when consumption and output are finished).</returns>
     procedure CleanCanStart(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]): Boolean
     var
         ProductionOrder: Record "Production Order";
@@ -540,12 +540,12 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure ExecutionCanStart
-    /// Validates if cleaning can start for the given production order.
+    /// Validates if execution can start for the given production order.
+    /// Execution cannot start after both consumption and output activities are finished.
     /// </summary>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrderCode"></param>
-    /// <returns name="CanStart">Boolean indicating if cleaning can start.</returns>
+    /// <param name="pProdOrderStatus">Production order status to validate.</param>
+    /// <param name="pProdOrderCode">Production order number to validate.</param>
+    /// <returns name="CanStart">Boolean indicating if execution can start (true when consumption and output are not finished).</returns>
     procedure ExecutionCanStart(pProdOrderStatus: Enum "Production Order Status"; pProdOrderCode: Code[20]): Boolean
     var
         ProductionOrder: Record "Production Order";
@@ -559,15 +559,15 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure ProcessExecutionAndStopAllTask
-    /// Processes the execution task and stops all other tasks.
+    /// Processes the execution task and stops all other tasks for the production order.
+    /// Ensures only one execution task is active at a time.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrder"></param>
-    /// <param name="pProdOrderLine"></param>
-    /// <param name="OperatorCode"></param>
-    /// <param name="BreakDownCode"></param>
+    /// <param name="id">Button identifier to determine which execution task to process.</param>
+    /// <param name="pProdOrderStatus">Production order status.</param>
+    /// <param name="pProdOrder">Production order number.</param>
+    /// <param name="pProdOrderLine">Production order line number.</param>
+    /// <param name="OperatorCode">Operator code performing the task.</param>
+    /// <param name="BreakDownCode">Breakdown code if execution involves a fault.</param>
     procedure ProcessExecutionAndStopAllTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -595,15 +595,15 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure StopMyTask
-    /// Processes the execution task and stops all other tasks.
+    /// Stops the current task for the operator.
+    /// Finalizes the active task and posts time consumption.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrder"></param>
-    /// <param name="pProdOrderLine"></param>
-    /// <param name="OperatorCode"></param>
-    /// <param name="BreakDownCode"></param>
+    /// <param name="id">Button identifier to determine which task to stop.</param>
+    /// <param name="pProdOrderStatus">Production order status.</param>
+    /// <param name="pProdOrder">Production order number.</param>
+    /// <param name="pProdOrderLine">Production order line number.</param>
+    /// <param name="OperatorCode">Operator code whose task should be stopped.</param>
+    /// <param name="BreakDownCode">Breakdown code if task involves a fault.</param>
     procedure StopMyTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -618,15 +618,15 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure ProcessBreakdownAndBlockedBreakdownTask
     /// Processes the breakdown and blocked breakdown tasks.
+    /// Validates that breakdown code matches any existing active fault and ensures correct button usage for blocking vs non-blocking codes.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="pProdOrderStatus"></param>
-    /// <param name="pProdOrder"></param>
-    /// <param name="pProdOrderLine"></param>
-    /// <param name="OperatorCode"></param>
-    /// <param name="BreakDownCode"></param>
+    /// <param name="id">Button identifier to determine which breakdown task to process.</param>
+    /// <param name="pProdOrderStatus">Production order status.</param>
+    /// <param name="pProdOrder">Production order number.</param>
+    /// <param name="pProdOrderLine">Production order line number.</param>
+    /// <param name="OperatorCode">Operator code performing the breakdown task.</param>
+    /// <param name="BreakDownCode">Breakdown code identifying the specific fault.</param>
     procedure ProcessBreakdownAndBlockedBreakdownTask(id: Text; pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; OperatorCode: Code[20]; BreakDownCode: Code[20])
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -704,10 +704,10 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure MarkProductionOrderAsOutputFinished
     /// Marks the production order as output finished.
+    /// Sets the APA MADCS Output finished flag to true.
     /// </summary>
-    /// <param name="ProdOrderLine"></param>
+    /// <param name="ProdOrderLine">Production order line providing the production order reference.</param>
     /// <returns name="Success">Boolean indicating if the operation was successful.</returns>
     internal procedure MarkProductionOrderAsOutputFinished(ProdOrderLine: Record "Prod. Order Line"): Boolean
     var
@@ -722,10 +722,10 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure MarkProductionOrderAsTimeFinished
-    /// Marks the production order as time finished.
+    /// Marks the production order as time finished and triggers production order closure.
+    /// Validates that both consumption and output are finished before marking time as finished.
     /// </summary>
-    /// <param name="ProdOrderLine"></param>
+    /// <param name="ProdOrderLine">Production order line providing the production order reference.</param>
     /// <returns name="Success">Boolean indicating if the operation was successful.</returns>
     internal procedure MarkProductionOrderAsTimeFinished(ProdOrderLine: Record "Prod. Order Line"): Boolean
     var
@@ -749,11 +749,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure MarkProductionOrderAsConsumptionFinished
-    /// Marks the production order as consumption finished.
+    /// Marks the production order as consumption finished and automatically initiates cleaning task.
+    /// Sets the APA MADCS Consumption finished flag and processes cleaning preparation.
     /// </summary>
-    /// <param name="ProdOrderComponent"></param>
-    /// <returns name="Success">Boolean indicating if the operation was successful.</returns>
+    /// <param name="ProdOrderComponent">Production order component providing the production order reference.</param>
+    /// <returns>Boolean indicating if the operation was successful.</returns>
     internal procedure MarkProductionOrderAsConsumptionFinished(ProdOrderComponent: Record "Prod. Order Component"): Boolean
     var
         ProdOrder: Record "Production Order";
@@ -787,11 +787,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure CurrentTask
-    /// Retrieves the current active task for the given operator code. If no active task is found
+    /// Retrieves the current active task for the given operator code.
+    /// If no active task is found, returns the default enum value.
     /// </summary>
-    /// <param name="OperatorCode"></param>
-    /// <returns></returns>
+    /// <param name="OperatorCode">Operator code to filter active tasks.</param>
+    /// <returns name="TaskType">Current active task type, or default value if no active task exists.</returns>
     internal procedure CurrentTask(OperatorCode: Code[20]): Enum "APA MADCS Journal Type"
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -807,10 +807,10 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure GetTimerInterval
-    /// Retrieves the timer interval for refreshing the picking status of production orders. This can be used
+    /// Retrieves the timer interval for refreshing the picking status of production orders.
+    /// Converts the configured interval from seconds to milliseconds.
     /// </summary>
-    /// <returns></returns>
+    /// <returns name="IntervalMs">Timer interval in milliseconds for production order status refresh.</returns>
     internal procedure GetTimerInterval(): Integer
     var
         ManufacturingSetup: Record "Manufacturing Setup";
@@ -822,6 +822,12 @@ codeunit 55000 "APA MADCS Management"
         exit(ManufacturingSetup."APA MADCS Timer Interval" * 1000); // Convert seconds to milliseconds
     end;
 
+    /// <summary>
+    /// Retrieves the center group (Agrupacion Centros) for a production order.
+    /// </summary>
+    /// <param name="MyStatus">Production order status to filter.</param>
+    /// <param name="MyProdOrdeNo">Production order number to retrieve.</param>
+    /// <returns name="CenterGroup">Center group text with asterisks removed, or empty string if not found.</returns>
     internal procedure GetProdOrderCenterGroup(MyStatus: Enum "Production Order Status"; MyProdOrdeNo: Code[20]): Text
     var
         ProductionOrder: Record "Production Order";
@@ -833,11 +839,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure UpdatePickingStatusField
-    /// Updates the "APA MADCS Picking Status" field based on the picking status of the production order components.
+    /// Updates the "APA MADCS Picking Status" field based on the picking status of production order components.
+    /// Evaluates component picking completion and sets status to Totaly Picked, Partialy Picked, or Pending.
     /// </summary>
-    /// <param name="ProductionOrder"></param>
-    /// <param name="save"></param>
+    /// <param name="ProductionOrder">Production order record to evaluate and update.</param>
+    /// <param name="save">Boolean indicating whether to save the changes to the database.</param>
     procedure UpdatePickingStatusField(var ProductionOrder: Record "Production Order"; save: Boolean)
     var
         lrProdOrderComponent: Record "Prod. Order Component";
@@ -870,11 +876,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure GetManufacturingSetupTaskData
-    /// Retrieves necessary data for processing a manufacturing task based on the journal type.
+    /// Retrieves the task number configured for a specific manufacturing journal type.
+    /// Maps journal types (Preparation, Cleaning, Execution) to their corresponding task codes in manufacturing setup.
     /// </summary>
-    /// <param name="APAMADCSJournalType"></param>
-    /// <returns></returns>
+    /// <param name="APAMADCSJournalType">Journal type to retrieve task data for (Preparation, Cleaning, or Execution).</param>
+    /// <returns name="TaskNo">Task number configured in Manufacturing Setup for the specified journal type.</returns>
     procedure GetManufacturingSetupTaskData(APAMADCSJournalType: Enum "APA MADCS Journal Type") TaskNo: Code[10]
     var
         ManufacturingSetup: Record "Manufacturing Setup";
@@ -901,11 +907,11 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// procedure GetMyActualActivity
-    /// Retrieves the current active activity for the given operator code. If no active task is found, raises an error.
+    /// Retrieves the current active activity for the given operator code.
+    /// If no active task is found, raises an error.
     /// </summary>
-    /// <param name="OperatorCode"></param>
-    /// <param name="Activity"></param>
+    /// <param name="OperatorCode">Operator code to filter active tasks.</param>
+    /// <param name="Activity">Output parameter containing the active activity record for the operator.</param>
     procedure GetMyActualActivity(OperatorCode: Code[20]; var Activity: Record "APA MADCS Pro. Order Line Time")
     var
         NoActiveTaskTitleMsg: Label 'No active task', Comment = 'ESP="No hay tarea activa"';
@@ -924,12 +930,12 @@ codeunit 55000 "APA MADCS Management"
 
     #region local procedures
     /// <summary>
-    /// internal procedure TimeUsed
-    /// Calculates the total minutes used between the start and end date times.
+    /// Calculates the time duration between start and end date times based on the specified unit of measure.
+    /// Converts milliseconds to the target unit (Minutes, Hours, Days, Seconds, or 100/Hour).
     /// </summary>
-    /// <param name="Activity"></param>
-    /// <param name="UnitOfMeasure"></param>
-    /// <returns></returns>
+    /// <param name="Activity">Activity record containing start and end date time.</param>
+    /// <param name="UnitOfMeasure">Unit of measure code to determine conversion (Minutes, Hours, Days, Seconds, 100/Hour).</param>
+    /// <returns name="Time">Calculated time duration in the specified unit of measure.</returns>
     internal procedure TimeUsed(Activity: Record "APA MADCS Pro. Order Line Time"; UnitOfMeasure: Code[10]) Time: Decimal
     var
         CapUnitOfMeasure: Record "Capacity Unit of Measure";
@@ -961,6 +967,11 @@ codeunit 55000 "APA MADCS Management"
         exit(Time);
     end;
 
+    /// <summary>
+    /// Retrieves the machine center code configured for the current ADCS user.
+    /// </summary>
+    /// <param name="MachineCenterCode">Output parameter containing the machine center code from ADCS User setup.</param>
+    /// <returns name="Success">Boolean indicating if the machine center was successfully retrieved.</returns>
     local procedure GetMachineCenterCode(var MachineCenterCode: Code[20]): Boolean
     var
         ADCSUser: Record "ADCS User";
@@ -981,6 +992,13 @@ codeunit 55000 "APA MADCS Management"
         exit(true);
     end;
 
+    /// <summary>
+    /// Retrieves the breakdown code from the current fault or execution with fault task for a production order line.
+    /// </summary>
+    /// <param name="pProdOrderStatus">Production order status to filter.</param>
+    /// <param name="pProdOrder">Production order number to filter.</param>
+    /// <param name="pProdOrderLine">Production order line number to filter.</param>
+    /// <returns name="BreakdownCode">The breakdown code from the active fault task, or empty string if none found.</returns>
     local procedure CurrenFaultTaskBreakdownCode(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer): Code[20]
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
@@ -997,6 +1015,15 @@ codeunit 55000 "APA MADCS Management"
         exit('');
     end;
 
+    /// <summary>
+    /// Checks if there are later tasks (activities with higher priority) already registered for a production order line.
+    /// This prevents starting earlier tasks when subsequent tasks have already been initiated.
+    /// </summary>
+    /// <param name="pProdOrderStatus">Production order status to filter.</param>
+    /// <param name="pProdOrder">Production order number to filter.</param>
+    /// <param name="pProdOrderLine">Production order line number to filter.</param>
+    /// <param name="APAMADCSJournalType">Journal type to evaluate for later tasks.</param>
+    /// <returns name="Exists">True if later tasks exist, preventing the current task from starting.</returns>
     local procedure LaterTaskExists(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; pProdOrderLine: Integer; APAMADCSJournalType: Enum "APA MADCS Journal Type"): Boolean
     var
         Activities: Record "APA MADCS Pro. Order Line Time";

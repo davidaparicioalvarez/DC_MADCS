@@ -69,14 +69,12 @@ page 55006 "APA MADCS Verification"
 
                     field("Item No."; Rec."Item No.")
                     {
-                        ToolTip = 'Specifies the item number of the component item.', Comment = 'ESP="Especifica el número del producto componente."';
                         Editable = false;
                         StyleExpr = this.styleColor;
                         Width = 14;
                     }
                     field(Description; Rec."Description")
                     {
-                        ToolTip = 'Specifies the description of the component item.', Comment = 'ESP="Especifica la descripción del producto componente."';
                         Editable = false;
                         StyleExpr = this.styleColor;
                         Width = 11;
@@ -139,6 +137,11 @@ page 55006 "APA MADCS Verification"
         NewActivityCreatedMsg: Label 'New preparation activity has been created.', Comment = 'ESP="Se ha creado una nueva actividad de preparación."';
         DangerButtonTok: Label 'danger', Locked = true;
 
+    /// <summary>
+    /// Determines the appropriate page style based on component verification status.
+    /// Sets favorable style (green) if component is verified, otherwise uses attention style (red).
+    /// Provides visual feedback for verification completion status.
+    /// </summary>
     local procedure SetStyleColor()
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -157,6 +160,10 @@ page 55006 "APA MADCS Verification"
         this.styleColor := Format(newPageStyle);
     end;
 
+    /// <summary>
+    /// Initializes the verification page with production order components.
+    /// Clears existing temporary data, loads all components for the production order, and logs in the operator.
+    /// </summary>
     local procedure InitializeData()
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -166,6 +173,12 @@ page 55006 "APA MADCS Verification"
         this.APAMADCSManagement.LogInOperator();
     end;
 
+    /// <summary>
+    /// Marks or unmarks a component as verified.
+    /// Updates both the temporary record and the actual database record.
+    /// When all lots for a component are verified, the main component line is also marked as verified.
+    /// </summary>
+    /// <param name="Verified">Boolean indicating if component should be marked as verified (true) or unverified (false).</param>
     local procedure MarkAsVerified(Verified: Boolean)
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -187,6 +200,11 @@ page 55006 "APA MADCS Verification"
         Rec.SetRange("APA MADCS Verified");
     end;
 
+    /// <summary>
+    /// Validates if all components in the production order have been verified.
+    /// Checks the actual database records for unverified components.
+    /// </summary>
+    /// <returns name="AllVerified">Boolean indicating if all components are verified.</returns>
     local procedure AreAllVerified(): Boolean
     var
         ProdOrderComponent: Record "Prod. Order Component";
@@ -202,6 +220,12 @@ page 55006 "APA MADCS Verification"
         exit(ProdOrderComponent.IsEmpty());
     end;
 
+    /// <summary>
+    /// Finalizes all verifications and creates preparation or cleaning task.
+    /// Validates that all components are verified before proceeding.
+    /// Creates appropriate activity based on button identifier (Preparation or Cleaning).
+    /// </summary>
+    /// <param name="id">Button identifier for determining which task to create (Preparation/Cleaning).</param>
     local procedure FinalizeVerifications(id: Text)
     var
         NotAllComponentsVerifiedMsg: Label 'Not all components have been verified. Please verify all components before starting the preparation phase.', Comment = 'ESP="No todos los componentes han sido verificados. Por favor, verifique todos los componentes antes de iniciar la fase de preparación."';

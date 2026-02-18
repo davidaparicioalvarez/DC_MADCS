@@ -41,47 +41,39 @@ page 55000 "APA MADCS Rel Prod Order Lines"
                 }
                 field("Prod. Order No."; Rec."Prod. Order No.")
                 {
-                    ToolTip = 'Specifies the production order number.', Comment = 'ESP="Especifica el número de orden de producción."';
                     StyleExpr = this.styleColor;
                 }
                 field("Item No."; Rec."Item No.")
                 {
-                    ToolTip = 'Specifies the item number of the item to manufacture.', Comment = 'ESP="Especifica el número de artículo del producto a fabricar."';
                     StyleExpr = this.styleColor;
                     Width = 14;
                 }
                 field("Description"; Rec.Description)
                 {
-                    ToolTip = 'Specifies the description of the item to manufacture.', Comment = 'ESP="Especifica la descripción del producto a fabricar."';
                     StyleExpr = this.styleColor;
                 }
                 field(Quantity; Rec.Quantity)
                 {
-                    ToolTip = 'Specifies the quantity to produce.', Comment = 'ESP="Especifica la cantidad a producir."';
                     StyleExpr = this.styleColor;
                 }
                 field("Finished Quantity"; Rec."Finished Quantity")
                 {
                     Visible = false;
-                    ToolTip = 'Specifies the finished quantity of the item.', Comment = 'ESP="Especifica la cantidad terminada del producto."';
                     StyleExpr = this.styleColor;
                 }
                 field("Starting Date-Time"; Rec."Starting Date-Time")
                 {
                     Visible = false;
-                    ToolTip = 'Specifies the starting date and time for the production order.', Comment = 'ESP="Especifica la fecha y hora de inicio de la orden de producción."';
                     StyleExpr = this.styleColor;
                 }
                 field("Ending Date-Time"; Rec."Ending Date-Time")
                 {
                     Visible = false;
-                    ToolTip = 'Specifies the ending date and time for the production order.', Comment = 'ESP="Especifica la fecha y hora de finalización de la orden de producción."';
                     StyleExpr = this.styleColor;
                 }
                 field("APA MADCS User Working"; Rec."APA MADCS User Working")
                 {
                     Visible = false;
-                    ToolTip = 'Specifies the user currently working with this production order.', Comment = 'ESP="Especifica el usuario que está trabajando con esta orden de producción."';
                     StyleExpr = this.styleColor;
                 }
             }

@@ -2,6 +2,11 @@ namespace MADCS.MADCS;
 
 using Microsoft.Manufacturing.Document;
 
+/// <summary>
+/// Page extension for Released Production Order card to display MADCS workflow status.
+/// Adds a dedicated group showing completion status of consumption, output, and time tracking activities.
+/// Provides quick visibility of MADCS process stages directly on the production order card.
+/// </summary>
 pageextension 55002 "APA MADCS Rel. Prod. Order" extends "Released Production Order"
 {
     layout

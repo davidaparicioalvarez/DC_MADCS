@@ -137,49 +137,40 @@ page 55004 "APA MADCS Outputs"
 
                     field("Item No."; Rec."Item No.")
                     {
-                        ToolTip = 'Specifies the item to be propduced in the production order.', Comment = 'ESP="Especifica el artículo que se va a producir en la orden de producción."';
                         Width = 12;
                     }
                     field(Description; Rec.Description)
                     {
-                        ToolTip = 'Specifies the description of the item to be produced in the production order.', Comment = 'ESP="Especifica la descripción del artículo que se va a producir en la orden de producción."';
                         Width = 11;
                     }
                     field("Bin Code"; Rec."Bin Code")
                     {
-                        ToolTip = 'Specifies the bin code of the item to be produced in the production order, if applicable.', Comment = 'ESP="Especifica el código de ubicación del artículo que se va a producir en la orden de producción, si corresponde."';
                         Width = 5;
                     }
                     field(RPV1; Rec.RPV1)
                     {
-                        ToolTip = 'Specifies first RPV associated.', Comment = 'ESP="Especifica el primer RPV asociado."';
                         Width = 5;
                     }
                     field(RPV2; Rec.RPV2)
                     {
-                        ToolTip = 'Specifies second RPV associated.', Comment = 'ESP="Especifica el segundo RPV asociado."';
                         Width = 5;
                     }
                     field(RPV3; Rec.RPV3)
                     {
-                        ToolTip = 'Specifies third RPV associated.', Comment = 'ESP="Especifica el tercer RPV asociado."';
                         Width = 5;
                     }
                     field(Quantity; Rec.Quantity)
                     {
-                        ToolTip = 'Specifies the total expected quantity to be produced in the production order.', Comment = 'ESP="Especifica la cantidad total que se espera producir en la orden de producción."';
                         Caption = 'Requested Quantity', Comment = 'ESP="Cantidad Requerida"';
                         Width = 5;
                     }
                     field("Finished Quantity"; Rec."Finished Quantity")
                     {
-                        ToolTip = 'Specifies the quantity that has been finished in the production order.', Comment = 'ESP="Especifica la cantidad que se ha terminado en la orden de producción."';
                         Caption = 'Finished Quantity', Comment = 'ESP="Cantidad Terminada"';
                         Width = 5;
                     }
                     field("Remaining Quantity"; Rec."Remaining Quantity")
                     {
-                        ToolTip = 'Specifies the quantity that remains to be produced in the production order.', Comment = 'ESP="Especifica la cantidad que queda por producir en la orden de producción."';
                         Caption = 'Remaining Quantity', Comment = 'ESP="Cantidad Pendiente"';
                         Width = 5;
                     }
@@ -206,6 +197,13 @@ page 55004 "APA MADCS Outputs"
         PrimaryButtonTok: Label 'primary', Locked = true;
         DangerButtonTok: Label 'danger', Locked = true;
 
+    /// <summary>
+    /// Marks the production order as finished in output processing.
+    /// Requires user confirmation before proceeding with the operation.
+    /// Sets the output finished flag, enabling progression to cleaning and time completion stages.
+    /// </summary>
+    /// <param name="ProdOrderLine">Production order line to mark as output finished.</param>
+    /// <returns name="Success">Boolean indicating if the operation was successful.</returns>
     local procedure MarkProductionOrderAsFinished(ProdOrderLine: Record "Prod. Order Line"): Boolean
     var
         ConfirmMgmt: Codeunit "Confirm Management";

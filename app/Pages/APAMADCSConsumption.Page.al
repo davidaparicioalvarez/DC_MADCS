@@ -129,13 +129,11 @@ page 55002 "APA MADCS Consumption"
 
                     field("Item No."; Rec."Item No.")
                     {
-                        ToolTip = 'Specifies the item number associated with the component.', Comment = 'ESP="Indica el número de artículo asociado con el componente."';
                         Width = 14;
                         StyleExpr = this.styleColor;
                     }
                     field(Description; Rec.Description)
                     {
-                        ToolTip = 'Specifies the description of the component.', Comment = 'ESP="Indica la descripción del componente."';
                         Width = 10;
                         StyleExpr = this.styleColor;
                     }
@@ -154,28 +152,24 @@ page 55002 "APA MADCS Consumption"
                     field("Quien sirve picking OP"; Rec."Quien sirve picking OP")
                     {
                         Caption = 'Picking Servicer', Comment = 'ESP="Quien sirve picking"';
-                        ToolTip = 'Specifies Warehouse implies remaining quantities.Factories/OrderDocument if the OPL isn`t interrupted don`t perform remaining quantities select "consume all" button; else perform remaining quantities.', Comment = 'ESP="Opción Almacen siempre impilca Realizar Restos.Fabrica/DocOrden: Si no se interrumpe la OPL no realizar resto marcar boton consumir todo, si se interrumpe la OPL realizar resto."';
                         Width = 1;
                         StyleExpr = this.styleColor;
                     }
                     field(Quantity; Rec."Expected Quantity")
                     {
                         Caption = 'Original Quantity', Comment = 'ESP="Cantidad Original"';
-                        ToolTip = 'Specifies the original quantity of the component.', Comment = 'ESP="Indica la cantidad original del componente."';
                         Width = 5;
                         StyleExpr = this.styleColor;
                     }
                     field("Qty. Picked"; Rec."Qty. Picked")
                     {
                         Caption = 'Picked Quantity', Comment = 'ESP="Cantidad Servida"';
-                        ToolTip = 'Specifies the quantity of the component to pick for consumption.', Comment = 'ESP="Indica la cantidad del componente a recoger para el consumo."';
                         Width = 5;
                         StyleExpr = this.styleColor;
                     }
                     field("Remaining Quantity"; Rec."Remaining Quantity")
                     {
                         Caption = 'Remaining Quantity', Comment = 'ESP="Cantidad Resto"';
-                        ToolTip = 'Specifies the remaining quantity of the component to be consumed.', Comment = 'ESP="Indica la cantidad restante del componente por consumir."';
                         Width = 5;
                         StyleExpr = this.styleColor;
                     }
@@ -227,6 +221,11 @@ page 55002 "APA MADCS Consumption"
         this.styleColor := Format(newPageStyle);
     end;
 
+    /// <summary>
+    /// Consumes all components where "Consumo por resto" is not set (served by factory/documentation).
+    /// Validates that produced quantity matches expected quantity before consuming all components.
+    /// Processes all applicable production order components with remaining quantity greater than zero.
+    /// </summary>
     local procedure ConsumeAllItemsFromFactory()
     var
         ProdOrderLine: Record "Prod. Order Line";
@@ -259,6 +258,11 @@ page 55002 "APA MADCS Consumption"
             Message(NoProdComponentsMsg);
     end;
 
+    /// <summary>
+    /// Shows the consumption page for warehouse-served components (consume by remaining).
+    /// Opens a modal page for individual lot-based consumption when components are served from warehouse.
+    /// Allows precise control over consumption quantities and lot tracking.
+    /// </summary>
     local procedure ShowConsumptionPageFromWarehouse()
     var
         APAMADCSConsumeComponents: Page "APA MADCS Consume Components";
@@ -269,6 +273,13 @@ page 55002 "APA MADCS Consumption"
         APAMADCSConsumeComponents.RunModal();
     end;
 
+    /// <summary>
+    /// Marks the production order as finished in consumption and creates a cleaning activity.
+    /// Requires user confirmation before proceeding with the operation.
+    /// Automatically initiates the cleaning phase after consumption is marked as complete.
+    /// </summary>
+    /// <param name="ProdOrdComponent">Production order component record providing production order context.</param>
+    /// <returns name="Success">Boolean indicating if the operation was successful.</returns>
     internal procedure MarkProductionOrderAsFinished(ProdOrdComponent: Record "Prod. Order Component"): Boolean
     var
         ConfirmMgmt: Codeunit "Confirm Management";
