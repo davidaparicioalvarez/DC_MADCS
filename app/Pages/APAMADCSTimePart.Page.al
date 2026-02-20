@@ -12,6 +12,7 @@ using System.Utilities;
 page 55003 "APA MADCS Time Part"
 {
     Caption = 'Time', Comment = 'ESP="Tiempo"';
+    DataCaptionFields = "Prod. Order No.";
     Extensible = true;
     PageType = List;
     SourceTable = "APA MADCS Pro. Order Line Time";

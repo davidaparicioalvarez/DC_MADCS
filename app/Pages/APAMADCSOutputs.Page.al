@@ -11,6 +11,7 @@ using System.Utilities;
 page 55004 "APA MADCS Outputs"
 {
     Caption = 'Outputs', Comment = 'ESP="Salidas"';
+    DataCaptionFields = "Prod. Order No.";
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Line";

@@ -586,7 +586,7 @@ codeunit 55000 "APA MADCS Management"
                 end;
             Format(Enum::"APA MADCS Buttons"::ALButtonEndTok):
                 begin
-                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder);
+                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder, true);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::StopTime);
                 end;
             else
@@ -649,7 +649,7 @@ codeunit 55000 "APA MADCS Management"
                     this.Raise(this.BuildApplicationError(BreakDownLbl, BlockedBreakDownLbl));
             Format(Enum::"APA MADCS Buttons"::ALButtonBlockedBreakdownTok): // BLOCKING FAULT
                 if Activities.BreakDownCodeIsBlocking(BreakDownCode) then begin
-                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder); // for all operators
+                    this.FinalizeAllActivities(pProdOrderStatus, pProdOrder, true); // for all operators
                     Activities.NewFaultActivity(id, pProdOrderStatus, pProdOrder, pProdOrderLine, OperatorCode, BreakDownCode);
                     this.LogAction(Activities, Enum::"APA MADCS Log Type"::Fault);
                 end else
@@ -1079,7 +1079,8 @@ codeunit 55000 "APA MADCS Management"
     /// </summary>
     /// <param name="pProdOrderStatus">Production order status to filter.</param>
     /// <param name="pProdOrder">Production order number to filter.</param>
-    local procedure FinalizeAllActivities(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20])
+    /// <param name="Post">Boolean indicating whether to post capacity journal lines for the finalized activities.</param>
+    local procedure FinalizeAllActivities(pProdOrderStatus: Enum "Production Order Status"; pProdOrder: Code[20]; Post: Boolean)
     var
         Activities: Record "APA MADCS Pro. Order Line Time";
     begin
@@ -1093,7 +1094,7 @@ codeunit 55000 "APA MADCS Management"
         if Activities.FindSet(true) then
             repeat
                 Activities."End Date Time" := CurrentDateTime();
-                if Activities."Action" <> Enum::"APA MADCS Journal Type"::Fault then
+                if (Activities."Action" <> Enum::"APA MADCS Journal Type"::Fault) and Post then
                     this.PostCapacityJournalLine(Activities);
                 Activities.Validate(Posted, true);
                 Activities.Modify(false);
@@ -1701,4 +1702,14 @@ codeunit 55000 "APA MADCS Management"
             exit('');
     end;
     #endregion local procedures
+
+    #region events
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Prod. Order Status Management", OnBeforeFlushProdOrder, '', true, true)]
+    local procedure OnBeforeFlushProdOrder(var ProductionOrder: Record "Production Order"; NewStatus: Enum "Production Order Status"; PostingDate: Date; var IsHandled: Boolean)
+    begin
+        // Finalize all activities for the production order when it is being closed to ensure all MADCS time is posted
+        if NewStatus = NewStatus::Finished then
+            this.FinalizeAllActivities(ProductionOrder.Status, ProductionOrder."No.", false);
+    end;
+    #endregion events
 }

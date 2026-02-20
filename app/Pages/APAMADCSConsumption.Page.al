@@ -15,6 +15,7 @@ using System.Utilities;
 page 55002 "APA MADCS Consumption"
 {
     Caption = 'Consumption', Comment = 'ESP="Consumo"';
+    DataCaptionFields = "Prod. Order No.";
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";
@@ -182,11 +183,11 @@ page 55002 "APA MADCS Consumption"
     var
         Activity: Record "APA MADCS Pro. Order Line Time";
         NoExecActionTitleLbl: Label 'No execution task.', Comment = 'ESP="No hay tarea de ejecución."';
-        NoExecActionTitleMsg: Label 'No active execution task found for the current user.', Comment = 'ESP="No se encontró una tarea de ejecución activa para el usuario actual."';
+        NoExecActionTitleMsg: Label 'No active execution task in this order found for the current user.', Comment = 'ESP="No se encontró tarea de ejecución activa en esta orden para el usuario actual."';
     begin
         // Verify that there is a Execution task
         this.APAMADCSManagement.GetMyActualActivity(this.APAMADCSManagement.GetOperatorCode(), Activity);
-        if not (Activity.Action in [Activity.Action::Execution, Activity.Action::"Execution with Fault"]) then
+        if (Activity."Prod. Order No." <> Rec."Prod. Order No.") or not (Activity.Action in [Activity.Action::Execution, Activity.Action::"Execution with Fault"]) then
             this.APAMADCSManagement.Raise(this.APAMADCSManagement.BuildApplicationError(NoExecActionTitleLbl, NoExecActionTitleMsg));
     end;
 

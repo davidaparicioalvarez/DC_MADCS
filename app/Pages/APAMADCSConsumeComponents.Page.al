@@ -10,6 +10,7 @@ using Microsoft.Inventory.Tracking;
 page 55001 "APA MADCS Consume Components"
 {
     Caption = 'Consume Components', Comment = 'ESP="Consumir Componentes"';
+    DataCaptionFields = "Prod. Order No.";
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";

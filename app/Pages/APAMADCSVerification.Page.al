@@ -11,6 +11,7 @@ using Microsoft.Inventory.Item;
 page 55006 "APA MADCS Verification"
 {
     Caption = 'Verification', Comment = 'ESP="Verificación"';
+    DataCaptionFields = "Prod. Order No.";
     PageType = List;
     SourceTable = "Prod. Order Component";
     SourceTableTemporary = true;

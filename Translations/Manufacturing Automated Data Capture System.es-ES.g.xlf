@@ -694,9 +694,9 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method OnInit - NamedType NoExecActionTitleLbl</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Method 4194163325 - NamedType 296363359" size-unit="char" translate="yes" xml:space="preserve">
-          <source>No active execution task found for the current user.</source>
-          <target state="translated">No se encontró una tarea de ejecución activa para el usuario actual.</target>
-          <note from="Developer" annotates="general" priority="2">ESP="No se encontró una tarea de ejecución activa para el usuario actual."</note>
+          <source>No active execution task in this order found for the current user.</source>
+          <target state="translated">No se encontró tarea de ejecución activa en esta orden para el usuario actual.</target>
+          <note from="Developer" annotates="general" priority="2">ESP="No se encontró tarea de ejecución activa en esta orden para el usuario actual."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Page APA MADCS Consumption - Method OnInit - NamedType NoExecActionTitleMsg</note>
         </trans-unit>
         <trans-unit id="Page 178587815 - Control 334747283 - Method 2219734473 - NamedType 14288021" size-unit="char" translate="yes" xml:space="preserve">

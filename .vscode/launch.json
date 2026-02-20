@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Your own server",
+            "name": "LOCAL normal",
             "request": "launch",
             "type": "al",
             "environmentType": "OnPrem",
@@ -30,7 +30,7 @@
             "serverInstance": "BC190",
             "authentication": "UserPassword",
             "startupObjectType": "Page",
-            "startupObjectId": 672,
+            "startupObjectId": 55000,
             "breakOnError": true,
             "breakOnRecordWrite": false,
             "enableSqlInformationDebugger": true,
