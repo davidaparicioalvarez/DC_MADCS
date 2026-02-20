@@ -161,7 +161,7 @@ codeunit 55000 "APA MADCS Management"
         this.GetManufacturingSetupForConsumption(ManufacturingSetup, ItemJnlTemplate, ItemJnlBatch);
 
         // Setup journal line
-        this.SetupConsumptionJournalLine(ItemJnlLine, ProdOrderComp, ItemJnlTemplate, ItemJnlBatch, Item, Quantity);
+        this.SetupConsumptionJournalLine(ItemJnlLine, ProdOrderComp, ItemJnlTemplate, ItemJnlBatch, Item, Quantity, Quantity, ProdOrderComp."APA MADCS Original Line No.");
 
         // Apply item tracking if needed
         if (Item."Item Tracking Code" <> '') and (LotNo <> '') then
@@ -207,7 +207,7 @@ codeunit 55000 "APA MADCS Management"
         this.GetManufacturingSetupForConsumption(ManufacturingSetup, ItemJnlTemplate, ItemJnlBatch);
 
         // Setup journal line for complete consumption
-        this.SetupCompleteConsumptionJournalLine(ItemJnlLine, ProdOrderComp, ItemJnlTemplate, ItemJnlBatch, Item, NeededQty, OriginalNeededQty);
+        this.SetupConsumptionJournalLine(ItemJnlLine, ProdOrderComp, ItemJnlTemplate, ItemJnlBatch, Item, NeededQty, OriginalNeededQty, ProdOrderComp."Line No.");
 
         // Apply item tracking if needed
         if Item."Item Tracking Code" <> '' then
@@ -1382,54 +1382,6 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-    /// Builds a consumption item journal line for a specific production order component.
-    /// </summary>
-    /// <param name="ItemJnlLine">Journal line to populate.</param>
-    /// <param name="ProdOrderComp">Component providing consumption context.</param>
-    /// <param name="ItemJnlTemplate">Journal template from setup.</param>
-    /// <param name="ItemJnlBatch">Journal batch from setup.</param>
-    /// <param name="Item">Item record for validations.</param>
-    /// <param name="Quantity">Quantity to consume in base units.</param>
-    local procedure SetupConsumptionJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; Item: Record Item; Quantity: Decimal)
-    var
-        ProdOrderLine: Record "Prod. Order Line";
-    begin
-        // Get production order line
-        Clear(ProdOrderLine);
-        if not ProdOrderLine.Get(ProdOrderComp.Status, ProdOrderComp."Prod. Order No.", ProdOrderComp."Prod. Order Line No.") then
-            exit;
-
-        Clear(ItemJnlLine);
-        ItemJnlLine."Journal Template Name" := ItemJnlTemplate.Name;
-        ItemJnlLine."Journal Batch Name" := ItemJnlBatch.Name;
-        ItemJnlLine."Line No." := 0;
-        ItemJnlLine.Validate("Posting Date", WorkDate());
-        ItemJnlLine.Validate("Entry Type", ItemJnlLine."Entry Type"::Consumption);
-        ItemJnlLine.Validate("Order Type", ItemJnlLine."Order Type"::Production);
-        ItemJnlLine.Validate("Order No.", ProdOrderComp."Prod. Order No.");
-        ItemJnlLine.Validate("Source No.", ProdOrderLine."Item No.");
-        ItemJnlLine.Validate("Item No.", ProdOrderComp."Item No.");
-        ItemJnlLine.Validate("Unit of Measure Code", ProdOrderComp."Unit of Measure Code");
-        ItemJnlLine.Description := ProdOrderComp.Description;
-        this.ConsumptionItemJnlLineValidateQuantity(ItemJnlLine, Quantity, Item, false);
-
-        ItemJnlLine.Validate("Location Code", ProdOrderComp."Location Code");
-        ItemJnlLine.Validate("Dimension Set ID", ProdOrderComp."Dimension Set ID");
-        if ProdOrderComp."Bin Code" <> '' then
-            ItemJnlLine."Bin Code" := ProdOrderComp."Bin Code";
-
-        ItemJnlLine."Variant Code" := ProdOrderComp."Variant Code";
-        ItemJnlLine.Validate("Order Line No.", ProdOrderComp."Prod. Order Line No.");
-        ItemJnlLine.Validate("Prod. Order Comp. Line No.", ProdOrderComp."APA MADCS Original Line No.");
-
-        ItemJnlLine.Level := 0;
-        ItemJnlLine."Flushing Method" := ProdOrderComp."Flushing Method";
-        ItemJnlLine."Source Code" := ItemJnlTemplate."Source Code";
-        ItemJnlLine."Reason Code" := ItemJnlBatch."Reason Code";
-        ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
-    end;
-
-    /// <summary>
     /// Applies lot tracking from a production component to the consumption journal line and sets handling quantities.
     /// </summary>
     /// <param name="ItemJnlLine">Journal line that receives tracking.</param>
@@ -1512,7 +1464,8 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="Item">Item record for validations.</param>
     /// <param name="NeededQty">Adjusted quantity to consume.</param>
     /// <param name="OriginalNeededQty">Original quantity prior to adjustments.</param>
-    local procedure SetupCompleteConsumptionJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; Item: Record Item; NeededQty: Decimal; OriginalNeededQty: Decimal)
+    /// <param name="LineNo">Line number to assign for tracking purposes.</param>
+    local procedure SetupConsumptionJournalLine(var ItemJnlLine: Record "Item Journal Line"; ProdOrderComp: Record "Prod. Order Component"; ItemJnlTemplate: Record "Item Journal Template"; ItemJnlBatch: Record "Item Journal Batch"; Item: Record Item; NeededQty: Decimal; OriginalNeededQty: Decimal; LineNo: Integer)
     var
         ProdOrderLine: Record "Prod. Order Line";
     begin
@@ -1537,12 +1490,14 @@ codeunit 55000 "APA MADCS Management"
 
         ItemJnlLine.Validate("Location Code", ProdOrderComp."Location Code");
         ItemJnlLine.Validate("Dimension Set ID", ProdOrderComp."Dimension Set ID");
+        ItemJnlLine.Validate("Shortcut Dimension 1 Code", Item."Global Dimension 1 Code");
+        ItemJnlLine.Validate("Shortcut Dimension 2 Code", Item."Global Dimension 2 Code");
         if ProdOrderComp."Bin Code" <> '' then
             ItemJnlLine."Bin Code" := ProdOrderComp."Bin Code";
 
         ItemJnlLine."Variant Code" := ProdOrderComp."Variant Code";
         ItemJnlLine.Validate("Order Line No.", ProdOrderComp."Prod. Order Line No.");
-        ItemJnlLine.Validate("Prod. Order Comp. Line No.", ProdOrderComp."Line No.");
+        ItemJnlLine.Validate("Prod. Order Comp. Line No.", LineNo);
 
         ItemJnlLine.Level := 0;
         ItemJnlLine."Flushing Method" := ProdOrderComp."Flushing Method";
