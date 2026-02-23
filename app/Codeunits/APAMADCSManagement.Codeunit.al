@@ -1490,8 +1490,6 @@ codeunit 55000 "APA MADCS Management"
 
         ItemJnlLine.Validate("Location Code", ProdOrderComp."Location Code");
         ItemJnlLine.Validate("Dimension Set ID", ProdOrderComp."Dimension Set ID");
-        ItemJnlLine.Validate("Shortcut Dimension 1 Code", Item."Global Dimension 1 Code");
-        ItemJnlLine.Validate("Shortcut Dimension 2 Code", Item."Global Dimension 2 Code");
         if ProdOrderComp."Bin Code" <> '' then
             ItemJnlLine."Bin Code" := ProdOrderComp."Bin Code";
 
