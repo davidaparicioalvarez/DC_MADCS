@@ -1,6 +1,7 @@
 namespace MADCS.MADCS;
 
 using Microsoft.Manufacturing.Document;
+using Microsoft.Warehouse.Activity.History;
 
 /// <summary>
 /// Page extension for Released Production Order card to display MADCS workflow status.
@@ -29,6 +30,25 @@ pageextension 55002 "APA MADCS Rel. Prod. Order" extends "Released Production Or
                 {
                     ApplicationArea = All;
                 }
+            }
+        }
+    }
+
+    actions
+    {
+        addafter("Put-away/Pick Lines/Movement Lines")
+        {
+            action("Reg. Put-away/Reg. Pick Lines/Reg. Movement Lines")
+            {
+                ApplicationArea = Warehouse;
+                Caption = 'Reg. Put-away/Reg. Pick Lines/Reg. Movement Lines', Comment = 'ESP="Líneas de registro de ubicaciones/recogidas/movimientos"';
+                Image = PutawayLines;
+                RunObject = page "Registered Whse. Act.-Lines";
+                RunPageLink = "Source Type" = filter(5406 | 5407),
+                                "Source Subtype" = const("3"),
+                                "Source No." = field("No.");
+                RunPageView = sorting("Source Type", "Source Subtype", "Source No.", "Source Line No.", "Source Subline No.", "Action Type");
+                ToolTip = 'View the list of ongoing inventory put-aways, picks, or movements for the order.', Comment = 'ESP="Ver la lista de ubicaciones/recogidas/movimientos de inventario en curso para la orden."';
             }
         }
     }

@@ -463,6 +463,26 @@
           <note from="Developer" annotates="general" priority="2">ESP="Código de seguimiento del artículo no encontrado: %1"</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method ShouldProcessItemTracking - NamedType ItemTrackingCodeErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1616528217 - NamedType 1006786137" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item not found</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Producto no encontrado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method UseLots - NamedType ItemNotFoundMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1616528217 - NamedType 2184892397" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item %1 was not found.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No se encontró el producto %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method UseLots - NamedType ItemNotFoundErr</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1616528217 - NamedType 4111532276" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item tracking code not found</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Código de seguimiento del producto no encontrado"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method UseLots - NamedType ItemTrackingNotFoundMsg</note>
+        </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 1616528217 - NamedType 462278672" size-unit="char" translate="yes" xml:space="preserve">
+          <source>The item tracking code %1 was not found.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="No se encontró el código de seguimiento del producto %1."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method UseLots - NamedType ItemTrackingNotFoundErr</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 721494182 - NamedType 1302664427" size-unit="char" translate="yes" xml:space="preserve">
           <source>Error initializing verification data.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error al inicializar los datos de verificación."</note>
@@ -1097,6 +1117,16 @@
           <source>MADCS Manufacturing Setup</source>
           <note from="Developer" annotates="general" priority="2">ESP="Configuración de fabricación MADCS"</note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension APA MADCS Manufacturing Setup - Control MADCS Manufacturing Setup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2539757448 - Action 2253754978 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3698582500">
+          <source>View the list of ongoing inventory put-aways, picks, or movements for the order.</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Ver la lista de ubicaciones/recogidas/movimientos de inventario en curso para la orden."</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension APA MADCS Rel. Prod. Order - Action Reg. Put-away/Reg. Pick Lines/Reg. Movement Lines - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2539757448 - Action 2253754978 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3698582500">
+          <source>Reg. Put-away/Reg. Pick Lines/Reg. Movement Lines</source>
+          <note from="Developer" annotates="general" priority="2">ESP="Líneas de registro de ubicaciones/recogidas/movimientos"</note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension APA MADCS Rel. Prod. Order - Action Reg. Put-away/Reg. Pick Lines/Reg. Movement Lines - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 2539757448 - Control 1527064973 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3698582500">
           <source>MADCS Production Order Info</source>

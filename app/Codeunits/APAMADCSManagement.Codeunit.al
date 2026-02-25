@@ -6,6 +6,8 @@ using Microsoft.Manufacturing.Document;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Inventory.Ledger;
+using Microsoft.Warehouse.Ledger;
 using Microsoft.Inventory.Journal;
 using Microsoft.Manufacturing.Setup;
 using Microsoft.Foundation.UOM;
@@ -39,7 +41,8 @@ codeunit 55000 "APA MADCS Management"
         tabledata "Capacity Ledger Entry" = r,
         tabledata "DC Errores Cierre Orden" = rmid,
         tabledata "DC Tolerancias Admitidas" = r,
-        tabledata "Capacity Unit of Measure" = r;
+        tabledata "Capacity Unit of Measure" = r,
+        tabledata "Warehouse Entry" = r;
 
     var
         CurrentOperatorCode: Code[20];
@@ -120,7 +123,7 @@ codeunit 55000 "APA MADCS Management"
     end;
 
     /// <summary>
-     /// Gets the current operator code for logging and tracking purposes.
+    /// Gets the current operator code for logging and tracking purposes.
     /// Triggers login if not already logged in.
     /// </summary>
     /// <returns name="OperatorCode">Current operator code, or empty string if login fails.</returns>
@@ -761,6 +764,7 @@ codeunit 55000 "APA MADCS Management"
         if ProdOrder.Get(ProdOrderComponent.Status, ProdOrderComponent."Prod. Order No.") then begin
             ProdOrder."APA MADCS Consumption finished" := true;
             ProdOrder.Modify(true);
+            this.MoveRemainigComponentsToDestinationBin(ProdOrderComponent);
             this.ProcessPreparationCleaningTask(Format(Enum::"APA MADCS Buttons"::ALButtonCleaningTok), ProdOrderComponent.Status, ProdOrderComponent."Prod. Order No.", ProdOrderComponent."Prod. Order Line No.", this.GetOperatorCode());
             exit(true);
         end;
@@ -929,6 +933,91 @@ codeunit 55000 "APA MADCS Management"
     #endregion procedures
 
     #region local procedures
+    local procedure MoveRemainigComponentsToDestinationBin(ProdOrderComponent: Record "Prod. Order Component")
+    var
+        ProdOrderComponentBuffer: Record "Prod. Order Component";
+        DCCtrlZONE: Codeunit "DC CtrlZONE Mgmt.";
+        Lotes: Dictionary of [Code[50], Decimal];
+        ExpirationDates: Dictionary of [Code[50], Date];
+        LotNo: Code[50];
+        QtyToReturn: Decimal;
+        ActualQtyToReturn: Decimal;
+    begin
+        Clear(ProdOrderComponentBuffer);
+        ProdOrderComponentBuffer.SetCurrentKey(Status, "Prod. Order No.", "Prod. Order Line No.");
+        ProdOrderComponentBuffer.SetRange(Status, ProdOrderComponent.Status);
+        ProdOrderComponentBuffer.SetRange("Prod. Order No.", ProdOrderComponent."Prod. Order No.");
+        ProdOrderComponentBuffer.SetRange("Prod. Order Line No.", ProdOrderComponent."Prod. Order Line No.");
+        if ProdOrderComponentBuffer.FindSet(false) then
+            repeat
+                if ProdOrderComponentBuffer."Bin Code" <> ProdOrderComponentBuffer."Destination Bin Code" then begin
+                    ProdOrderComponentBuffer.CalcFields("Act. Consumption (Qty)");
+                    QtyToReturn := ProdOrderComponentBuffer."Qty. Picked" - ProdOrderComponentBuffer."Act. Consumption (Qty)";
+                    if (QtyToReturn > 0) then 
+                        if this.UseLots(ProdOrderComponentBuffer."Item No.") then begin
+                            this.GetAllRemainingComponentsLots(ProdOrderComponentBuffer, Lotes, ExpirationDates);
+                            foreach LotNo in Lotes.Keys() do 
+                                if (QtyToReturn > 0) then begin
+                                    ActualQtyToReturn := Lotes.Get(LotNo);
+                                    if QtyToReturn >= ActualQtyToReturn then begin
+                                        DCCtrlZONE.InsertWhseMovsLocations(ProdOrderComponentBuffer, LotNo, ExpirationDates.Get(LotNo), ActualQtyToReturn);
+                                        QtyToReturn -= ActualQtyToReturn;
+                                    end else begin
+                                        DCCtrlZONE.InsertWhseMovsLocations(ProdOrderComponentBuffer, LotNo, ExpirationDates.Get(LotNo), QtyToReturn);
+                                        QtyToReturn := 0;
+                                    end
+                                end
+                        end else
+                            DCCtrlZONE.InsertWhseMovsLocations(ProdOrderComponentBuffer, '', 0D, QtyToReturn)
+                end
+            until ProdOrderComponentBuffer.Next() = 0;
+    end;
+
+    local procedure GetAllRemainingComponentsLots(ProdOrderComponent: Record "Prod. Order Component"; var Lotes: Dictionary of [Code[50], Decimal]; var ExpirationDates: Dictionary of [Code[50], Date])
+    var
+        WarehouseEntry: Record "Warehouse Entry";
+        WarehouseEntryLot: Record "Warehouse Entry";
+    begin
+        Clear(WarehouseEntry);
+        WarehouseEntry.SetCurrentKey("Source Type", "Source Subtype", "Source No.", "Item No.");
+        WarehouseEntry.SetFilter("Source Type", '%1|%2|%3', Database::"Item Journal Line", Database::"Prod. Order Component", Database::"Prod. Order Line");
+        WarehouseEntry.SetFilter("Source Subtype", '%1|%2|%3', 3, 4, 5);
+        WarehouseEntry.SetFilter("Source No.", ProdOrderComponent."Prod. Order No.");
+        WarehouseEntry.SetRange("Bin Code", ProdOrderComponent."Bin Code");
+        WarehouseEntry.SetRange("Item No.", ProdOrderComponent."Item No.");
+        if WarehouseEntry.FindSet(false) then
+            repeat
+                Clear(WarehouseEntryLot);
+                WarehouseEntryLot.CopyFilters(WarehouseEntry);
+                WarehouseEntryLot.SetRange("Lot No.", WarehouseEntry."Lot No.");
+                WarehouseEntryLot.CalcSums(Quantity);
+                if WarehouseEntryLot.Quantity <> 0 then
+                    if not Lotes.ContainsKey(WarehouseEntry."Lot No.") then begin
+                        Lotes.Add(WarehouseEntry."Lot No.", WarehouseEntryLot.Quantity);
+                        ExpirationDates.Add(WarehouseEntry."Lot No.", WarehouseEntry."Expiration Date");
+                    end;
+            until WarehouseEntry.Next() = 0;
+    end;
+
+    local procedure UseLots(ItemNo: Code[20]): Boolean
+    var
+        Item: Record Item;
+        ItemTracking: Record "Item Tracking Code";
+        ItemNotFoundMsg: Label 'Item not found', Comment = 'ESP="Producto no encontrado"';
+        ItemNotFoundErr: Label 'The item %1 was not found.', Comment = 'ESP="No se encontró el producto %1."';
+        ItemTrackingNotFoundMsg: Label 'Item tracking code not found', Comment = 'ESP="Código de seguimiento del producto no encontrado"';
+        ItemTrackingNotFoundErr: Label 'The item tracking code %1 was not found.', Comment = 'ESP="No se encontró el código de seguimiento del producto %1."';
+    begin
+        if not Item.Get(ItemNo) then
+            this.Raise(this.BuildApplicationError(ItemNotFoundMsg, StrSubstNo(ItemNotFoundErr, ItemNo)));
+        if Item."Item Tracking Code" <> '' then begin
+            if not ItemTracking.Get(Item."Item Tracking Code") then
+                this.Raise(this.BuildApplicationError(ItemTrackingNotFoundMsg, StrSubstNo(ItemTrackingNotFoundErr, Item."Item Tracking Code")));
+            exit(ItemTracking."Lot Manuf. Inbound Tracking" or ItemTracking."Lot Warehouse Tracking");
+        end;
+        exit(false);
+    end;
+
     /// <summary>
     /// Calculates the time duration between start and end date times based on the specified unit of measure.
     /// Converts milliseconds to the target unit (Minutes, Hours, Days, Seconds, or 100/Hour).
@@ -936,35 +1025,50 @@ codeunit 55000 "APA MADCS Management"
     /// <param name="Activity">Activity record containing start and end date time.</param>
     /// <param name="UnitOfMeasure">Unit of measure code to determine conversion (Minutes, Hours, Days, Seconds, 100/Hour).</param>
     /// <returns name="Time">Calculated time duration in the specified unit of measure.</returns>
-    internal procedure TimeUsed(Activity: Record "APA MADCS Pro. Order Line Time"; UnitOfMeasure: Code[10]) Time: Decimal
+    local procedure TimeUsed(Activity: Record "APA MADCS Pro. Order Line Time"; UnitOfMeasure: Code[10]): Decimal
     var
         CapUnitOfMeasure: Record "Capacity Unit of Measure";
-        Duration: Decimal;
     begin
         if not CapUnitOfMeasure.Get(UnitOfMeasure) then
             this.Raise(this.BuildApplicationError('Invalid Unit of Measure', 'The provided unit of measure is not valid.'));
 
+        exit(this.ConvertDurationToCapacityUnit(this.GetActivityDurationInSeconds(Activity), CapUnitOfMeasure));
+    end;
+
+    /// <summary>
+    /// Returns activity duration in seconds.
+    /// </summary>
+    /// <param name="Activity">Activity record containing start and end timestamps.</param>
+    /// <returns name="DurationInSeconds">Duration expressed in seconds.</returns>
+    local procedure GetActivityDurationInSeconds(Activity: Record "APA MADCS Pro. Order Line Time"): Decimal
+    begin
         if Activity."End Date Time" = 0DT then
-            Duration := 0
-        else
-            Duration := (Activity."End Date Time" - Activity."Start Date Time") / 1000;
+            exit(0);
 
+        exit((Activity."End Date Time" - Activity."Start Date Time") / 1000);
+    end;
+
+    /// <summary>
+    /// Converts a duration in seconds to the requested capacity unit type.
+    /// </summary>
+    /// <param name="DurationInSeconds">Duration in seconds.</param>
+    /// <param name="CapUnitOfMeasure">Target capacity unit of measure record.</param>
+    /// <returns name="ConvertedDuration">Converted duration.</returns>
+    local procedure ConvertDurationToCapacityUnit(DurationInSeconds: Decimal; CapUnitOfMeasure: Record "Capacity Unit of Measure"): Decimal
+    begin
         case CapUnitOfMeasure.Type of
-            CapUnitOfMeasure.Type::" ":
-                Time := Duration / 60; // Default to minutes when no type is specified
-            CapUnitOfMeasure.Type::"100/Hour":
-                Time := Duration / 60 / 60 * 100;
-            CapUnitOfMeasure.Type::Days:
-                Time := Duration / 60 / 60 / 24;
-            CapUnitOfMeasure.Type::Hours:
-                Time := Duration / 60 / 60;
+            CapUnitOfMeasure.Type::" ",
             CapUnitOfMeasure.Type::Minutes:
-                Time := Duration / 60;
+                exit(DurationInSeconds / 60); // Default to minutes when no type is specified
+            CapUnitOfMeasure.Type::"100/Hour":
+                exit(DurationInSeconds / 60 / 60 * 100);
+            CapUnitOfMeasure.Type::Days:
+                exit(DurationInSeconds / 60 / 60 / 24);
+            CapUnitOfMeasure.Type::Hours:
+                exit(DurationInSeconds / 60 / 60);
             CapUnitOfMeasure.Type::Seconds:
-                Time := Duration;
+                exit(DurationInSeconds);
         end;
-
-        exit(Time);
     end;
 
     /// <summary>
@@ -1489,7 +1593,6 @@ codeunit 55000 "APA MADCS Management"
         this.ConsumptionItemJnlLineValidateQuantity(ItemJnlLine, NeededQty, Item, NeededQty < OriginalNeededQty);
 
         ItemJnlLine.Validate("Location Code", ProdOrderComp."Location Code");
-        ItemJnlLine.Validate("Dimension Set ID", ProdOrderComp."Dimension Set ID");
         if ProdOrderComp."Bin Code" <> '' then
             ItemJnlLine."Bin Code" := ProdOrderComp."Bin Code";
 
@@ -1502,6 +1605,9 @@ codeunit 55000 "APA MADCS Management"
         ItemJnlLine."Source Code" := ItemJnlTemplate."Source Code";
         ItemJnlLine."Reason Code" := ItemJnlBatch."Reason Code";
         ItemJnlLine."Posting No. Series" := ItemJnlBatch."Posting No. Series";
+        ItemJnlLine.Validate("Dimension Set ID", 0);
+        ItemJnlLine.Validate("Shortcut Dimension 1 Code", Item."Global Dimension 1 Code");
+        ItemJnlLine.Validate("Shortcut Dimension 2 Code", Item."Global Dimension 2 Code");
     end;
 
     /// <summary>
