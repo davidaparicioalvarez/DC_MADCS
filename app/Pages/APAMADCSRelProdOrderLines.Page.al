@@ -9,6 +9,7 @@ using Microsoft.Manufacturing.Document;
 page 55000 "APA MADCS Rel Prod Order Lines"
 {
     Caption = 'MADCS Released Production Order Lines', Comment = 'ESP="MADCS Líneas de órdenes de producción lanzadas"';
+    DataCaptionExpression = this.GetCaption();
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Line";
@@ -295,5 +296,10 @@ page 55000 "APA MADCS Rel Prod Order Lines"
         this.IsVerified := Rec."APA MADCS Verified";
         this.IsOutputsFinished := Rec."APA MADCS Output finished";
         this.IsConsumptionFinished := Rec."APA MADCS Consumption finished";
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

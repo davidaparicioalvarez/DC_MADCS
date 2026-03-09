@@ -11,7 +11,7 @@ using Microsoft.Inventory.Item;
 page 55006 "APA MADCS Verification"
 {
     Caption = 'Verification', Comment = 'ESP="Verificación"';
-    DataCaptionFields = "Prod. Order No.";
+    DataCaptionExpression = this.GetCaption();
     PageType = List;
     SourceTable = "Prod. Order Component";
     SourceTableTemporary = true;
@@ -241,5 +241,10 @@ page 55006 "APA MADCS Verification"
             Message(this.NewActivityCreatedMsg);
         end else
             Message(AllVerifiedMsg);
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

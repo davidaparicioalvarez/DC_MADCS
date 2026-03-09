@@ -11,7 +11,7 @@ using System.Utilities;
 page 55004 "APA MADCS Outputs"
 {
     Caption = 'Outputs', Comment = 'ESP="Salidas"';
-    DataCaptionFields = "Prod. Order No.";
+    DataCaptionExpression = this.GetCaption();
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Line";
@@ -214,5 +214,10 @@ page 55004 "APA MADCS Outputs"
         if not ConfirmMgmt.GetResponseOrDefault(ConfirmFinishOrderQst) then
             exit(false);
         exit(this.APAMADCSManagement.MarkProductionOrderAsOutputFinished(ProdOrderLine));
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

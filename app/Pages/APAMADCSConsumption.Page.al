@@ -15,7 +15,7 @@ using System.Utilities;
 page 55002 "APA MADCS Consumption"
 {
     Caption = 'Consumption', Comment = 'ESP="Consumo"';
-    DataCaptionFields = "Prod. Order No.";
+    DataCaptionExpression = this.GetCaption();
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";
@@ -290,5 +290,10 @@ page 55002 "APA MADCS Consumption"
         if not ConfirmMgmt.GetResponseOrDefault(ConfirmFinishOrderQst) then
             exit(false);
         exit(this.APAMADCSManagement.MarkProductionOrderAsConsumptionFinished(ProdOrdComponent));
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

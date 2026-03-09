@@ -10,7 +10,7 @@ using Microsoft.Inventory.Tracking;
 page 55001 "APA MADCS Consume Components"
 {
     Caption = 'Consume Components', Comment = 'ESP="Consumir Componentes"';
-    DataCaptionFields = "Prod. Order No.";
+    DataCaptionExpression = this.GetCaption();
     Extensible = true;
     PageType = List;
     SourceTable = "Prod. Order Component";
@@ -183,5 +183,10 @@ page 55001 "APA MADCS Consume Components"
         if ProdOrderComponent.Get(Rec.Status, Rec."Prod. Order No.", Rec."Prod. Order Line No.", Rec."APA MADCS Original Line No.") then
             this.APAMADCSManagement.PostQuantityLotComponentConsumption(ProdOrderComponent, QuantityToConsume, Rec."APA MADCS Lot No.");
         Message(ComponentConsuedSuccessMsg);
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

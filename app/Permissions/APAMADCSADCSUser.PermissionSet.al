@@ -10,6 +10,8 @@ using Microsoft.Manufacturing.Document;
 permissionset 55000 "APA MADCS ADCS User"
 {
     Caption = 'MADCS ADCS User', MaxLength = 30, Comment = 'ESP="Usuario ADCS MADCS"';
+    Assignable = true;
+
     Permissions =
         tabledata "APA MADCS User Log" = RIMD,
         tabledata "Item Journal Line" = RIMD,

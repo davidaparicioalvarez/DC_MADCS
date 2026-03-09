@@ -12,7 +12,7 @@ using System.Utilities;
 page 55003 "APA MADCS Time Part"
 {
     Caption = 'Time', Comment = 'ESP="Tiempo"';
-    DataCaptionFields = "Prod. Order No.";
+    DataCaptionExpression = this.GetCaption();
     Extensible = true;
     PageType = List;
     SourceTable = "APA MADCS Pro. Order Line Time";
@@ -198,7 +198,7 @@ page 55003 "APA MADCS Time Part"
                             Clear(BreakDownCodes);
                             Clear(BreakDownCodeList);
                             BreakDownCodes.SetRange(Disabling, false);
-                            BreakDownCodes.SetFilter(Code, '%1', this.APAMADCSManagement.GetProdOrderCenterGroup(this.MyStatus, this.MyProdOrdeNo) + '*');
+                            // BreakDownCodes.SetFilter(Code, '%1', this.APAMADCSManagement.GetProdOrderCenterGroup(this.MyStatus, this.MyProdOrdeNo) + '*');
                             BreakDownCodeList.SetTableView(BreakDownCodes);
                             BreakDownCodeList.LookupMode(true);
                             if BreakDownCodeList.RunModal() = Action::LookupOK then begin
@@ -503,5 +503,10 @@ page 55003 "APA MADCS Time Part"
         // Only stop the timer if the control is ready
         if this.isTimerControlReady then
             CurrPage.APAMADCSTimer.StopTimer();
+    end;
+
+    local procedure GetCaption(): Text
+    begin
+        exit(this.APAMADCSManagement.GetPageCaption(Rec."Prod. Order No."));
     end;
 }

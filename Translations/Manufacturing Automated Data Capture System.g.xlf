@@ -403,6 +403,11 @@
           <note from="Developer" annotates="general" priority="2">ESP="No se encontró una tarea activa para el operario."</note>
           <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetMyActualActivity - NamedType NoActiveTaskErr</note>
         </trans-unit>
+        <trans-unit id="Codeunit 1470976125 - Method 3514430461 - NamedType 464073374" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Logged user: </source>
+          <note from="Developer" annotates="general" priority="2">ESP="Usuario logeado: "</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Codeunit APA MADCS Management - Method GetPageCaption - NamedType OperatorLbl</note>
+        </trans-unit>
         <trans-unit id="Codeunit 1470976125 - Method 2861038669 - NamedType 2716043997" size-unit="char" translate="yes" xml:space="preserve">
           <source>Permissions Error.</source>
           <note from="Developer" annotates="general" priority="2">ESP="Error de permisos."</note>

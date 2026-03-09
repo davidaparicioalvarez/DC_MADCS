@@ -54,6 +54,17 @@ codeunit 55000 "APA MADCS Management"
         UserNotFoundMsg: Label 'Operator %1 not found in ADCS users.', Comment = 'ESP="El operador %1 no se encuentra en los usuarios ADCS."';
 
     #region procedures
+    /// <summary>
+    /// Generates the page caption by combining the operator code and production order number.
+    /// </summary>
+    /// <param name="ProdOrderNo"></param>
+    /// <returns></returns>
+    procedure GetPageCaption(ProdOrderNo: Code[20]): Text
+    var
+        OperatorLbl: Label 'Logged user: ', Comment = 'ESP="Usuario logeado: "';
+    begin
+        exit(OperatorLbl + this.GetOperatorCode() + ' - ' + Format(ProdOrderNo));
+    end;
 
     /// <summary>
     /// Checks if the production order is marked for component consumption.
